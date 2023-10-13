@@ -16,7 +16,7 @@ const create = async (org_id, event_id, title, description, options) => {
 
   // create new poll
   const newPoll = {
-    poll_id: new ObjectId(),
+    _id: new ObjectId(),
     org_id: org_id,
     event_id: event_id,
     title: title,
@@ -153,5 +153,11 @@ const remove = async (user_id, poll_id) => {
   return updateInfo;
 };
 
-console.log(await create("123", "456", "poll1", "des", ["Dog", "Cat"]));
+try {
+  const poll = await create("123", "456", "poll1", "des", ["opt1", "opt2"]);
+  await getAll();
+} catch (error) {
+  console.log(error);
+}
+
 export { create, get, getAll, getByEventId, vote, update, remove };
