@@ -69,7 +69,11 @@ const getAll = async () => {
  *
  * @param {String} event_id
  */
-const getByEventId = async (event_id) => {};
+const getByEventId = async (event_id) => {
+  const pollsData = await polls();
+  const pollList = await pollsData.findAll({ _id: event_id });
+  return pollList;
+};
 
 /**
  *
@@ -101,7 +105,29 @@ const vote = async (user_id, poll_id, option) => {
  * @param {String} description
  * @param {Array} options
  */
-const update = async (org_id, event_id, title, description, options) => {};
+const update = async (_org_id, _poll_id, _title, _description, _options) => {
+  const pollsData = await polls();
+  const poll = await polls.findOne({ poll_id });
+  let { org_id, poll_id, title, description, options } = poll;
+  _org_id = _org_id ? _org_id : org_id;
+  _title = _title ? _title : title;
+  _description = _description ? _description : description;
+  _options = _options ? _options : options;
+
+  const updateInfo = await pollsData.findOneAndUpdate(
+    { poll_id },
+    {
+      $set: {
+        org_id: _org_id,
+        title: _title,
+        description: _description,
+        options: _options,
+      },
+    },
+    { returnDocument: "after" }
+  );
+  return updateInfo;
+};
 
 /**
  *
@@ -109,7 +135,18 @@ const update = async (org_id, event_id, title, description, options) => {};
  * @param {String} poll_id
  * @param {String} option
  */
-const remove = async (user_id, poll_id) => {};
+const remove = async (user_id, poll_id) => {
+  const pollsData = await polls();
+  const poll = await pollsData.findOne({ poll_id });
+  let options = poll.options;
+  for (let k of Object.keys(options)) {
+    options[k].filter((ele) => {
+      return ele !== user_id;
+    });
+  }
+  const updateInfo = await pollsData.findOneAndUpdate({ poll_id }, { options });
+  return updateInfo;
+};
 
 create("123", "456", "poll1", "des");
 
