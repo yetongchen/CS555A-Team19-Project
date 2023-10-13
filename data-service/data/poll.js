@@ -107,18 +107,20 @@ const vote = async (user_id, poll_id, option) => {
  */
 const update = async (_org_id, _poll_id, _title, _description, _options) => {
   const pollsData = await polls();
-  const poll = await polls.findOne({ poll_id });
-  let { org_id, poll_id, title, description, options } = poll;
-  _org_id = _org_id ? _org_id : org_id;
+  const poll = await pollsData.findOne({
+    poll_id: new ObjectId(_poll_id),
+    org_id: _org_id,
+  });
+  console.log(poll);
+  let { title, description, options } = poll;
   _title = _title ? _title : title;
   _description = _description ? _description : description;
   _options = _options ? _options : options;
 
   const updateInfo = await pollsData.findOneAndUpdate(
-    { poll_id },
+    { poll_id: new ObjectId(_poll_id), org_id: _org_id },
     {
       $set: {
-        org_id: _org_id,
         title: _title,
         description: _description,
         options: _options,
@@ -137,17 +139,19 @@ const update = async (_org_id, _poll_id, _title, _description, _options) => {
  */
 const remove = async (user_id, poll_id) => {
   const pollsData = await polls();
-  const poll = await pollsData.findOne({ poll_id });
+  const poll = await pollsData.findOne({ poll_id: new ObjectId(poll_id) });
   let options = poll.options;
   for (let k of Object.keys(options)) {
     options[k].filter((ele) => {
       return ele !== user_id;
     });
   }
-  const updateInfo = await pollsData.findOneAndUpdate({ poll_id }, { options });
+  const updateInfo = await pollsData.findOneAndUpdate(
+    { poll_id: new ObjectId(poll_id) },
+    { options }
+  );
   return updateInfo;
 };
 
-create("123", "456", "poll1", "des");
-
+console.log(await create("123", "456", "poll1", "des", ["Dog", "Cat"]));
 export { create, get, getAll, getByEventId, vote, update, remove };
