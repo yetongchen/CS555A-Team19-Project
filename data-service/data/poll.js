@@ -1,4 +1,4 @@
-import { polls } from "../../config/mongoCollections.js";
+import { polls } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 
 /**
@@ -9,23 +9,61 @@ import { ObjectId } from "mongodb";
  * @param {Array} options
  */
 const create = async (org_id, event_id, title, description, options) => {
+  // validation
+
+  const optionsObj = {};
+  options.forEach((option) => (optionsObj[option] = []));
+
+  // create new poll
   const newPoll = {
-    poll_id: "",
-    org_id: "",
-    event_id: "",
-    title: "",
-    description: "",
-    options: {},
+    poll_id: new ObjectId(),
+    org_id: org_id,
+    event_id: event_id,
+    title: title,
+    description: description,
+    options: optionsObj,
   };
+
+  // add to database
+  const pollCollection = await polls();
+  const insertInfo = await pollCollection.insertOne(newPoll);
+  if (!insertInfo.acknowledged || !insertInfo.insertedId)
+    throw "Error: Could not add poll.";
+
+  // get from database
+  const newId = insertInfo.insertedId.toString();
+  return await get(newId);
 };
 
 /**
  *
  * @param {String} poll_id
  */
-const get = async (poll_id) => {};
+const get = async (poll_id) => {
+  // validation
 
-const getAll = async () => {};
+  // get from database
+  const pollCollection = await polls();
+  const poll = await pollCollection.findOne({
+    _id: new ObjectId(poll_id),
+  });
+  if (!poll) throw `Error: no poll exists with an id of ${poll_id}.`;
+  poll._id = poll._id.toString();
+
+  return poll;
+};
+
+const getAll = async () => {
+  const pollCollection = await polls();
+  let pollList = await pollCollection.find({}).toArray();
+  if (!pollList) throw "Error: Could not get all polls.";
+  pollList = pollList.map((poll) => {
+    poll._id = poll._id.toString();
+    return poll;
+  });
+
+  return pollList;
+};
 
 /**
  *
@@ -39,7 +77,22 @@ const getByEventId = async (event_id) => {};
  * @param {String} poll_id
  * @param {String} option
  */
-const vote = async (user_id, poll_id, option) => {};
+const vote = async (user_id, poll_id, option) => {
+  // validation
+
+  const pollCollection = await polls();
+
+  let poll = await pollCollection.updateOne(
+    { _id: new ObjectId(poll_id) },
+    {
+      $push: { options: { option: user_id } },
+    }
+  );
+
+  if (!poll) throw `Could not update the recipe with id ${poll_id}`;
+
+  return await get(poll_id);
+};
 
 /**
  * @param {String} org_id
@@ -57,5 +110,7 @@ const update = async (org_id, event_id, title, description, options) => {};
  * @param {String} option
  */
 const remove = async (user_id, poll_id) => {};
+
+create("123", "456", "poll1", "des");
 
 export { create, get, getAll, getByEventId, vote, update, remove };

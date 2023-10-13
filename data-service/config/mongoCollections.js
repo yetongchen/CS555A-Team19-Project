@@ -14,4 +14,4 @@ const getCollectionFn = (collection) => {
 };
 
 // Documents
-export const users = getCollectionFn("poll");
+export const polls = getCollectionFn("poll");
