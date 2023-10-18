@@ -1,8 +1,14 @@
-import * as polls from "./data/poll.js";
+import * as pollData from "./data/poll.js";
+import { dbConnection, closeConnection } from "./config/mongoConnection.js";
 import { expect } from "chai";
+
+let poll_id;
 
 describe("poll function tests", async () => {
   it("create poll", async () => {
+    const db = await dbConnection();
+    await db.dropDatabase();
+
     const data = {
       org_id: "1234567890",
       event_id: "1234567890",
@@ -11,13 +17,14 @@ describe("poll function tests", async () => {
       options: ["opt1", "opt2", "opt3"],
     };
 
-    const poll = await polls.create(
+    const poll = await pollData.create(
       data.org_id,
       data.event_id,
       data.title,
       data.description,
       data.options
     );
+    poll_id = poll._id;
 
     expect(poll.org_id).to.equal("1234567890");
     expect(poll.event_id).to.equal("1234567890");
@@ -30,9 +37,11 @@ describe("poll function tests", async () => {
 
   it("vote", async () => {
     const userId = "userId_000";
-    const id = "652f20bfc80685760e5aec7f";
 
-    const poll = await polls.vote(userId, id, "opt1");
+    const poll = await pollData.vote(userId, poll_id, "opt1");
     expect(poll.options.opt1[0]).to.equal(userId);
   });
+
+  await db.dropDatabase();
+  await db.closeConnection();
 });

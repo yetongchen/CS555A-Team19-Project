@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --exit"
   },
   "type": "module",
   "dependencies": {
