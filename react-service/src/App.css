@@ -97,3 +97,91 @@ section
 {
   text-decoration: underline;
 }
+
+.event-container {
+  position: relative; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url(/src/images/login.jpg);
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+}
+
+.event-image {
+  width: 100%;
+  border-radius: 10px;
+  max-width: 900px;
+  max-height: 400px;
+}
+
+.event-details {
+  width: 80%;
+  max-width: 900px;
+  margin-top: 20px;
+}
+
+.event-name {
+  font-size: 2.5em;
+  margin-top: 10px;
+  text-align: left;
+}
+
+.event-time-location {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-time-location div {
+  margin-right: 20px;
+}
+
+.join-button {
+  border-radius: 10px;
+  background-color: #FFC085;
+  width: 100px; 
+  height: 30px; 
+}
+
+.join-button:hover {
+  background-color: #f4b070;  /* 鼠标悬停时稍深一点的橘色 */
+}
+
+.event-address {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.event-description {
+  position: relative;
+  text-align: left;
+}
+
+.show-more {
+  cursor: pointer;
+  color: #dd74ca;
+  text-decoration: underline;
+  display: block;
+  margin-top: 5px;
+  font-weight: bold;  /* 可选: 加粗以突出显示 */
+}
+
+.show-more:hover {
+  text-decoration: none;
+}
+
+.event-ticket {
+  text-align: left;
+}
+
+.event-link {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #dd74ca;
+}
