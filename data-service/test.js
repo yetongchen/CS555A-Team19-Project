@@ -41,7 +41,7 @@ describe("poll function tests", async () => {
     const poll = await pollData.vote(userId, poll_id, "opt1");
     expect(poll.options.opt1[0]).to.equal(userId);
   });
-  
+
   it("Get all", async () => {
     const db = await dbConnection();
     await db.dropDatabase();
@@ -99,8 +99,47 @@ describe("poll function tests", async () => {
     expect(Array.isArray(second_poll.options.opt3)).to.equal(true);
 
     await db.dropDatabase();
-    await closeConnection();
   });
+
+  it("update poll", async () => {
+    const db = await dbConnection();
+    await db.dropDatabase();
+
+    const data = {
+      org_id: "1234567890",
+      event_id: "1234567890",
+      title: "new poll",
+      description: "this is a new poll",
+      options: ["opt1", "opt2", "opt3"],
+    };
+
+    const poll = await pollData.create(
+      data.org_id,
+      data.event_id,
+      data.title,
+      data.description,
+      data.options
+    );
+    poll_id = poll._id;
+
+    const updateInfo = await pollData.update(
+      data.org_id,
+      data.poll_id,
+      "updated poll",
+      "this is an updated poll",
+      data.options
+    );
+
+    expect(updateInfo.org_id).to.equal("1234567890");
+    expect(updateInfo.title).to.equal("updated poll");
+    expect(updateInfo.description).to.equal("this is an updated poll");
+    expect(Array.isArray(poll.options.opt1)).to.equal(true);
+    expect(Array.isArray(poll.options.opt2)).to.equal(true);
+    expect(Array.isArray(poll.options.opt3)).to.equal(true);
+    await db.dropDatabase();
+
+  });
+
   await db.dropDatabase();
   await db.closeConnection();
 });
