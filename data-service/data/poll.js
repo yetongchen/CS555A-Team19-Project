@@ -86,10 +86,13 @@ const vote = async (user_id, poll_id, option) => {
 
   const pollCollection = await polls();
 
+  let pushObj = {};
+  pushObj["options." + option] = user_id;
+
   let poll = await pollCollection.updateOne(
     { _id: new ObjectId(poll_id) },
     {
-      $push: { options: { option: user_id } },
+      $push: pushObj,
     }
   );
 
