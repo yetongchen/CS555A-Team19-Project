@@ -5,6 +5,10 @@ const validation = require('../data/validation');
 const bcrypt = require('bcrypt');
 
 
+router.get('/', (req, res) => {
+    res.send('Welcome to the server homepage!');
+  });
+
 
 router.post('/login', async (req,res) => {
     const login = req.body;
