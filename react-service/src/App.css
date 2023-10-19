@@ -1,4 +1,219 @@
-.App {
+@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+*
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+section
+{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+.container
+{
+  position: absolute;
+  left: -10%;
+  width: 120%;
+  height: 100vh;
+  background: url(/src/images/login.jpg);
+}
+.login
+{
+  position: relative;
+  padding: 60px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+}
+.login .inputBox {
+  margin-bottom: 24px; 
+}
+
+.login h2
+{
+  position: relative;
+  width: 100%;
+  text-align: center;
+  font-size: 2.5em;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.login .inputBox input
+{
+  position: relative;
+  width: 100%;
+  padding: 15px 20px;
+  outline: none;
+  font-size: 1.25em;
+  color: #fff;
+  border-radius: 5px;
+  background: rgba(0,0,0,0.2);
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.25);
+  border: 1px solid rgba(0,0,0,0.5);
+}
+.login .inputBox ::placeholder
+{
+  color: rgba(255, 255, 255, 0.5);
+}
+.login .inputBox #btn
+{
+  position: relative;
+  border: none;
+  outline: none;
+  background: linear-gradient(0deg, #2c3c99, #00b0ff);
+  cursor: pointer;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: none;
+}
+.login .group
+{
+  display: flex;
+  justify-content: space-between;
+}
+.login .group a
+{
+  font-size: 1.25em;
+  color: #fff;
+  text-decoration: none;
+}
+.login .group a:nth-child(2)
+{
+  text-decoration: underline;
+}
+
+.event-container {
+  position: relative; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url(/src/images/login.jpg);
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+}
+
+.event-image {
+  width: 100%;
+  border-radius: 5px;
+  max-width: 900px;
+  max-height: 350px;
+}
+
+.event-details {
+  width: 80%;
+  max-width: 900px;
+  margin-top: 20px;
+}
+
+.event-name {
+  font-size: 2em;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.event-time-location {
+  display: flex;
+  text-align: left;
+  /* justify-content: space-between; */
+  align-items: center;
+  gap: 5px;
+}
+
+.event-time-location div {
+  margin-right: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.join-button {
+  border-radius: 10px;
+  background-color: #FFC085;
+  width: 100px; 
+  height: 30px; 
+  float: right;
+}
+
+.join-button:hover {
+  background-color: #f4b070;  /* 鼠标悬停时稍深一点的橘色 */
+}
+
+.event-address {
+  margin-top: 10px;
+  text-align: left;
+  display: flex; 
+  align-items: center; 
+  gap: 5px;
+}
+
+.event-description {
+  position: relative;
+  text-align: left;
+  gap: 5px;
+}
+
+.description-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.description-header h2 {
+  margin: 0;
+}
+
+.show-more {
+  cursor: pointer;
+  color: #dd74ca;
+  text-decoration: underline;
+  display: block;
+  margin-top: 5px;
+  font-weight: bold;  /* 可选: 加粗以突出显示 */
+}
+
+.show-more:hover {
+  text-decoration: none;
+}
+
+.event-ticket {
+  text-align: left;
+}
+
+.event-link {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #dd74ca;
+}
+
+.event-comments {
+  margin-top: 10px;
+  text-align: left;
+  display: flex; 
+  align-items: center; 
+  gap: 5px;
+}
+
+App {
   text-align: center;
 }
 
