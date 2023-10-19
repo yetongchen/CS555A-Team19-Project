@@ -1,33 +1,19 @@
-import { useState } from 'react';
-import Calendar from 'react-calendar';
-import './Calendar.css';
+import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import EventDetail from './components/EventDetail';
+import Header from './components/Header';
+import Home from './components/Home';
 
 function App() {
-  const [date, setDate] = useState(new Date());
-
   return (
-    <Router>
-      <div className="App">
-      
-        <h1 className='text-center'>ReactCalendar</h1>
-        <div className='calendar-container' style={{display: 'flex', justifyContent:'center'}}>
-          <Calendar onChange={setDate} value={date}/>
-        </div>
-        <p className='text-center'>
-          <span className='bold'>SelectedDate:</span>{' '}{date.toDateString()}
-        </p>
- 
-    </div>
-    
+    <Router>   
      <div className="App">
-      <header className="App-header">
-      </header>
+      <Header/>
       <div className='App-body'>
         <Routes>
+          <Route path='/' element={<Home />}/>
           <Route path='/login' element={<Login />} />
           <Route path='/events/:id' element={<EventDetail />} />
         </Routes>
