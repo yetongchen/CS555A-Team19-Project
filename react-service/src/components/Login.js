@@ -5,9 +5,27 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login logic here
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    let {email, password} = event.target.elements;
+    try {
+      await doSignInWithEmailAndPassword(email.value, password.value);
+    } catch (e) {
+      alert(e);
+    }
+  }
+
+  const auth = getAuth(firebaseApp);
+
+  const handleGoogleLogin = () => {
+      signInWithPopup(auth, googleAuthProvider)
+          .then(result => {
+              navigate("/home");
+          })
+          .catch(error => {
+              console.error("Google Login Error：", error);
+              setErrorMsg(error.message); 
+          });
   }
 
   return (
