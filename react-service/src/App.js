@@ -8,7 +8,7 @@ import SignUp from './components/SignUp';
 
 function App() {
   return (
-    <AuthProvider>
+    //<AuthProvider>
       <Router>
         <div className="App">
           <header className="App-header">
@@ -22,7 +22,7 @@ function App() {
        <footer className='App-footer'></footer>
         </div>
       </Router>
-    </AuthProvider>
+    //</AuthProvider>
   );
 }
 

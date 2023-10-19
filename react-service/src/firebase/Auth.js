@@ -4,9 +4,10 @@ import { firebaseApp } from './Firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth'; 
 import { getSessionToken } from './FirebaseFunctions';
 
-
-export const AuthContext = React.createContext();
-
+export const AuthContext = React.createContext({
+  currentUser: null,
+  userCode: null
+});
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -39,8 +40,8 @@ export const AuthProvider = ({ children }) => {
             setUserCode(Number(data.userType));
             setLoadingUser(false);
           } catch (e) {
-            setLoadingUser(true);
             console.log(e);
+            setLoadingUser(false); 
           }
         }
         fetchData();
