@@ -115,9 +115,9 @@ section
 
 .event-image {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 5px;
   max-width: 900px;
-  max-height: 400px;
+  max-height: 350px;
 }
 
 .event-details {
@@ -127,19 +127,23 @@ section
 }
 
 .event-name {
-  font-size: 2.5em;
-  margin-top: 10px;
+  font-size: 2em;
+  margin-top: 5px;
   text-align: left;
 }
 
 .event-time-location {
   display: flex;
-  justify-content: space-between;
+  text-align: left;
+  /* justify-content: space-between; */
   align-items: center;
+  gap: 5px;
 }
 
 .event-time-location div {
   margin-right: 20px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .join-button {
@@ -147,6 +151,7 @@ section
   background-color: #FFC085;
   width: 100px; 
   height: 30px; 
+  float: right;
 }
 
 .join-button:hover {
@@ -156,11 +161,25 @@ section
 .event-address {
   margin-top: 10px;
   text-align: left;
+  display: flex; 
+  align-items: center; 
+  gap: 5px;
 }
 
 .event-description {
   position: relative;
   text-align: left;
+  gap: 5px;
+}
+
+.description-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.description-header h2 {
+  margin: 0;
 }
 
 .show-more {
@@ -229,3 +248,15 @@ section
 }
 
 
+
+.event-comments {
+  margin-top: 10px;
+  text-align: left;
+  display: flex; 
+  align-items: center; 
+  gap: 5px;
+}
+
+.text-center{
+  text-align: center;
+}

@@ -4,18 +4,17 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {AuthProvider} from './firebase/Auth';
 import Login from './components/Login';
 import EventDetail from './components/EventDetail';
-import SignUp from './components/SignUp';
-
+import Header from './components/Header';
+import Home from './components/Home';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="App">
-          <header className="App-header">
-          </header>
-        <div className='App-body'>
+    <Router>   
+     <div className="App">
+      <Header/>
+      <div className='App-body'>
         <Routes>
+          <Route path='/' element={<Home />}/>
           <Route path='/login' element={<Login />} />
           <Route path='/events/:id' element={<EventDetail />} />
           <Route path='/signup' element={<SignUp />} />
@@ -24,7 +23,6 @@ function App() {
        <footer className='App-footer'></footer>
         </div>
       </Router>
-    </AuthProvider>
   );
 }
 
