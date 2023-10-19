@@ -5,34 +5,43 @@ import { doSignInWithEmailAndPassword } from '../firebase/FirebaseFunctions';
 import firebaseApp, { googleAuthProvider } from '../firebase/Firebase';
 import { getAuth, signInWithPopup } from 'firebase/auth';
 import googleLoginImage from '../images/google_login.png';
+import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Google } from "@mui/icons-material";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState(''); 
+  const auth = getAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    let {email, password} = event.target.elements;
+    signInWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        if (auth.currentUser) navigate("/");
+      })
+      .catch((e) => alert("Either email or password is incorrect"));
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
     try {
-      await doSignInWithEmailAndPassword(email.value, password.value);
-    } catch (e) {
-      alert(e);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      axios
+        .post("http://localhost:4000/users/register", { // Update the URL to your backend endpoint
+          name: user.displayName,
+          email: user.email,
+          uid: user.uid,
+        })
+        .then((res) => navigate("/"))
+        .catch((error) => console.error(error));
+    } catch (error) {
+      console.error("Google sign in error:", error);
+      alert("Google Sign-In failed, please try again.");
     }
-  }
-
-  const auth = getAuth(firebaseApp);
-
-  const handleGoogleLogin = () => {
-      signInWithPopup(auth, googleAuthProvider)
-          .then(result => {
-              // navigate("/home");
-          })
-          .catch(error => {
-              console.error("Google Login Error：", error);
-              setErrorMsg(error.message); 
-          });
   }
 
   return (
@@ -40,7 +49,7 @@ const Login = () => {
       <div className="container"></div>
       <div className="login">
         <h2>Sign In</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <div className="inputBox">
             <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
@@ -50,7 +59,14 @@ const Login = () => {
           <div className="inputBox">
             <input type="submit" value="Login" id="btn" />
           </div>
-          {errorMsg && <p className="error">{errorMsg}</p>}
+          <div className="social-signin" style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '50px', 
+          }}>
+            <Google onClick={handleGoogleSignIn} />
+          </div>
         </form>
         <button className="google-login-button" onClick={handleGoogleLogin}>
           <img src={googleLoginImage} alt="Sign in with Google" />
@@ -58,7 +74,7 @@ const Login = () => {
           </button>
         <div className="group">
           <a href="#">Forgot Password?</a>
-          <Link to="/signup">Sign Up</Link>
+          <a href="/register">Sign Up</a>
         </div>
       </div>
     </section>
@@ -66,3 +82,4 @@ const Login = () => {
 }
 
 export default Login;
+
