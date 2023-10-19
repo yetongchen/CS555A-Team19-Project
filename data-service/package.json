@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "start": "node app.js"
   },
   "type": "module",
   "dependencies": {

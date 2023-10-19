@@ -15,3 +15,4 @@ const getCollectionFn = (collection) => {
 
 // Documents
 export const polls = getCollectionFn("poll");
+export const users = getCollectionFn("user");
