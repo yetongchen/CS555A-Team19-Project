@@ -118,22 +118,22 @@ _Below is an example of how you can instruct your audience on installing and set
 
 3. Open Mongodb and postman. And type in user information in the postman to register a new user. (Note: If you enter a non-existent email, you will not be able to receive the email.)
  <div align="center">
-  <img src="https://github.com/tzuminglu/2FA-with-email/blob/main/register.png" width="800"> 
+  <img src="https://github.com/tzuminglu/2FA-with-email/blob/main/register.png" width="800">
 </div>
 
 4. Verify if MongoDB stores your data. (Note: You can download MongoDB Compass to visualize the database.)
  <div align="center">
-  <img src="https://github.com/tzuminglu/2FA-with-email/blob/main/mongodb.png" width="600"> 
+  <img src="https://github.com/tzuminglu/2FA-with-email/blob/main/mongodb.png" width="600">
 </div>
 5. After completing the aforementioned steps, the recipient's email will receive a message containing a QR code. Using a mobile phone, you can download either Google Authenticator or Microsoft Authenticator to scan the code. The application will then generate a token every 30 seconds. Users are required to input this token in the login interface to access their accounts.
 <div></div>
 6. Open Postman and send a request to test the validity of the token.
  <div align="center">
-  <img src="https://github.com/tzuminglu/2FA-with-email/blob/main/login.png" width="800"> 
+  <img src="https://github.com/tzuminglu/2FA-with-email/blob/main/login.png" width="800">
 </div>
 
+ -->
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- CONTACT -->
 
 ## Contact
