@@ -37,6 +37,7 @@ This is CS555 Project Repo
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#database">Database</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#reference">Reference</a></li>
   </ol>
@@ -134,6 +135,13 @@ _Below is an example of how you can instruct your audience on installing and set
 
  -->
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- Database -->
+## Database
+  <a href="">
+    <img src="database.png" alt="Database" width="600" >
+  </a>
+
 <!-- CONTACT -->
 
 ## Contact
