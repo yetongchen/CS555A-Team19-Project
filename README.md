@@ -7,7 +7,7 @@ This is CS555 Project Repo
 <br />
 <div align="center">
   <a href="">
-    <img src="/react-service/src/images/logo.png" alt="Logo" width="600" >
+    <img src="logo.png" alt="Logo" width="600" >
   </a>
 
   <h3 align="center">This is CS555 Project Repo</h3>
