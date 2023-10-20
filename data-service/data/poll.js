@@ -153,11 +153,11 @@ const remove = async (user_id, poll_id) => {
   return updateInfo;
 };
 
-try {
-  const poll = await create("123", "456", "poll1", "des", ["opt1", "opt2"]);
-  await getAll();
-} catch (error) {
-  console.log(error);
-}
+// try {
+//   const poll = await create("123", "456", "poll1", "des", ["opt1", "opt2"]);
+//   await getAll();
+// } catch (error) {
+//   console.log(error);
+// }
 
 export { create, get, getAll, getByEventId, vote, update, remove };

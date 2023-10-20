@@ -97,3 +97,142 @@ section
 {
   text-decoration: underline;
 }
+/* App.css */
+.register {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 40px;  /* Increase padding */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 350px;  /* Set a fixed width */
+  box-sizing: border-box;  /* Ensure padding and border are included in the element's total width and height */
+}
+
+/* Add some margin to the form elements for better spacing */
+.register form InputLabel,
+.register form Input,
+.register form .inputBox {
+  margin-bottom: 20px;  
+}
+
+.event-container {
+  position: relative; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url(/src/images/login.jpg);
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+}
+
+.event-image {
+  width: 100%;
+  border-radius: 5px;
+  max-width: 900px;
+  max-height: 350px;
+}
+
+.event-details {
+  width: 80%;
+  max-width: 900px;
+  margin-top: 20px;
+}
+
+.event-name {
+  font-size: 2em;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.event-time-location {
+  display: flex;
+  text-align: left;
+  /* justify-content: space-between; */
+  align-items: center;
+  gap: 5px;
+}
+
+.event-time-location div {
+  margin-right: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.join-button {
+  border-radius: 10px;
+  background-color: #FFC085;
+  width: 100px; 
+  height: 30px; 
+  float: right;
+}
+
+.join-button:hover {
+  background-color: #f4b070;  /* 鼠标悬停时稍深一点的橘色 */
+}
+
+.event-address {
+  margin-top: 10px;
+  text-align: left;
+  display: flex; 
+  align-items: center; 
+  gap: 5px;
+}
+
+.event-description {
+  position: relative;
+  text-align: left;
+  gap: 5px;
+}
+
+.description-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.description-header h2 {
+  margin: 0;
+}
+
+.show-more {
+  cursor: pointer;
+  color: #dd74ca;
+  text-decoration: underline;
+  display: block;
+  margin-top: 5px;
+  font-weight: bold;  /* 可选: 加粗以突出显示 */
+}
+
+.show-more:hover {
+  text-decoration: none;
+}
+
+.event-ticket {
+  text-align: left;
+}
+
+.event-link {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #dd74ca;
+}
+
+.event-comments {
+  margin-top: 10px;
+  text-align: left;
+  display: flex; 
+  align-items: center; 
+  gap: 5px;
+}
+
+.text-center{
+  text-align: center;
+}
