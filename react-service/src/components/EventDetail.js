@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import axios from 'axios';
 import '../App.css';
 
@@ -76,20 +80,27 @@ function EventDetail({}) {
         <h1 className="event-name">{event.name && event.name.text}</h1>
 
         <div className="event-time-location">
+          <CalendarMonthOutlinedIcon />
           <h2>Date and Time: </h2>
           {event.start && event.end && formatDateTime(event.start, event.end)}
           <button className="join-button">Join</button>
         </div>
         
         <div className="event-address">
+          <LocationOnOutlinedIcon />
           <h2>Address:</h2>
+          <div>
           {event.venue && event.venue.name} 
           {event.venue && event.venue.address && event.venue.address.address_1}
+          </div>
         </div>
 
         {/*我想把它设计成只显示三行的样子，有一个show more可以点击查看所有的event-description，但是没实现。*/}
         <div className="event-description">
-          <h2>Description: </h2>
+          <div className="description-header">
+            <DescriptionOutlinedIcon />
+            <h2>Description:</h2>
+          </div>
           <div ref={descriptionRef}>
             {showMore || !isDescriptionLong
               ? event.description && event.description.text
@@ -100,7 +111,7 @@ function EventDetail({}) {
               {showMore ? 'Show less' : 'Show more'}
             </span>
           )}
-          </div>
+        </div>
 
         <p className="event-ticket">
           If you want the tickets, click the link:
@@ -108,6 +119,11 @@ function EventDetail({}) {
             {event.external_ticketing && event.external_ticketing.external_url}
           </a>
         </p>
+
+        <div className='event-comments'>
+          <CommentOutlinedIcon />
+          <h2>Comments:</h2>
+        </div>
       </div>
     </div>
   );
