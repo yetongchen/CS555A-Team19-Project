@@ -12,6 +12,7 @@ const createPost = data.posts.createPost;
 const getPostByEventId = data.posts.getPostByEventId;
 const getPostByPostId = data.posts.getPostByPostId;
 const removePostByPostId = data.posts.removePostByPostId;
+const getPostByUserId = data.posts.getPostByUserId;
 
 // import {
 //   createPost,
@@ -62,7 +63,7 @@ router.route("/new").post(async (req, res) => {
   }
 });
 
-router.route("/:post_id").get(async (req, res) => {
+router.route("/detail/:post_id").get(async (req, res) => {
   try {
     const checkedPostId = checkStringObjectID(req.params.post_id);
     const postInfo = await getPostByPostId(checkedPostId);
@@ -73,7 +74,7 @@ router.route("/:post_id").get(async (req, res) => {
   }
 });
 
-router.route("/:post_id").delete(async (req, res) => {
+router.route("/detail/:post_id").delete(async (req, res) => {
   try {
     const checkedPostId = checkStringObjectID(req.params.post_id);
     const postInfo = await removePostByPostId(checkedPostId);
@@ -87,6 +88,17 @@ router.route("/:post_id").delete(async (req, res) => {
 router.route("/event/:event_id").get(async (req, res) => {
   try {
     const postList = await getPostByEventId(req.params.event_id);
+    console.log(postList);
+    res.status(200).json(postList);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.route("/user/:user_id").get(async (req, res) => {
+  try {
+    const checkedUserId = checkStringObjectID(req.params.user_id);
+    const postList = await getPostByUserId(checkedUserId);
     console.log(postList);
     res.status(200).json(postList);
   } catch (err) {
