@@ -7,6 +7,7 @@ await db.dropDatabase();
 let post1 = null;
 let post2 = null;
 
+//createPost
 try {
     post1 = await postData.createPost(
         "643477cd9042a9c9256c5ac5",
@@ -33,6 +34,23 @@ try {
     console.log(e);
 }
 
+//getPostByEventId
+try {
+    const postsEvent1 = await postData.getPostByEventId(post1.event_id);
+    console.log(postsEvent1);
+}catch(e){
+    console.log(e);
+}
+
+//getPostByUserId
+try {
+    const postUser2 = await postData.getPostByUserId(post2.user_id);
+    console.log(postUser2);
+}catch(e) {
+    console.log(e);
+}
+
+//removePostByPostId
 try {
     const deleteInfo1 = await postData.removePostByPostId(post1._id.toString());
     console.log(deleteInfo1);
@@ -40,19 +58,12 @@ try {
     console.log(e);
 }
 
-try {
-    const postsEvent1 = await postData.getPostByEventId('692750504407');
-    console.log(postsEvent1);
-}catch(e){
-    console.log(e);
-}
-
-//should throw not found error
+//getPostByPostId
 try {
     const newPost1 = await postData.getPostByPostId(post1._id.toString());
     console.log(newPost1);
 }catch(e) {
-    console.log(e);
+    console.log(e);//should throw not found error
 }
 
 try {
@@ -61,7 +72,6 @@ try {
 }catch(e) {
     console.log(e);
 }
-
 
 console.log('Done seeding database');
 await closeConnection();

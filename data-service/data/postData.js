@@ -129,13 +129,31 @@ const getPostByEventId = async (
     return postByEventId;
 }
 
+/**
+ * @param {String} user_id
+ * @returns array of post Object
+ */
+const getPostByUserId = async (
+    user_id
+) => {
+    //validadtion
+    //user_id = validation.checkStringObjectID(user_id);
+
+    const postCollection = await posts();
+    const postByUserId = await postCollection.find({user_id: user_id}).toArray();
+    if (!postByUserId)
+        throw `can not find post of user with id of ${user_id}`; 
+
+    return postByUserId;
+}
+
 const exportedMethods = {
     createPost,
     removePostByPostId,
     //updatePost,
     getPostByPostId,
     getPostByEventId,
-    //getPostByUserId
+    getPostByUserId
 };
 
 export default exportedMethods;
