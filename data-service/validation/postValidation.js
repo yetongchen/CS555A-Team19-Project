@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 const maxNameLength = 25;
-const minNameLength = 3;
+const minNameLength = 1;
 const maxTitleLength = 50;
 const minTitleLength = 5;
 const maxTextLength = 400;
@@ -56,7 +56,7 @@ const checkText = (text) => {
   return text;
 };
 
-module.exports = {
+export default {
   checkFirstname,
   checkLastname,
   checkStringObjectID,

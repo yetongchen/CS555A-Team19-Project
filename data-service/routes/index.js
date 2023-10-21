@@ -1,8 +1,8 @@
-import users from "./users.js";
+//import users from "./users.js";
 
 const constructorMethod = (app) => {
 
-    app.use('/user', users);
+    //app.use('/user', users);
 
     app.use('*', (req, res) => {
         res.render('error', {
