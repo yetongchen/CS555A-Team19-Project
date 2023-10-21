@@ -1,5 +1,13 @@
 import express from "express";
 import data from "../data/index.js";
+import postValidation from "../validation/postValidation.js";
+
+const checkFirstname = postValidation.checkFirstname;
+const checkLastname = postValidation.checkLastname;
+const checkStringObjectID = postValidation.checkStringObjectID;
+const checkTitle = postValidation.checkTitle;
+const checkText = postValidation.checkText;
+
 const createPost = data.posts.createPost;
 const getPostByEventId = data.posts.getPostByEventId;
 const getPostByPostId = data.posts.getPostByPostId;
@@ -29,12 +37,12 @@ router.get("/", async (req, res) => {
 router.route("/new").post(async (req, res) => {
   try {
     console.log(req.body);
-    let user_id = req.body.user_id;
+    let user_id = checkStringObjectID(req.body.user_id);
     let event_id = req.body.event_id;
-    let firstname = req.body.firstname;
-    let lastname = req.body.lastname;
-    let title = req.body.title;
-    let text = req.body.text;
+    let firstname = checkFirstname(req.body.firstname);
+    let lastname = checkLastname(req.body.lastname);
+    let title = checkTitle(req.body.title);
+    let text = checkText(req.body.text);
     let _id = req.body.uid;
 
     let result = await createPost(
@@ -56,7 +64,8 @@ router.route("/new").post(async (req, res) => {
 
 router.route("/:post_id").get(async (req, res) => {
   try {
-    const postInfo = await getPostByPostId(req.params.post_id);
+    const checkedPostId = checkStringObjectID(req.params.post_id);
+    const postInfo = await getPostByPostId(checkedPostId);
     console.log(postInfo);
     res.status(200).json(postInfo);
   } catch (err) {
@@ -66,7 +75,8 @@ router.route("/:post_id").get(async (req, res) => {
 
 router.route("/:post_id").delete(async (req, res) => {
   try {
-    const postInfo = await removePostByPostId(req.params.post_id);
+    const checkedPostId = checkStringObjectID(req.params.post_id);
+    const postInfo = await removePostByPostId(checkedPostId);
     console.log(postInfo);
     res.status(200).json(postInfo);
   } catch (err) {
