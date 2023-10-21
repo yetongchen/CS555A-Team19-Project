@@ -137,7 +137,7 @@ const getPostByUserId = async (
     user_id
 ) => {
     //validadtion
-    //user_id = validation.checkStringObjectID(user_id);
+    user_id = validation.checkStringObjectID(user_id);
 
     const postCollection = await posts();
     const postByUserId = await postCollection.find({user_id: user_id}).toArray();
