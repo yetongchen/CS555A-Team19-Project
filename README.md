@@ -107,6 +107,12 @@ _Below is an example of how you can instruct your audience on installing and set
 
 ## Usage
 
+Run npm start in terminal
+
+```sh
+npm run start
+```
+
 <!-- Mastering this application becomes achievable by following the steps outlined below
 
 1. Prepare two email addresses: one for the sender and another for the receiver. Create an .env file in the root directory. In this file, you need to include GMAIL_USER (your sender email address) and GMAIL_PASS (16-digit password) for this email address. You can follow this [reference](https://israynotarray.com/nodejs/20230722/1626712457/) to generate a new 16-digit password.
@@ -137,10 +143,14 @@ _Below is an example of how you can instruct your audience on installing and set
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Database -->
+
 ## Database
+
+<div align="center">
   <a href="">
     <img src="database.png" alt="Database" width="600" >
   </a>
+</div>
 
 <!-- CONTACT -->
 
