@@ -15,4 +15,5 @@ const getCollectionFn = (collection) => {
 
 // Documents
 export const polls = getCollectionFn("poll");
-export const users = getCollectionFn("user");
+//export const users = getCollectionFn("user");
+export const posts = getCollectionFn("post");

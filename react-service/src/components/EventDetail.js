@@ -8,7 +8,8 @@ import '../App.css';
 
 const apiKey = "HOXTF4SFSKCCDLS4V4XK";
 // const id = "48288403916";
-const id = "79728781933";
+// const id = "79728781933";
+const id = "737523611977";
 
 async function getEventById(id) {
   const apiUrl = `https://www.eventbriteapi.com/v3/events/${id}/`;
@@ -19,7 +20,6 @@ async function getEventById(id) {
         'Authorization': `Bearer ${apiKey}`,
       },
     });
-
     return response.data;
   } catch (error) {
     console.error('Error when get event detail', error);
@@ -29,17 +29,39 @@ async function getEventById(id) {
 
 function EventDetail({}) {
   const [event, setEvent] = useState({});
+  const [venue, setVenue] = useState({});
   const eventId = id;
 
   useEffect(() => {
     getEventById(eventId)
       .then((eventData) => {
         setEvent(eventData);
+        if (eventData.venue_id){
+          getVenueById(eventData.venue_id)
+          .then(setVenue)
+          .catch(error => console.error('Error fetching venue', error));
+        }
       })
       .catch((error) => {
         console.error('Error', error);
       });
   }, [eventId]);
+
+  async function getVenueById(vid) {
+    const apiUrl = `https://www.eventbriteapi.com/v3/venues/${vid}/`;
+  
+    try {
+      const response = await axios.get(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error when get venue detail', error);
+      throw error;
+    }
+  }
 
   function formatDateTime(start, end) {
     const startDate = new Date(start.local);
@@ -73,6 +95,37 @@ function EventDetail({}) {
     }
   }, [event.description]);
 
+  function formatVenueAddress(venue) {
+    let addressParts = [];
+    if (venue.name) {
+        addressParts.push(venue.name);
+    }
+
+    if (venue.address) {
+        if (venue.address.address_1) {
+            addressParts.push(venue.address.address_1);
+        }
+        if (venue.address.address_2) {
+            addressParts.push(venue.address.address_2);
+        }
+        let cityRegionPostal = [];
+        if (venue.address.city) {
+            cityRegionPostal.push(venue.address.city);
+        }
+        if (venue.address.region) {
+            cityRegionPostal.push(venue.address.region);
+        }
+        if (venue.address.postal_code) {
+            cityRegionPostal.push(venue.address.postal_code);
+        }
+        if (cityRegionPostal.length > 0) {
+            addressParts.push(cityRegionPostal.join(', '));
+        }
+    }
+    return addressParts.join(' ');
+}
+
+
   return (
     <div className="event-container">
       <img className="event-image" src={event.logo && event.logo.url} alt="Event Image" />
@@ -90,8 +143,7 @@ function EventDetail({}) {
           <LocationOnOutlinedIcon />
           <h2>Address:</h2>
           <div>
-          {event.venue && event.venue.name} 
-          {event.venue && event.venue.address && event.venue.address.address_1}
+            {event.online_event ? "Online": formatVenueAddress(venue)}
           </div>
         </div>
 
@@ -114,11 +166,17 @@ function EventDetail({}) {
         </div>
 
         <p className="event-ticket">
-          If you want the tickets, click the link:
-          <a className="event-link" href={event.external_ticketing && event.external_ticketing.external_url}>
-            {event.external_ticketing && event.external_ticketing.external_url}
-          </a>
-        </p>
+          {event.is_externally_ticketed && event.external_ticketing && event.external_ticketing.external_url ? (
+              <>
+                  If you want the tickets, click the link:
+                  <a className="event-link" href={event.external_ticketing.external_url}>
+                      {event.external_ticketing.external_url}
+                  </a>
+              </>
+          ) : (
+              'No external ticketing link available.'
+          )}
+      </p>
 
         <div className='event-comments'>
           <CommentOutlinedIcon />
