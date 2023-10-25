@@ -32,6 +32,8 @@ function EventDetail({}) {
   const [event, setEvent] = useState({});
   const [venue, setVenue] = useState({});
   const [posts, setPosts] = useState([]);
+  const [newPostTitle, setNewPostTitle] = useState('');
+  const [newPostContent, setNewPostContent] = useState(''); 
   const eventId = id;
 
   useEffect(() => {
@@ -110,7 +112,7 @@ function EventDetail({}) {
     return addressParts.join(' ');
   }
 
-// posts
+// display all the posts
 useEffect(() => {
   displayPostForEvent(eventId)
     .then(posts => {
@@ -142,6 +144,33 @@ const displayPostForEvent = async (id) => {
   }
 } 
 
+// add post
+const currentEventID = id;
+const handleAddPost = async () => {
+  try {
+    const postData = {
+      user_id: '63ddcbc4b3ffe78cebcbb5a4',
+      event_id: currentEventID,
+      firstname: 'cong', 
+      lastname: 'guo',
+      title: newPostTitle,
+      text: newPostContent,
+    };
+
+    const response = await axios.post('http://localhost:4000/post/new', postData);
+    
+    if (response.status !== 200) {
+      console.error('Error from server:', response.statusText);
+      throw new Error('Error from server: ' + response.statusText);
+    }
+    
+    const newPost = response.data;
+    return newPost; 
+  } catch (error) {
+    console.error('Detailed error:', error.response ? error.response.data : error);
+    throw new Error("Error to add the post");
+  }
+}
 
   return (
     <div className='outer-container'>
@@ -186,7 +215,8 @@ const displayPostForEvent = async (id) => {
           ) : (
               'No external ticketing link available.'
           )}
-      </p>
+       </p>
+
         <div className='event-posts'>
           <CommentOutlinedIcon />
           <h2>Posts:</h2>
@@ -203,6 +233,36 @@ const displayPostForEvent = async (id) => {
             </div>
           ))}
         </div>
+
+        <div className="post-input-container">
+          <table>
+            <tbody>
+              <tr>
+                <td>Title:</td>
+                <td>
+                  <input 
+                    type="text" 
+                    value={newPostTitle}
+                    onChange={(e) => setNewPostTitle(e.target.value)}
+                    placeholder="Enter post title" 
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Content:</td>
+                <td>
+                  <textarea 
+                    value={newPostContent}
+                    onChange={(e) => setNewPostContent(e.target.value)}
+                    placeholder="Enter post content"
+                  ></textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button onClick={handleAddPost}>Add</button>
+        </div>
+
       </div>
     </div>
   );
