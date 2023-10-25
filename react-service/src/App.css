@@ -272,3 +272,61 @@ section
 .post-content {
   text-align: left;
 }
+
+.post-input-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.post-input-container table {
+  width: 100%;
+}
+
+.post-input-container td {
+  padding: 10px;
+  vertical-align: top;
+}
+
+.post-input-container input[type="text"],
+.post-input-container textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.post-input-container input[type="text"]:focus,
+.post-input-container textarea:focus {
+  border-color: #FFC085;
+  outline: none;
+}
+
+.post-input-container textarea {
+  height: 100px;
+  resize: vertical; 
+}
+
+.post-input-container button {
+  display: block;
+  width: 100px;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #FFC085;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.post-input-container button:hover {
+  background-color: #f4b070;
+}
