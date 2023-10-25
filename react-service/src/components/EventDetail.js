@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect} from 'react';
+import { useParams } from 'react-router-dom';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
@@ -7,9 +8,8 @@ import axios from 'axios';
 import '../App.css';
 
 const apiKey = "HOXTF4SFSKCCDLS4V4XK";
-// const id = "48288403916";
-// const id = "79728781933";
-const id = "737523611977";
+// const id = "692750504407";
+// const id = "735668072007";
 
 async function getEventById(id) {
   const apiUrl = `https://www.eventbriteapi.com/v3/events/${id}/`;
@@ -28,8 +28,10 @@ async function getEventById(id) {
 }
 
 function EventDetail({}) {
+  const { id } = useParams();
   const [event, setEvent] = useState({});
   const [venue, setVenue] = useState({});
+  const [posts, setPosts] = useState([]);
   const eventId = id;
 
   useEffect(() => {
@@ -78,23 +80,6 @@ function EventDetail({}) {
     return `${startDateString} · ${startTime} - ${endTime} ${timeZone}`;
   }
 
-  const [showMore, setShowMore] = useState(false);
-  const handleShowMoreClick = () => {
-    setShowMore(!showMore);
-  };
-
-  const descriptionRef = useRef(null);
-  const [isDescriptionLong, setIsDescriptionLong] = useState(false);
-
-  useEffect(() => {
-    if (descriptionRef.current) {
-      const lineHeight = parseInt(window.getComputedStyle(descriptionRef.current).lineHeight, 10);
-      const actualLines = descriptionRef.current.clientHeight / lineHeight;
-      
-      setIsDescriptionLong(actualLines > 3);
-    }
-  }, [event.description]);
-
   function formatVenueAddress(venue) {
     let addressParts = [];
     if (venue.name) {
@@ -123,10 +108,43 @@ function EventDetail({}) {
         }
     }
     return addressParts.join(' ');
+  }
+
+// posts
+useEffect(() => {
+  displayPostForEvent(eventId)
+    .then(posts => {
+      setPosts(posts);
+    })
+    .catch(error => {
+      console.error('Error fetching posts for event', error);
+    });
+}, [eventId]);
+
+const postsForEvent = async (id) => {
+  try {
+    const response = await axios.get(`http://localhost:4000/post/event/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error to get the postlist");
+  }
 }
+
+const displayPostForEvent = async (id) => {
+  try {
+    const posts = await postsForEvent(id);
+    return posts;
+  }
+  catch(error) {
+    console.log(error);
+    throw new Error("Error to display the post");
+  }
+} 
 
 
   return (
+    <div className='outer-container'>
     <div className="event-container">
       <img className="event-image" src={event.logo && event.logo.url} alt="Event Image" />
       <div className="event-details">
@@ -147,22 +165,14 @@ function EventDetail({}) {
           </div>
         </div>
 
-        {/*我想把它设计成只显示三行的样子，有一个show more可以点击查看所有的event-description，但是没实现。*/}
         <div className="event-description">
           <div className="description-header">
             <DescriptionOutlinedIcon />
             <h2>Description:</h2>
           </div>
-          <div ref={descriptionRef}>
-            {showMore || !isDescriptionLong
-              ? event.description && event.description.text
-              : `${event.description && event.description.text.split('\n').slice(0, 3).join('\n')}...`}
+          <div>
+            {event.description && event.description.text}
           </div>
-          {isDescriptionLong && (
-            <span className="show-more" onClick={handleShowMoreClick}>
-              {showMore ? 'Show less' : 'Show more'}
-            </span>
-          )}
         </div>
 
         <p className="event-ticket">
@@ -177,10 +187,21 @@ function EventDetail({}) {
               'No external ticketing link available.'
           )}
       </p>
-
-        <div className='event-comments'>
+        <div className='event-posts'>
           <CommentOutlinedIcon />
-          <h2>Comments:</h2>
+          <h2>Posts:</h2>
+          </div>
+          {posts.map(post => (
+            <div className="post-container" key={post._id}>
+                <div className="post-header">
+                    <span className="post-title">{post.title}</span>
+                    <span className="post-author">By: {post.firstname} {post.lastname}</span>
+                </div>
+                <div className="post-content">
+                    {post.text}
+                </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
