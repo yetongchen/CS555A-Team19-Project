@@ -374,3 +374,53 @@ section
 .post-input-container button:hover {
   background-color: #f4b070;
 }
+
+
+
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;          
+  background-color: #f7f8fc; 
+}
+
+
+.user-profile img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
+
+
+.user-profile h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;            
+}
+
+
+.user-profile p {
+  font-size: 18px;
+  color: gray;
+  margin-bottom: 8px;     
+}
+
+
+.user-profile button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007BFF;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 20px;       
+  transition: background-color 0.3s; 
+}
+
+.user-profile button:hover {
+  background-color: #0056b3; 
+}
