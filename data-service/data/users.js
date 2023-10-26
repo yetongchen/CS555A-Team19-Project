@@ -2,8 +2,6 @@ import { users } from "../config/mongoCollections.js";
 
 export const createUser = async (name, email, _id) => {
   const userCollection = await users();
-  //fix later
-  // password = await bcrypt.hash(password, saltRounds);
   let usernameDuplication = await userCollection.findOne({
     email: email,
   });
