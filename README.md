@@ -91,27 +91,45 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    git clone https://github.com/yetongchen/CS555A-Team19-Project.git
    ```
+2. Install MongoDB
 
-### Installation
+### Run data service
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Install NPM packages
-   ```sh
-   npm install
-   ```
-
+1. Go to the data-service directory
+    ```sh
+      cd data-service
+    ```
+2. Install NPM packages
+    ```sh
+      npm install
+    ```
+3. Run
+    ```sh
+      npm start
+    ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Run react service
+
+1. Go to the data-service directory
+    ```sh
+      cd react-service
+    ```
+2. Install NPM packages
+    ```sh
+      npm install
+    ```
+3. Run
+    ```sh
+      npm start
+    ```
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
 
-Run npm start in terminal
 
-```sh
-npm run start
-```
 
 <!-- Mastering this application becomes achievable by following the steps outlined below
 
