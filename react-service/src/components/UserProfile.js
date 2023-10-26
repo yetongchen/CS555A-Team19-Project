@@ -14,6 +14,9 @@ function UserProfile() {
 
   const auth = getAuth();
 
+
+
+
   useEffect(() => {
     async function fetchUserData() {
       try {
@@ -21,12 +24,21 @@ function UserProfile() {
         if (user) {
           const userId = user.uid;
           const response = await axios.get(`/users/${userId}`);
-          setUserInfo(response.data);
-
+          const userData = response.data;
+  
+          setUserInfo({
+            name: userData.name,
+            email: userData.email
+          });
+  
+          // 设置评论
           axios.get(`/api/user/${userId}`).then(response => {
             setUserComments(response.data.map(post => post.text));
             setFilteredComments(response.data.map(post => post.text));
           });
+  
+          // 设置用户保存的活动
+          setSavedEvents(userData.events);
         }
       } catch (e) {
         console.log(e);
@@ -34,6 +46,9 @@ function UserProfile() {
     }
     fetchUserData();
   }, [auth]);
+
+
+
 
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
@@ -43,6 +58,9 @@ function UserProfile() {
   };
 
   const currentComments = filteredComments.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+
+
 
   return (
     <div className='container'>
