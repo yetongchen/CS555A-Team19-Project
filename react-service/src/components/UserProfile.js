@@ -90,7 +90,7 @@ function UserProfile() {
             />
           </Tabs.TabPane>
           
-          <Tabs.TabPane tab="Collections" key="2">
+          <Tabs.TabPane tab="Comments" key="2">
             <List
               dataSource={savedEvents}
               renderItem={(event, index) => (
