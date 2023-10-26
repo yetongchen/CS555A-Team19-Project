@@ -66,10 +66,14 @@ const Login = () => {
             <Google onClick={handleGoogleSignIn} />
           </div>
         </form>
+
+        {/*
         <button className="google-login-button" onClick={handleGoogleSignIn}>
           <img src={googleLoginImage} alt="Sign in with Google" />
                       
           </button>
+        */}
+        
         <div className="group">
           <a href="#">Forgot Password?</a>
           <a href="/register">Sign Up</a>

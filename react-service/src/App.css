@@ -213,6 +213,7 @@ section
   cursor: pointer;
   color: #dd74ca;
 }
+/*
 .error {
   color: red;
   background-color: rgba(255, 255, 255, 0.2);
@@ -255,7 +256,7 @@ section
 .login .inputBox button.btn:hover {
   background: linear-gradient(0deg, #00b0ff, #2c3c99); 
 }
-
+*/
 
 
 .event-posts {
