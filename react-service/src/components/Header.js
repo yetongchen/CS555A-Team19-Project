@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const Header = () => {
     const [user, setUser] = useState(null);
-    const auth = getAuth();
+    const auth = getAuth(); // 获取 Firebase Auth 的实例
     const [userInfo, setUserInfo] = useState(null);  // 新状态来存储从你的后端获取的用户信息
 
     useEffect(() => {
