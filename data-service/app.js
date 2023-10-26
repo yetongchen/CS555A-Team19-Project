@@ -4,6 +4,8 @@ import session from 'express-session';
 import configRoutes from "./routes/index.js";
 import cors from 'cors';
 
+app.set('view engine', 'ejs');
+
 app.use(express.json());
 app.use(cors({
   origin: 'http://localhost:3000',  // 这里需要替换为您的前端应用的 URL
