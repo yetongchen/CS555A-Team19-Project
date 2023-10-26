@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import '../App.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { doSignInWithEmailAndPassword } from '../firebase/FirebaseFunctions';
-import firebaseApp, { googleAuthProvider } from '../firebase/Firebase';
-import { getAuth, signInWithPopup } from 'firebase/auth';
+import firebaseApp, { googleAuthProvider } from '../firebase/firebase';
 import googleLoginImage from '../images/google_login.png';
-import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { Google } from "@mui/icons-material";
 import axios from "axios";
@@ -68,7 +66,7 @@ const Login = () => {
             <Google onClick={handleGoogleSignIn} />
           </div>
         </form>
-        <button className="google-login-button" onClick={handleGoogleLogin}>
+        <button className="google-login-button" onClick={handleGoogleSignIn}>
           <img src={googleLoginImage} alt="Sign in with Google" />
                       
           </button>

@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, List, Pagination, Input } from 'antd';
-import { AuthContext } from "../firebase/Auth";
-import { getPostByUserId } from '../../data-service/data/postData';
+import { getAuth } from "firebase/auth";
 
 
 function UserProfile() {
-  const { currentUser } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState({});
   const [userComments, setUserComments] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
@@ -14,25 +12,28 @@ function UserProfile() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
-  
+  const auth = getAuth();
+
   useEffect(() => {
     async function fetchUserData() {
       try {
-        if (currentUser) {
-          const userId = currentUser.uid;
+        const user = auth.currentUser;
+        if (user) {
+          const userId = user.uid;
           const response = await axios.get(`/users/${userId}`);
           setUserInfo(response.data);
 
-          const userPosts = await getPostByUserId(userId);
-          setUserComments(userPosts.map(post => post.text));
-          setFilteredComments(userPosts.map(post => post.text));
+          axios.get(`/api/user/${userId}`).then(response => {
+            setUserComments(response.data.map(post => post.text));
+            setFilteredComments(response.data.map(post => post.text));
+          });
         }
       } catch (e) {
         console.log(e);
       }
     }
     fetchUserData();
-  }, [currentUser]);
+  }, [auth]);
 
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
