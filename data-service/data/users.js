@@ -9,7 +9,9 @@ export const createUser = async (name, email, _id) => {
   const newUser = {
     _id: _id,
     name: name,
-    email: email
+    email: email,
+    posts: [],
+    events: []
   };
   const newInsertInformation = await userCollection.insertOne(newUser);
   if (newInsertInformation.acknowledged != true) throw "Insert failed!";
