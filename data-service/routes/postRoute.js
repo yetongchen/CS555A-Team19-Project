@@ -44,7 +44,6 @@ router.route("/new").post(async (req, res) => {
     let lastname = checkLastname(req.body.lastname);
     let title = checkTitle(req.body.title);
     let text = checkText(req.body.text);
-    let _id = req.body.uid;
 
     let result = await createPost(
       user_id,
@@ -52,8 +51,7 @@ router.route("/new").post(async (req, res) => {
       firstname,
       lastname,
       title,
-      text,
-      _id
+      text
     );
 
     console.log(result);
