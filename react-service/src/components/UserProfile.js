@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, List, Pagination, Input } from 'antd';
+import { Card, List, Pagination, Input, Tabs } from 'antd';
 import { getAuth } from "firebase/auth";
 
 
@@ -63,38 +63,47 @@ function UserProfile() {
 
 
   return (
-    <div className='container'>
-      <Card title="User Profile">
-        <p>Name: {userInfo.name}</p>
-        <p>Email: {userInfo.email}</p>
-      </Card>
-
-      <Card title="User Comments">
-        <Input placeholder="Search comments" onChange={handleSearch} />
-        <List
-          dataSource={currentComments}
-          renderItem={(comment, index) => (
-            <List.Item key={index}>{comment}</List.Item>
-          )}
-        />
-        <Pagination 
-          current={currentPage} 
-          total={filteredComments.length} 
-          pageSize={pageSize} 
-          onChange={page => setCurrentPage(page)} 
-        />
-      </Card>
-
-      <Card title="Saved Events">
-        <List
-          dataSource={savedEvents}
-          renderItem={(event, index) => (
-            <List.Item key={index}>{event}</List.Item>
-          )}
-        />
-      </Card>
+    <div className='user-profile-container'>
+      <div className="user-profile-sidebar">
+        <div className="user-profile">
+          <h2>{userInfo.name}</h2>
+          <p>{userInfo.email}</p>
+          <button>Edit Profile</button>
+        </div>
+      </div>
+      
+      <div className="user-profile-content">
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="Events" key="1">
+            <Input placeholder="Search comments" onChange={handleSearch} />
+            <List
+              dataSource={currentComments}
+              renderItem={(comment, index) => (
+                <List.Item key={index}>{comment}</List.Item>
+              )}
+            />
+            <Pagination 
+              current={currentPage} 
+              total={filteredComments.length} 
+              pageSize={pageSize} 
+              onChange={page => setCurrentPage(page)} 
+            />
+          </Tabs.TabPane>
+          
+          <Tabs.TabPane tab="Collections" key="2">
+            <List
+              dataSource={savedEvents}
+              renderItem={(event, index) => (
+                <List.Item key={index}>{event}</List.Item>
+              )}
+            />
+          </Tabs.TabPane>
+        </Tabs>
+      </div>
     </div>
-  );
+);
 }
+
+
 
 export default UserProfile;
