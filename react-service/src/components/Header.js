@@ -5,19 +5,42 @@ import { NavLink } from "react-router-dom";
 import { AppBar, Toolbar, Typography, IconButton, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import axios from 'axios';
 
 const Header = () => {
     const [user, setUser] = useState(null);
     const auth = getAuth();
+    const [userInfo, setUserInfo] = useState(null);  // 新状态来存储从你的后端获取的用户信息
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, setUser);
         return () => unsubscribe();
     }, [auth]);
 
+    // 新的 useEffect 钩子来获取用户信息
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            if (user) {
+                try {
+                    const response = await axios.get(`http://localhost:4000/users/${user.uid}`);
+                    setUserInfo(response.data);
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                }
+            }else {
+              // 如果用户未登录，清除 userInfo
+              setUserInfo(null);
+            }
+        };
+
+        fetchUserInfo();
+    }, [user]);
+
     const handleLogout = () => {
         signOut(auth).then(() => {
             console.log('User signed out');
+            // 清除 userInfo 当用户退出登录
+            setUserInfo(null);
         }).catch((error) => {
             console.error('Sign out error:', error);
         });
@@ -47,6 +70,11 @@ const Header = () => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Events
                     </Typography>
+                    {userInfo && (
+                        <Typography variant="body1" component="span">
+                            Welcome, {userInfo.name}
+                        </Typography>
+                    )}
                     <Button color="inherit" onClick={user ? handleLogout : null}>
                         <NavLink to={user ? "/" : "/login"}>{user ? "Logout" : "Login"}</NavLink>
                     </Button>
