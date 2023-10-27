@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
+import { doSignInWithEmailAndPassword } from '../firebase/FirebaseFunctions';
+import firebaseApp, { googleAuthProvider } from '../firebase/firebase';
+import googleLoginImage from '../images/google_login.png';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { Google } from "@mui/icons-material";
 import axios from "axios";
@@ -46,10 +49,10 @@ const Login = () => {
         <h2>Sign In</h2>
         <form onSubmit={handleLogin}>
           <div className="inputBox">
-            <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div className="inputBox">
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
           <div className="inputBox">
             <input type="submit" value="Login" id="btn" />
@@ -63,6 +66,14 @@ const Login = () => {
             <Google onClick={handleGoogleSignIn} />
           </div>
         </form>
+
+        {/*
+        <button className="google-login-button" onClick={handleGoogleSignIn}>
+          <img src={googleLoginImage} alt="Sign in with Google" />
+                      
+          </button>
+        */}
+        
         <div className="group">
           <a href="#">Forgot Password?</a>
           <a href="/register">Sign Up</a>

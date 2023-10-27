@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {AuthProvider} from './firebase/Auth';
 import Login from './components/Login';
 import SignUpPage from './components/SignUpPage';
 import EventDetail from './components/EventDetail';
 import EventOfDate from './components/EventOfDate';
 import Header from './components/Header';
 import Home from './components/Home';
+import UserProfile from './components/UserProfile';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/firebase";
 import { useState } from "react";
@@ -22,14 +24,15 @@ function App() {
       setUser(null);
     }
   });
+
   return (
-    <Router>   
-     <div className="App">
-      <Header/>
-      <div className='App-body'>
-        <Routes>
-          <Route path='/' element={<Home />}/>
-          <Route
+    <Router>
+      <div className="App">
+        <Header />
+        <div className='App-body'>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route
               path="/login"
               element={user ? <Navigate to={"/"} /> : <Login />}
             />
@@ -39,9 +42,10 @@ function App() {
               path="/register"
               element={user ? <Navigate to={"/"} /> : <SignUpPage />}
             />
-        </Routes>
-       </div>
-       <footer className='App-footer'></footer>
+            <Route path="/profile" element={<UserProfile />} /> 
+          </Routes>
+        </div>
+        <footer className='App-footer'></footer>
       </div>
     </Router>
   );
