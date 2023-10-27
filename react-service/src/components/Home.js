@@ -77,6 +77,7 @@ const Home = () => {
             <div id = "calendar">
             <div className='calendar-container' style={{display: 'flex', justifyContent:'center'}}>
                 <Calendar onChange={setDate} value={date} onClickDay={()=>{window.open("https://www.eventbrite.com/d/nj--jersey-city/all-events/?page=1&start_date="+date+"&end_date="+date);}}/>
+                {/* onClickDay needs to pass the date value props to eventofDate for retrieving the event ID from file eventId */}
             </div>
             <p className='text-center'>
                 <span className='bold'>SelectedDate:</span>{' '}{date.toDateString()}            

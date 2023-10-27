@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import SignUpPage from './components/SignUpPage';
 import EventDetail from './components/EventDetail';
+import EventOfDate from './components/EventOfDate';
 import Header from './components/Header';
 import Home from './components/Home';
 import { onAuthStateChanged } from "firebase/auth";
@@ -33,6 +34,7 @@ function App() {
               element={user ? <Navigate to={"/"} /> : <Login />}
             />
           <Route path='/events/:id' element={<EventDetail />} />
+          <Route path='/events/date' element={<EventOfDate />} />
           <Route
               path="/register"
               element={user ? <Navigate to={"/"} /> : <SignUpPage />}
