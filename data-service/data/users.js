@@ -2,8 +2,6 @@ import { users } from "../config/mongoCollections.js";
 
 export const createUser = async (name, email, _id) => {
   const userCollection = await users();
-  //fix later
-  // password = await bcrypt.hash(password, saltRounds);
   let usernameDuplication = await userCollection.findOne({
     email: email,
   });
@@ -11,7 +9,9 @@ export const createUser = async (name, email, _id) => {
   const newUser = {
     _id: _id,
     name: name,
-    email: email
+    email: email,
+    posts: [],
+    events: []
   };
   const newInsertInformation = await userCollection.insertOne(newUser);
   if (newInsertInformation.acknowledged != true) throw "Insert failed!";
