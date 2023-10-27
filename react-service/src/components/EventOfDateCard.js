@@ -11,7 +11,7 @@ import "../App.css";
 import axios from "axios";
 import { Grid } from "@mui/material";
 
-const apiKey = "QWGPNXKB6Z7KDVKLMMHK";
+const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
 
 function EventOfDateCard({ eventId }) {
   const [eventData, setEventData] = useState(null);
