@@ -175,7 +175,7 @@ const handleAddPost = async () => {
   return (
     <div className='outer-container'>
     <div className="event-container">
-      <img className="event-image" src={event.logo && event.logo.url} alt="Event Image" />
+      <img className="event-image" src={event.logo && event.logo.original.url} alt="Event Image" />
       <div className="event-details">
         <h1 className="event-name">{event.name && event.name.text}</h1>
 
