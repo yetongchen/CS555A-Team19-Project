@@ -5,9 +5,7 @@ import validation from '../validation/postValidation.js';
 /**
  * @param {String} user_id
  * @param {String} event_id
- * @param {String} firstname
- * @param {String} lastname
- * @param {String} datetime
+ * @param {String} name
  * @param {String} title
  * @param {String} text
  * @param {String} poll_id
@@ -18,16 +16,14 @@ import validation from '../validation/postValidation.js';
 const createPost = async (
     user_id,
     event_id,
-    firstname,
-    lastname,
+    name,
     title,
     text
 ) => {
     //validation
     user_id = validation.checkStringObjectID(user_id);
     //event_id = validation.checkStringObjectID(event_id);
-    firstname = validation.checkFirstname(firstname);
-    lastname = validation.checkLastname(lastname);
+    name = validation.checkUsername(name);
     title = validation.checkTitle(title);
     text = validation.checkText(text);
     
@@ -37,8 +33,7 @@ const createPost = async (
     const postData = {
         user_id: user_id,
         event_id: event_id,
-        firstname: firstname,
-        lastname: lastname,
+        name: name,
         datetime: datetime,
         title: title,
         text: text,
