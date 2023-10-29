@@ -7,6 +7,21 @@ const minTitleLength = 5;
 const maxTextLength = 400;
 const minTextLength = 5;
 
+const checkUsername = (username) => {
+  if (!username) throw "Please provide a username";
+  if (typeof username != "string") throw "username type should be string";
+  username = username.trim().toLowerCase();
+  if (username.length < minNameLength)
+    throw `username length should be at least ${minNameLength} character`;
+  if (username.length > maxNameLength)
+    throw `username length should be less than ${maxNameLength} character`;
+  // check if string contains space
+  //const space = /\s/;
+  //if (space.test(username) == true) throw "username should not contains space";
+
+  return username;
+};
+
 const checkFirstname = (username) => {
   if (!username) throw "Please provide a username";
   if (typeof username != "string") throw "username type should be string";
@@ -57,6 +72,7 @@ const checkText = (text) => {
 };
 
 export default {
+  checkUsername,
   checkFirstname,
   checkLastname,
   checkStringObjectID,

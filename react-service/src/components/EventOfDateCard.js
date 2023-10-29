@@ -9,7 +9,8 @@ import {
 } from "@mui/joy";
 import "../App.css";
 import axios from "axios";
-import { Grid } from "@mui/material";
+import { Grid, Skeleton } from "@mui/material";
+import noImage from "../images/no-image.png";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
 
@@ -29,7 +30,8 @@ function EventOfDateCard({ eventId }) {
         setLoading(false);
       } catch (error) {
         console.error("Error when get event detail", error);
-        throw error;
+        setEventData(undefined);
+        setLoading(false);
       }
     }
     getEventById(eventId);
@@ -37,17 +39,15 @@ function EventOfDateCard({ eventId }) {
 
   if (loading) {
     return (
-      <div>
-        <h1>EventOfDateCard</h1>
-      </div>
-    );
-  } else {
-    return (
-      <Grid item xs={8} sm={8} md={4} lg={3} xl={3}>
-        <Card sx={{ width: 320, height: 320 }}>
+      <Grid item xs={8} sm={8} md={5} lg={4} xl={3}>
+        <Card className="event-by-date-card" sx={{ width: 320, height: 370 }}>
           <div>
-            <Typography level="title-lg">{eventData.name.text}</Typography>
-            <Typography level="body-sm">{eventData.start.local}</Typography>
+            <Typography level="title-lg">
+              <Skeleton sx={{ width: 290, height: 42, animation: "wave" }} />
+            </Typography>
+            <Typography level="body-sm">
+              <Skeleton sx={{ width: 290, height: 18.4, animation: "wave" }} />
+            </Typography>
             <IconButton
               aria-label="bookmark Bahamas Islands"
               variant="plain"
@@ -59,15 +59,15 @@ function EventOfDateCard({ eventId }) {
             </IconButton>
           </div>
           <AspectRatio minHeight="120px" maxHeight="200px">
-            <img src={eventData.logo.original.url} loading="lazy" alt="" />
+            <Skeleton sx={{ width: 290, height: 163, animation: "wave" }} />
           </AspectRatio>
           <CardContent orientation="horizontal">
             <div>
               <Typography level="body-xs">
                 <a>
-                  {eventData.description.text.length <= 70
-                    ? eventData.description.text
-                    : eventData.description.text.substr(0, 70) + "..."}
+                  <Skeleton
+                    sx={{ width: 202.85, height: 64, animation: "wave" }}
+                  />
                 </a>
               </Typography>
             </div>
@@ -78,14 +78,102 @@ function EventOfDateCard({ eventId }) {
               aria-label="Explore Bahamas Islands"
               sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
             >
-              <a
-                href={`/events/${eventId}`}
-                style={{ color: "white" }}
-                target="_blank"
-              >
+              <a href="#" style={{ color: "white" }}>
                 Explore
               </a>
             </Button>
+          </CardContent>
+        </Card>
+      </Grid>
+    );
+  } else {
+    return (
+      <Grid item xs={8} sm={8} md={5} lg={4} xl={3}>
+        <Card className="event-by-date-card" sx={{ width: 320, height: 370 }}>
+          <div>
+            {eventData ? (
+              <Typography level="title-lg">
+                {eventData && eventData.name.text}
+              </Typography>
+            ) : (
+              <Typography level="title-lg">
+                This event has been canceled{" "}
+              </Typography>
+            )}
+
+            {eventData ? (
+              <Typography level="body-sm">{eventData.start.local}</Typography>
+            ) : (
+              <Typography level="title-lg">
+                The date is no longer valid
+              </Typography>
+            )}
+
+            <IconButton
+              aria-label="bookmark Bahamas Islands"
+              variant="plain"
+              color="neutral"
+              size="sm"
+              sx={{ position: "absolute", top: "0.875rem", right: "0.5rem" }}
+            >
+              {/* <BookmarkAdd /> */}
+            </IconButton>
+          </div>
+          <AspectRatio minHeight="120px" maxHeight="200px">
+            {eventData ? (
+              <img
+                src={eventData.logo.original.url}
+                loading="lazy"
+                alt="logo"
+              />
+            ) : (
+              <img src={noImage} loading="lazy" alt="no-image" />
+            )}
+          </AspectRatio>
+
+          <CardContent orientation="horizontal">
+            <div>
+              {eventData ? (
+                <Typography level="body-xs">
+                  <a>
+                    {eventData.description.text.length <= 200
+                      ? eventData.description.text
+                      : eventData.description.text.substr(0, 200) + "..."}
+                  </a>
+                </Typography>
+              ) : (
+                <a>No description available</a>
+              )}
+            </div>
+            {eventData ? (
+              <Button
+                variant="solid"
+                size="md"
+                color="primary"
+                aria-label="Explore Bahamas Islands"
+                sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+              >
+                <a
+                  href={`/events/${eventId}`}
+                  style={{ color: "white" }}
+                  target="_blank"
+                >
+                  Explore
+                </a>
+              </Button>
+            ) : (
+              <Button
+                variant="solid"
+                size="md"
+                color="primary"
+                aria-label="Explore Bahamas Islands"
+                sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+              >
+                <a href={`#`} style={{ color: "white" }}>
+                  Explore
+                </a>
+              </Button>
+            )}
           </CardContent>
         </Card>
       </Grid>
