@@ -107,3 +107,27 @@ export const addPostToUser = async (userId, postId) => {
   }
 };
 
+export const addEventToUser = async (userId, eventId) => {
+  if(!userId) throw 'You must provide an id to search for';
+  if(typeof userId !== 'string' && typeof userId !== 'object') 
+     throw 'Id must be a string or ObjectId';
+  if (userId.trim().length === 0)
+     throw 'id cannot be an empty string or just spaces';
+  userId = userId.trim();
+  if(!eventId) throw 'You must provide an id to search for';
+  if(typeof eventId !== 'string' && typeof eventId !== 'object') 
+     throw 'Id must be a string or ObjectId';
+  if (eventId.trim().length === 0)
+      throw 'id cannot be an empty string or just spaces';
+  eventId = eventId.trim();
+
+  try {
+    const userCollection = await users();
+    const updatedInfo = await userCollection.updateOne({_id: new ObjectId(id)}, { $push: { events: eventId } });
+    if (!updatedInfo)
+      throw `Error: Update failed, could not find a user with id of ${userId}`;
+    return updatedInfo;
+  }catch (error) {
+    throw error;
+  }
+};
