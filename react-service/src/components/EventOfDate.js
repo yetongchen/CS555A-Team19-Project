@@ -5,8 +5,24 @@ import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
 import "../App.css";
 // import getEventIds from "../../../data-service/eventId/EventID.js";
 import EventOfDateCard from "./EventOfDateCard";
+import axios from "axios";
 
-const event_ids = [
+const getEventIDs = async () => {
+  const { data } = await axios.post("http://localhost:4000/eventIDs", {
+    pages: 3,
+    date: "2023-10-31",
+    state: "NJ",
+    city: "hoboken",
+  });
+
+  console.log(data.eventIDs);
+
+  return data.eventIDs;
+};
+
+const event_ids = await getEventIDs();
+/*
+[
   698662738057, 691696692427, 476192744317, 502844430227, 639071970467,
   677631703667, 624779902507, 728981502297, 706738683427, 737622016307,
   491089340437, 626746825627, 462627941627, 684348904997, 691785989517,
@@ -48,6 +64,7 @@ const event_ids = [
   507992899437, 708694242557, 718529299477, 723738710967, 146584912419,
   623101632757, 707351847417, 682154120337, 719285852347, 681029897757,
 ];
+*/
 
 function EventOfDate() {
   const [searchParams] = useSearchParams();
