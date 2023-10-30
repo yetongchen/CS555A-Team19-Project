@@ -51,7 +51,7 @@ const event_ids = [
 
 function EventOfDate() {
   const [searchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(searchParams.get("page"));
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page")));
 
   let cardsData = null;
   let pageDisplay = 20;
@@ -71,8 +71,8 @@ function EventOfDate() {
   //   useEffect(() => {
   //     setCurrentPage(searchParams.get("page"));
   //   }, [currentPage]);
-
   //   require to add useEffect when the event_ids changed
+
   cardsData =
     event_ids &&
     event_ids
