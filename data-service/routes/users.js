@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, getUserById } from "../data/users.js";
+import { createUser, getUserById, updateUserPatch } from "../data/users.js";
 import { users } from "../config/mongoCollections.js";
 
 const router = express.Router();
@@ -35,7 +35,8 @@ router.route("/logout").get(async (req, res) => {
   res.json({ Authenticated: "logout" });
 });
 
-router.route("/:userId").get(async (req, res) => {
+router.route("/:userId")
+.get(async (req, res) => {
   try {
     const userInfo = await getUserById(req.params.userId);
     console.log(userInfo);
@@ -43,8 +44,30 @@ router.route("/:userId").get(async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+})
+.patch(async (req, res) => {
+  let userInfo = req.body;
+  if (!userInfo || Object.keys(userInfo).length === 0) {
+    return res
+      .status(400)
+      .json({error: 'There are no fields in the request body'});
+  }
+  try{
+    req.params.userId = req.params.userId.trim();
+      if(req.params.userId.length === 0) throw 'Id cannot be an empty string or just spaces';
+      if(typeof req.params.userId !== 'string' && typeof req.params.userId !== 'object') 
+        throw 'Id must be a string or ObjectId';
+      if(userInfo.name){
+        if(typeof userInfo.name !== 'string') throw 'Name must be a string';
+        if (userInfo.name.trim().length === 0)
+          throw 'Name cannot be an empty string or just spaces';
+        userInfo.name = userInfo.name.trim();
+      }
+       const updatedUser = await updateUserPatch(req.params.userId, userInfo);
+       res.json(updatedUser);
+    } catch (e) {
+      res.status(400).json({ error: e });
+    }
 });
-
-
 
 export default router;
