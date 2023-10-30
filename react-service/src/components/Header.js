@@ -24,6 +24,7 @@ const Header = () => {
                 try {
                     const response = await axios.get(`http://localhost:4000/users/${user.uid}`);
                     setUserInfo(response.data);
+                    console.log(response.data);
                 } catch (error) {
                     console.error('Error fetching user info:', error);
                 }
