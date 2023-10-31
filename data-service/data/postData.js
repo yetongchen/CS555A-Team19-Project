@@ -21,7 +21,7 @@ const createPost = async (
     text
 ) => {
     //validation
-    user_id = validation.checkStringObjectID(user_id);
+    //user_id = validation.checkStringObjectID(user_id);
     //event_id = validation.checkStringObjectID(event_id);
     name = validation.checkUsername(name);
     title = validation.checkTitle(title);
