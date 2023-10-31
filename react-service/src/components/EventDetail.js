@@ -5,7 +5,8 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import axios from "axios";
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+
 import "../App.css";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
