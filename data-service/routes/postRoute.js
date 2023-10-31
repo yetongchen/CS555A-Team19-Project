@@ -4,6 +4,7 @@ import postValidation from "../validation/postValidation.js";
 
 const checkFirstname = postValidation.checkFirstname;
 const checkLastname = postValidation.checkLastname;
+const checkUsername = postValidation.checkUsername;
 const checkStringObjectID = postValidation.checkStringObjectID;
 const checkTitle = postValidation.checkTitle;
 const checkText = postValidation.checkText;
@@ -40,16 +41,14 @@ router.route("/new").post(async (req, res) => {
     console.log(req.body);
     let user_id = checkStringObjectID(req.body.user_id);
     let event_id = req.body.event_id;
-    let firstname = checkFirstname(req.body.firstname);
-    let lastname = checkLastname(req.body.lastname);
+    let name = checkUsername(req.body.name);
     let title = checkTitle(req.body.title);
     let text = checkText(req.body.text);
 
     let result = await createPost(
       user_id,
       event_id,
-      firstname,
-      lastname,
+      name,
       title,
       text
     );

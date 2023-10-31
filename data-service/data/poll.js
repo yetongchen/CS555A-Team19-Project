@@ -86,10 +86,13 @@ const vote = async (user_id, poll_id, option) => {
 
   const pollCollection = await polls();
 
+  let pushObj = {};
+  pushObj["options." + option] = user_id;
+
   let poll = await pollCollection.updateOne(
     { _id: new ObjectId(poll_id) },
     {
-      $push: { options: { option: user_id } },
+      $push: pushObj,
     }
   );
 
@@ -108,17 +111,17 @@ const vote = async (user_id, poll_id, option) => {
 const update = async (_org_id, _poll_id, _title, _description, _options) => {
   const pollsData = await polls();
   const poll = await pollsData.findOne({
-    poll_id: new ObjectId(_poll_id),
+    poll_id: _poll_id,
     org_id: _org_id,
   });
-  console.log(poll);
+  
   let { title, description, options } = poll;
   _title = _title ? _title : title;
   _description = _description ? _description : description;
   _options = _options ? _options : options;
 
   const updateInfo = await pollsData.findOneAndUpdate(
-    { poll_id: new ObjectId(_poll_id), org_id: _org_id },
+    { poll_id: _poll_id, org_id: _org_id },
     {
       $set: {
         title: _title,
