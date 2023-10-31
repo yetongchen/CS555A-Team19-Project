@@ -188,13 +188,11 @@ function EventDetail({}) {
   };
 
   // add post
-  const currentEventID = id;
   const handleAddPost = async () => {
     try {
       const postData = {
         user_id: userInfo._id,
-        event_id: currentEventID,
-        // datetime: new Date().toISOString(),
+        event_id: eventId,
         name: userInfo.name,
         title: newPostTitle,
         text: newPostContent,
@@ -218,11 +216,7 @@ function EventDetail({}) {
       setNewPostContent("");
       return newPost;
     } catch (error) {
-      console.error(
-        "Detailed error:",
-        error.response ? error.response.data : error
-      );
-      throw new Error("Error to add the post");
+      console.log(error);
     }
   };
 
