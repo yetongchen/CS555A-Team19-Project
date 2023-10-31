@@ -5,6 +5,8 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import axios from "axios";
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+
 import "../App.css";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
@@ -32,9 +34,37 @@ function EventDetail({}) {
   const [event, setEvent] = useState({});
   const [venue, setVenue] = useState({});
   const [posts, setPosts] = useState([]);
+  const [user, setUser] = useState(null);
+  const auth = getAuth(); // 获取 Firebase Auth 的实例
+  const [userInfo, setUserInfo] = useState(null);  // 新状态来存储从你的后端获取的用户信息
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
   const eventId = id;
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
+  }, [auth]);
+
+  // 新的 useEffect 钩子来获取用户信息
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+        if (user) {
+            try {
+                const response = await axios.get(`http://localhost:4000/users/${user.uid}`);
+                setUserInfo(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        }else {
+          // 如果用户未登录，清除 userInfo
+          setUserInfo(null);
+        }
+    };
+
+    fetchUserInfo();
+}, [user]);
 
   useEffect(() => {
     getEventById(eventId)
@@ -62,8 +92,7 @@ function EventDetail({}) {
       });
       return response.data;
     } catch (error) {
-      console.error("Error when get venue detail", error);
-      throw error;
+      console.log(error);
     }
   }
 
@@ -144,7 +173,6 @@ function EventDetail({}) {
       return response.data;
     } catch (error) {
       console.log(error);
-      throw new Error("Error to get the postlist");
     }
   };
 
@@ -154,19 +182,16 @@ function EventDetail({}) {
       return posts;
     } catch (error) {
       console.log(error);
-      throw new Error("Error to display the post");
     }
   };
 
   // add post
-  const currentEventID = id;
   const handleAddPost = async () => {
     try {
       const postData = {
-        user_id: "63ddcbc4b3ffe78cebcbb5a4",
-        event_id: currentEventID,
-        firstname: "cong",
-        lastname: "guo",
+        user_id: userInfo._id,
+        event_id: eventId,
+        name: userInfo.name,
         title: newPostTitle,
         text: newPostContent,
       };
@@ -176,21 +201,30 @@ function EventDetail({}) {
         postData
       );
 
-      if (response.status !== 200) {
-        console.error("Error from server:", response.statusText);
-        throw new Error("Error from server: " + response.statusText);
-      }
-
       const newPost = response.data;
+
+      let updatedPosts = await postsForEvent(id);
+      setPosts(updatedPosts);
+      setNewPostTitle("");
+      setNewPostContent("");
       return newPost;
     } catch (error) {
-      console.error(
-        "Detailed error:",
-        error.response ? error.response.data : error
-      );
-      throw new Error("Error to add the post");
+      console.log(error);
     }
   };
+
+  // formate posts date
+  const formatDate = (datetime) => {
+    const date = new Date(datetime);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+  }
+  
 
   return (
     <div className="outer-container">
@@ -253,7 +287,7 @@ function EventDetail({}) {
               <div className="post-header">
                 <span className="post-title">{post.title}</span>
                 <span className="post-author">
-                  By: {post.firstname} {post.lastname}
+                  {formatDate(post.datetime)} By: {post.name} 
                 </span>
               </div>
               <div className="post-content">{post.text}</div>
