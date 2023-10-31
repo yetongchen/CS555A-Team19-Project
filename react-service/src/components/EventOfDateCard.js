@@ -25,6 +25,7 @@ function EventOfDateCard({ eventId }) {
       try {
         const response = await axios.get(apiUrl);
         data = response.data;
+        console.log(data);
         if (data) data.start.local = data.start.local.replace("T", " ");
         setEventData(data);
         setLoading(false);
@@ -120,7 +121,7 @@ function EventOfDateCard({ eventId }) {
             </IconButton>
           </div>
           <AspectRatio minHeight="120px" maxHeight="200px">
-            {eventData &&  eventData.logo? (
+            {eventData && eventData.logo ? (
               <img
                 src={eventData.logo.original.url}
                 loading="lazy"

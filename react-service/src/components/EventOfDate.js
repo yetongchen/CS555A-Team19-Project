@@ -70,7 +70,7 @@ function EventOfDate() {
       try {
         let res = null;
         const { data } = await axios.post("http://localhost:4000/eventIDs", {
-          pages: 3,
+          pages: 5,
           date,
           state,
           city,
