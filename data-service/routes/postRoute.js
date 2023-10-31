@@ -48,7 +48,7 @@ router.route("/new").post(async (req, res) => {
     // let _id = req.body.uid;
 
     let result = await createPost(
-      user_id,
+      req.body.user_id,
       event_id,
       name,
       title,
