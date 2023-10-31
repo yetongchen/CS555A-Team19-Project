@@ -39,7 +39,7 @@ router.get("/", async (req, res) => {
 router.route("/new").post(async (req, res) => {
   try {
     console.log(req.body);
-    let user_id = checkStringObjectID(req.body.user_id);
+    //let user_id = checkStringObjectID(req.body.user_id);
     let event_id = req.body.event_id;
     let name = checkUsername(req.body.name);
     let title = checkTitle(req.body.title);
