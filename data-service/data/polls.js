@@ -114,7 +114,7 @@ const update = async (_org_id, _poll_id, _title, _description, _options) => {
     poll_id: _poll_id,
     org_id: _org_id,
   });
-  
+
   let { title, description, options } = poll;
   _title = _title ? _title : title;
   _description = _description ? _description : description;
@@ -163,4 +163,4 @@ const remove = async (user_id, poll_id) => {
 //   console.log(error);
 // }
 
-export { create, get, getAll, getByEventId, vote, update, remove };
+export default { create, get, getAll, getByEventId, vote, update, remove };
