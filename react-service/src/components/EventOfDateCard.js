@@ -120,7 +120,7 @@ function EventOfDateCard({ eventId }) {
             </IconButton>
           </div>
           <AspectRatio minHeight="120px" maxHeight="200px">
-            {eventData ? (
+            {eventData &&  eventData.logo? (
               <img
                 src={eventData.logo.original.url}
                 loading="lazy"

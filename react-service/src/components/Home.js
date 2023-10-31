@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import { motion, AnimatePresence } from "framer-motion";
 import "../styles/Home.css";
-import EventOfDate from "./EventOfDate";
+import { useGeolocated } from "react-geolocated";
+import axios from "axios";
+
 import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 
 const Home = () => {
   const [date, setDate] = useState(new Date());
   const [state, setState] = useState("");
-  const navigate = useNavigate();
+  const [coordsInfo, setCoords] = useState(undefined);
 
   const posters = [
     "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F591759059%2F226667758798%2F1%2Foriginal.20230906-185327?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C2160%2C1080&s=99cc3629ad04e9bf79a60e74c70a170a",
@@ -73,23 +75,45 @@ const Home = () => {
     );
   };
 
+  // To get the current location
+  const navigate = useNavigate();
+  let { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
+    positionOptions: {
+      enableHighAccuracy: false,
+    },
+    userDecisionTimeout: 5000,
+  });
+
+  // When the user only select state and click the calendlar, it will fire to events/date/?page=1&date=${dateParms}&state=${state}
+  // When the user use geolocation and click the calendlar, it will fire to `events/date/?page=1&date=${dateParms}&state=${coordsInfo.nearest[0].prov}&city=${coordsInfo.nearest[0].city}
   const hadleClickDate = (event, value) => {
-    // console.log(event);
-    // console.log(event.getDate(), event.getUTCMonth() + 1, event.getFullYear());
-    if (state) {
-      let dateParms = `${event.getFullYear()}-${
-        event.getUTCMonth() + 1
-      }-${event.getDate()}`;
+    let dateParms = `${event.getFullYear()}-${
+      event.getUTCMonth() + 1
+    }-${event.getDate()}`;
+
+    if (coordsInfo) {
+      let state = coordsInfo.nearest[0].prov[0];
+      let city = coordsInfo.nearest[0].city[0];
+      state = state ? state.replace(/\s+/g, '-') : state;
+      city = city ? city.replace(/\s+/g, '-') : city;
+      console.log(state, city);
+      navigate(
+        `events/date/?page=1&date=${dateParms}&state=${state}&city=${city}`
+      );
+      setState(coordsInfo.nearest[0].prov);
+    } else if (state) {
       navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
-    }else{
-        navigate("/")
+    } else {
+      navigate("/");
     }
   };
 
+  // To handle state drop down list
   const handleChange = (event) => {
     setState(event.target.value);
   };
 
+  // A list of states and their abbr.
   const statesList = {
     AL: "Alabama",
     AK: "Alaska",
@@ -152,6 +176,7 @@ const Home = () => {
     WY: "Wyoming",
   };
 
+  // Get all the keys from stateList and create components for each state
   const keys = Object.keys(statesList);
   const statesData = keys.map((ele) => {
     return (
@@ -160,6 +185,29 @@ const Home = () => {
       </MenuItem>
     );
   });
+
+  useEffect(() => {
+    if (coords) {
+      async function fetchDatabyId() {
+        try {
+          let data = await axios
+            .get("http://localhost:4000/geo", {
+              params: {
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+              },
+            })
+            .then((res) => {
+              let geodata = res.data.geodata;
+              setCoords(geodata);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      fetchDatabyId();
+    }
+  }, [coords]);
 
   return (
     <div className="main">
