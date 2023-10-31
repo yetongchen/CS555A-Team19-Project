@@ -211,6 +211,11 @@ function EventDetail({}) {
       }
 
       const newPost = response.data;
+
+      let updatedPosts = await postsForEvent(id);
+      setPosts(updatedPosts);
+      setNewPostTitle("");
+      setNewPostContent("");
       return newPost;
     } catch (error) {
       console.error(
