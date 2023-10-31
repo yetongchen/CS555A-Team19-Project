@@ -5,6 +5,7 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import axios from "axios";
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import "../App.css";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
@@ -32,9 +33,37 @@ function EventDetail({}) {
   const [event, setEvent] = useState({});
   const [venue, setVenue] = useState({});
   const [posts, setPosts] = useState([]);
+  const [user, setUser] = useState(null);
+  const auth = getAuth(); // 获取 Firebase Auth 的实例
+  const [userInfo, setUserInfo] = useState(null);  // 新状态来存储从你的后端获取的用户信息
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
   const eventId = id;
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
+  }, [auth]);
+
+  // 新的 useEffect 钩子来获取用户信息
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+        if (user) {
+            try {
+                const response = await axios.get(`http://localhost:4000/users/${user.uid}`);
+                setUserInfo(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        }else {
+          // 如果用户未登录，清除 userInfo
+          setUserInfo(null);
+        }
+    };
+
+    fetchUserInfo();
+}, [user]);
 
   useEffect(() => {
     getEventById(eventId)
@@ -163,10 +192,10 @@ function EventDetail({}) {
   const handleAddPost = async () => {
     try {
       const postData = {
-        user_id: "63ddcbc4b3ffe78cebcbb5a4",
+        user_id: userInfo._id,
         event_id: currentEventID,
-        firstname: "cong",
-        lastname: "guo",
+        // datetime: new Date().toISOString(),
+        name: userInfo.name,
         title: newPostTitle,
         text: newPostContent,
       };
@@ -253,7 +282,7 @@ function EventDetail({}) {
               <div className="post-header">
                 <span className="post-title">{post.title}</span>
                 <span className="post-author">
-                  By: {post.firstname} {post.lastname}
+                  {post.datetime} By: {post.name} 
                 </span>
               </div>
               <div className="post-content">{post.text}</div>
