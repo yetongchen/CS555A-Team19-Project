@@ -1,57 +1,97 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams, redirect, Link } from "react-router-dom";
+import { useSearchParams, redirect, Link } from "react-router-dom";
 import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
-// import { ArrowBackIcon, ArrowForwardIcon } from "@mui/icons-material";
 import "../App.css";
-// import getEventIds from "../../../data-service/eventId/EventID.js";
 import EventOfDateCard from "./EventOfDateCard";
 import axios from "axios";
 
-const getEventIDs = async () => {
-  const { data } = await axios.post("http://localhost:4000/eventIDs", {
-    pages: 1,
-    date: "2023-10-31",
-    state: "NJ",
-    city: "hoboken",
-  });
+// Jason template
+// const getEventIDs = async () => {
+//   const { data } = await axios.post("http://localhost:4000/eventIDs", {
+//     pages: 10,
+//     date: "2023-10-31",
+//     state: "NJ",
+//     city: "hoboken",
+//   });
 
-  return data.eventIDs;
-};
+//   return data.eventIDs;
+// };
 
-const event_ids = await getEventIDs();
+// const event_ids = await getEventIDs();
 
 function EventOfDate() {
   const [searchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(searchParams.get("page"));
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page"))
+  );
+  const [lastPage, setLastPage] = useState(undefined);
+  const [cardsData, setCardsData] = useState(null);
 
-  let cardsData = null;
+  let date = searchParams.get("date");
+  let city = searchParams.get("city");
+  let state = searchParams.get("state");
+  state = state ? state.replace(/\s+/g, "-") : state;
+  city = city ? city.replace(/\s+/g, "-") : city;
+  let event_ids = null;
   let pageDisplay = 20;
-  let lastPage = Math.ceil(event_ids.length / pageDisplay);
-  console.log(lastPage);
 
   const handleChange = (event, value) => {
     setCurrentPage(value);
     if (currentPage < 0) {
-      return redirect(`events/date/?page=1`);
+      if (city) {
+        return redirect(
+          `events/date/?page=1&date=${date}&state=${state}&city=${city}`
+        );
+      } else {
+        return redirect(`events/date/?page=1&date=${date}&state=${state}`);
+      }
     } else if (currentPage > lastPage) {
-      return redirect(`events/date/?page=${lastPage}`);
+      if (city) {
+        return redirect(
+          `events/date/?page=${lastPage}&date=${date}&state=${state}&city=${city}`
+        );
+      } else {
+        return redirect(
+          `events/date/?page=${lastPage}&date=${date}&state=${state}`
+        );
+      }
     }
-    return redirect(`events/date/?page=${value}`);
+    if (city) {
+      return redirect(
+        `events/date/?page=${value}&date=${date}&state=${state}&city=${city}`
+      );
+    } else {
+      return redirect(`events/date/?page=${value}&date=${date}&state=${state}`);
+    }
   };
 
-  //   useEffect(() => {
-  //     setCurrentPage(searchParams.get("page"));
-  //   }, [currentPage]);
+  useEffect(() => {
+    async function getEventIDs() {
+      try {
+        let res = null;
+        const { data } = await axios.post("http://localhost:4000/eventIDs", {
+          pages: 3,
+          date,
+          state,
+          city,
+        });
+        event_ids = data.eventIDs;
+        res =
+          event_ids &&
+          event_ids
+            .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
+            .map((id) => {
+              return <EventOfDateCard eventId={id} key={id} />;
+            });
+        setCardsData(res);
+        setLastPage(Math.ceil(event_ids.length / pageDisplay));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getEventIDs();
+  }, [currentPage]);
 
-  //   require to add useEffect when the event_ids changed
-  cardsData =
-    event_ids &&
-    event_ids
-      .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
-      .map((id) => {
-        return <EventOfDateCard eventId={id} key={id} />;
-      });
-  console.log(Math.ceil(event_ids.length / pageDisplay));
   return (
     <section className="event-by-date-section">
       <div className="event-by-date-div">
@@ -88,7 +128,11 @@ function EventOfDate() {
             renderItem={(item) => (
               <PaginationItem
                 component={Link}
-                to={`?page=${item.page}`}
+                to={
+                  city
+                    ? `?page=${item.page}&date=${date}&state=${state}&city=${city}`
+                    : `?page=${item.page}&date=${date}&state=${state}`
+                }
                 {...item}
               />
             )}

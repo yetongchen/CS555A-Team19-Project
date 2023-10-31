@@ -1,13 +1,13 @@
 import users from "./users.js";
 import postRoute from "./postRoute.js";
 import eventIDs from "./eventIDs.js";
-import polls from "./polls.js";
+import geo from "./geolocation.js";
 
 const constructorMethod = (app) => {
   app.use("/users", users);
   app.use("/post", postRoute);
   app.use("/eventIDs", eventIDs);
-  app.use("/polls", polls);
+  app.use("/geo", geo);
 
   app.use("*", (req, res) => {
     res.status(404).json({ error: "Not found" });
