@@ -8,7 +8,7 @@ import { ObjectId } from "mongodb";
  * @param {String} description
  * @param {Array} options
  */
-const create = async (org_id, event_id, title, description, options) => {
+const create = async (event_id, org_id, title, description, options) => {
   // validation
 
   const optionsObj = {};
@@ -17,8 +17,8 @@ const create = async (org_id, event_id, title, description, options) => {
   // create new poll
   const newPoll = {
     _id: new ObjectId(),
-    org_id: org_id,
     event_id: event_id,
+    org_id: org_id,
     title: title,
     description: description,
     options: optionsObj,
@@ -81,22 +81,64 @@ const getByEventId = async (event_id) => {
  * @param {String} poll_id
  * @param {String} option
  */
-const vote = async (user_id, poll_id, option) => {
+const vote = async (poll_id, user_id, option) => {
   // validation
 
+  let voted = false;
+  let voted_option = undefined;
+
   const pollCollection = await polls();
-
-  let pushObj = {};
-  pushObj["options." + option] = user_id;
-
-  let poll = await pollCollection.updateOne(
-    { _id: new ObjectId(poll_id) },
-    {
-      $push: pushObj,
+  await pollCollection.find().forEach((doc) => {
+    for (let option in doc.options) {
+      if (doc.options[option].includes(user_id)) {
+        // console.log("option: " + option);
+        voted_option = option;
+        voted = true;
+        break;
+      }
     }
-  );
+  });
 
-  if (!poll) throw `Could not update the recipe with id ${poll_id}`;
+  if (!voted) {
+    // not yet voted
+
+    let pushObj = {};
+    pushObj["options." + option] = user_id;
+
+    let poll = await pollCollection.updateOne(
+      { _id: new ObjectId(poll_id) },
+      {
+        $push: pushObj,
+      }
+    );
+    if (!poll) throw `Could not update the poll with id ${poll_id}`;
+  } else {
+    // already voted
+
+    let pullObj = {};
+    pullObj["options." + voted_option] = user_id;
+
+    let poll = await pollCollection.updateOne(
+      { _id: new ObjectId(poll_id) },
+      {
+        $pull: pullObj,
+      }
+    );
+
+    if (voted_option !== option) {
+      let pushObj = {};
+      pushObj["options." + option] = user_id;
+
+      poll = await pollCollection.updateOne(
+        { _id: new ObjectId(poll_id) },
+        {
+          $push: pushObj,
+        }
+      );
+    }
+
+    if (!poll) throw `Could not update the poll with id ${poll_id}`;
+  }
 
   return await get(poll_id);
 };
@@ -155,12 +197,5 @@ const remove = async (user_id, poll_id) => {
   );
   return updateInfo;
 };
-
-// try {
-//   const poll = await create("123", "456", "poll1", "des", ["opt1", "opt2"]);
-//   await getAll();
-// } catch (error) {
-//   console.log(error);
-// }
 
 export default { create, get, getAll, getByEventId, vote, update, remove };
