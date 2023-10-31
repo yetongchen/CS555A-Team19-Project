@@ -5,7 +5,7 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import axios from "axios";
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import "../App.css";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
@@ -91,8 +91,7 @@ function EventDetail({}) {
       });
       return response.data;
     } catch (error) {
-      console.error("Error when get venue detail", error);
-      throw error;
+      console.log(error);
     }
   }
 
@@ -173,7 +172,6 @@ function EventDetail({}) {
       return response.data;
     } catch (error) {
       console.log(error);
-      throw new Error("Error to get the postlist");
     }
   };
 
@@ -183,7 +181,6 @@ function EventDetail({}) {
       return posts;
     } catch (error) {
       console.log(error);
-      throw new Error("Error to display the post");
     }
   };
 
@@ -203,11 +200,6 @@ function EventDetail({}) {
         postData
       );
 
-      if (response.status !== 200) {
-        console.error("Error from server:", response.statusText);
-        throw new Error("Error from server: " + response.statusText);
-      }
-
       const newPost = response.data;
 
       let updatedPosts = await postsForEvent(id);
@@ -219,6 +211,19 @@ function EventDetail({}) {
       console.log(error);
     }
   };
+
+  // formate posts date
+  const formatDate = (datetime) => {
+    const date = new Date(datetime);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day} ${hour}:${minute}`;
+  }
+  
 
   return (
     <div className="outer-container">
@@ -281,7 +286,7 @@ function EventDetail({}) {
               <div className="post-header">
                 <span className="post-title">{post.title}</span>
                 <span className="post-author">
-                  {post.datetime} By: {post.name} 
+                  {formatDate(post.datetime)} By: {post.name} 
                 </span>
               </div>
               <div className="post-content">{post.text}</div>
