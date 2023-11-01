@@ -7,6 +7,14 @@ const minTitleLength = 5;
 const maxTextLength = 400;
 const minTextLength = 5;
 
+const checkString = (str) => {
+  if (!str) throw "Please provide a string";
+  if (typeof str != "string") throw "input type should be a string";
+  str = str.trim();
+  if (str.length === 0) throw "input should not be empty";
+  return str;
+};
+
 const checkUsername = (username) => {
   if (!username) throw "Please provide a username";
   if (typeof username != "string") throw "username type should be string";
@@ -72,9 +80,10 @@ const checkText = (text) => {
 };
 
 export default {
+  checkString,
   checkUsername,
-  checkFirstname,
-  checkLastname,
+  //checkFirstname,
+  //checkLastname,
   checkStringObjectID,
   checkTitle,
   checkText,

@@ -53,7 +53,7 @@ function EventDetail({}) {
             try {
                 const response = await axios.get(`http://localhost:4000/users/${user.uid}`);
                 setUserInfo(response.data);
-                console.log(response.data);
+                //console.log(response.data);
             } catch (error) {
                 console.error('Error fetching user info:', error);
             }
@@ -282,7 +282,7 @@ function EventDetail({}) {
             <CommentOutlinedIcon />
             <h2>Posts:</h2>
           </div>
-          {posts.map((post) => (
+          {posts && posts.map((post) => (
             <div className="post-container" key={post._id}>
               <div className="post-header">
                 <span className="post-title">{post.title}</span>
