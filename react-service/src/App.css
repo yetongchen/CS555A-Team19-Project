@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
-*
-{
+
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
-section
-{
+
+section {
   position: relative;
   display: flex;
   justify-content: center;
@@ -16,16 +16,16 @@ section
   height: 100vh;
   overflow: hidden;
 }
-.container
-{
+
+.container {
   position: absolute;
   left: -10%;
   width: 120%;
-  height: 100vh;
+  /* height: 100vh; */
   background: url(/src/images/login.jpg);
 }
-.login
-{
+
+.login {
   position: relative;
   padding: 60px;
   background: rgba(255, 255, 255, 0.15);
@@ -38,14 +38,14 @@ section
   display: flex;
   flex-direction: column;
   gap: 25px;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-}
-.login .inputBox {
-  margin-bottom: 24px; 
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
 }
 
-.login h2
-{
+.login .inputBox {
+  margin-bottom: 24px;
+}
+
+.login h2 {
   position: relative;
   width: 100%;
   text-align: center;
@@ -54,8 +54,8 @@ section
   color: #fff;
   margin-bottom: 10px;
 }
-.login .inputBox input
-{
+
+.login .inputBox input {
   position: relative;
   width: 100%;
   padding: 15px 20px;
@@ -63,16 +63,16 @@ section
   font-size: 1.25em;
   color: #fff;
   border-radius: 5px;
-  background: rgba(0,0,0,0.2);
-  box-shadow: inset 0 0 15px rgba(0,0,0,0.25);
-  border: 1px solid rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
-.login .inputBox ::placeholder
-{
+
+.login .inputBox ::placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-.login .inputBox #btn
-{
+
+.login .inputBox #btn {
   position: relative;
   border: none;
   outline: none;
@@ -82,21 +82,22 @@ section
   font-weight: 500;
   box-shadow: none;
 }
-.login .group
-{
+
+.login .group {
   display: flex;
   justify-content: space-between;
 }
-.login .group a
-{
+
+.login .group a {
   font-size: 1.25em;
   color: #fff;
   text-decoration: none;
 }
-.login .group a:nth-child(2)
-{
+
+.login .group a:nth-child(2) {
   text-decoration: underline;
 }
+
 /* App.css */
 .register {
   position: absolute;
@@ -104,18 +105,21 @@ section
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
-  padding: 40px;  /* Increase padding */
+  padding: 40px;
+  /* Increase padding */
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  width: 350px;  /* Set a fixed width */
-  box-sizing: border-box;  /* Ensure padding and border are included in the element's total width and height */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  /* Set a fixed width */
+  box-sizing: border-box;
+  /* Ensure padding and border are included in the element's total width and height */
 }
 
 /* Add some margin to the form elements for better spacing */
 .register form InputLabel,
 .register form Input,
 .register form .inputBox {
-  margin-bottom: 20px;  
+  margin-bottom: 20px;
 }
 
 .outer-container {
@@ -125,7 +129,7 @@ section
 }
 
 .event-container {
-  position: relative; 
+  position: relative;
   left: 0;
   top: 0;
   width: 100%;
@@ -176,19 +180,20 @@ section
 .join-button {
   border-radius: 10px;
   background-color: #FFC085;
-  width: 100px; 
-  height: 30px; 
+  width: 100px;
+  height: 30px;
   float: right;
 }
 
 .join-button:hover {
-  background-color: #f4b070;  /* 鼠标悬停时稍深一点的橘色 */
+  background-color: #f4b070;
+  /* 鼠标悬停时稍深一点的橘色 */
 }
 
 .event-address {
   text-align: left;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   gap: 5px;
 }
 
@@ -213,6 +218,7 @@ section
   cursor: pointer;
   color: #dd74ca;
 }
+
 /*
 .error {
   color: red;
@@ -262,17 +268,17 @@ section
 .event-posts {
   margin-top: 10px;
   text-align: left;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   gap: 5px;
 }
 
-.text-center{
+.text-center {
   text-align: center;
 }
 
 .post-container {
-  background-color: #f5f5f5; 
+  background-color: #f5f5f5;
   padding: 10px;
   margin-bottom: 5px;
   border-radius: 5px;
@@ -280,8 +286,10 @@ section
 
 .post-header {
   display: flex;
-  justify-content: space-between; /* 使标题和作者名在两侧 */
-  margin-bottom: 5px; /* 和正文之间的距离 */
+  justify-content: space-between;
+  /* 使标题和作者名在两侧 */
+  margin-bottom: 5px;
+  /* 和正文之间的距离 */
 }
 
 .post-title {
@@ -301,8 +309,8 @@ section
 
 .post-header {
   display: flex;
-  justify-content: space-between; 
-  margin-bottom: 5px; 
+  justify-content: space-between;
+  margin-bottom: 5px;
 }
 
 .post-title {
@@ -356,7 +364,7 @@ section
 
 .post-input-container textarea {
   height: 100px;
-  resize: vertical; 
+  resize: vertical;
 }
 
 .post-input-container button {
@@ -468,22 +476,22 @@ section
   margin-top: 20px;
 }
 
-.event-by-date-section{
+.event-by-date-section {
   display: block;
   overflow: auto;
   margin-left: 3%;
   margin-bottom: 1%;
   height: "auto";
-  text-align:center;
+  text-align: center;
   align-items: center;
 }
 
-.event-by-date-div{
+.event-by-date-div {
   margin-bottom: 5%;
   position: relative;
 }
 
-.event-by-date-card{
+.event-by-date-card {
   border: 1px solid gray;
   flex-basis: 30%;
   flex-shrink: 0;

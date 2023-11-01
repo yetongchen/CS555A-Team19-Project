@@ -355,6 +355,7 @@ function EventDetail({}) {
           <br></br>
           {polls &&
             polls.map((poll) => {
+              // const userID = userInfo._id;
               return <PollCard pollData={poll} key={poll._id.toString()} />;
             })}
         </div>
