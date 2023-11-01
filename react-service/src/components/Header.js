@@ -6,6 +6,7 @@ import { AppBar, Toolbar, Typography, IconButton, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
+import profile from "../images/profile-1.jpg";
 
 const Header = () => {
     const [user, setUser] = useState(null);
@@ -72,8 +73,11 @@ const Header = () => {
                         Events
                     </Typography>
                     {userInfo && (
-                        <Typography variant="body1" component="span">
-                            Welcome, {userInfo.name}
+                        <Typography variant="body1" component="span" >
+                            <NavLink to="/profile">
+                                <div class="welcome">Welcome, {userInfo.name}</div>
+                                <div class="profile-photo"><img src={profile}></img></div>
+                            </NavLink>
                         </Typography>
                     )}
                     <Button color="inherit" onClick={user ? handleLogout : null}>

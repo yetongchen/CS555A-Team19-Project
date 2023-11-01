@@ -308,17 +308,18 @@ function EventDetail({}) {
             <CommentOutlinedIcon />
             <h2>Posts:</h2>
           </div>
-          {posts.map((post) => (
-            <div className="post-container" key={post._id}>
-              <div className="post-header">
-                <span className="post-title">{post.title}</span>
-                <span className="post-author">
-                  {formatDate(post.datetime)} By: {post.name}
-                </span>
+          {posts &&
+            posts.map((post) => (
+              <div className="post-container" key={post._id}>
+                <div className="post-header">
+                  <span className="post-title">{post.title}</span>
+                  <span className="post-author">
+                    {formatDate(post.datetime)} By: {post.name}
+                  </span>
+                </div>
+                <div className="post-content">{post.text}</div>
               </div>
-              <div className="post-content">{post.text}</div>
-            </div>
-          ))}
+            ))}
         </div>
 
         <div className="post-input-container">
