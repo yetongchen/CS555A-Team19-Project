@@ -17,9 +17,32 @@ import axios from "axios";
 export const PollForm = () => {
   let { eventID } = useParams();
 
+  const [title, setTitle] = useState("");
+
+  const handleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(title);
+  };
+
   return (
     <div>
       <h1>Poll Form</h1>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Title:
+          <input
+            type="text"
+            name="title"
+            value={title || ""}
+            onChange={handleChange}
+          />
+        </label>
+        <input type="submit" />
+      </form>
     </div>
   );
 };

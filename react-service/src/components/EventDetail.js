@@ -352,13 +352,10 @@ function EventDetail({}) {
 
         <div>
           <h1>Poll:</h1>
+          <br></br>
           {polls &&
             polls.map((poll) => {
-              const pollData = {
-                title: poll.title,
-                description: poll.description,
-              };
-              return <PollCard pollData={pollData} key={poll._id.toString()} />;
+              return <PollCard pollData={poll} key={poll._id.toString()} />;
             })}
         </div>
       </div>
