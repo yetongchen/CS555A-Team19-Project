@@ -49,13 +49,14 @@ router
   .route("/event/:eventId")
   .get(async (req, res) => {
     const eventID = req.params.eventId;
-    console.log(eventID);
+
     if (!eventID) {
       return res.status(400).json({ error: "Empty id." });
     }
     try {
-      let data = await pollData.getByEventId(eventID);
-      res.status(200).json(data);
+      let polls = await pollData.getByEventId(eventID);
+
+      return res.status(200).json({ polls });
     } catch (e) {
       res.status(400).json({ error: e });
     }

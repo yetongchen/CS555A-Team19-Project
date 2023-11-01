@@ -5,7 +5,9 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import axios from "axios";
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+
+import { PollCard } from "./PollCard";
 
 import "../App.css";
 
@@ -36,10 +38,12 @@ function EventDetail({}) {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
   const auth = getAuth(); // 获取 Firebase Auth 的实例
-  const [userInfo, setUserInfo] = useState(null);  // 新状态来存储从你的后端获取的用户信息
+  const [userInfo, setUserInfo] = useState(null); // 新状态来存储从你的后端获取的用户信息
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
   const eventId = id;
+
+  const [polls, setPolls] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, setUser);
@@ -49,22 +53,24 @@ function EventDetail({}) {
   // 新的 useEffect 钩子来获取用户信息
   useEffect(() => {
     const fetchUserInfo = async () => {
-        if (user) {
-            try {
-                const response = await axios.get(`http://localhost:4000/users/${user.uid}`);
-                setUserInfo(response.data);
-                console.log(response.data);
-            } catch (error) {
-                console.error('Error fetching user info:', error);
-            }
-        }else {
-          // 如果用户未登录，清除 userInfo
-          setUserInfo(null);
+      if (user) {
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/users/${user.uid}`
+          );
+          setUserInfo(response.data);
+          console.log(response.data);
+        } catch (error) {
+          console.error("Error fetching user info:", error);
         }
+      } else {
+        // 如果用户未登录，清除 userInfo
+        setUserInfo(null);
+      }
     };
 
     fetchUserInfo();
-}, [user]);
+  }, [user]);
 
   useEffect(() => {
     getEventById(eventId)
@@ -80,6 +86,27 @@ function EventDetail({}) {
         console.error("Error", error);
       });
   }, [eventId]);
+
+  useEffect(() => {
+    async function getPolls() {
+      console.log("useEffect fired");
+
+      try {
+        const { data } = await axios.get(
+          `http://localhost:4000/polls/event/${id}`
+        );
+        const results = data.polls;
+
+        if (results && results.length > 0) setPolls(results);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (id) {
+      getPolls();
+    }
+  }, [id]);
 
   async function getVenueById(vid) {
     const apiUrl = `https://www.eventbriteapi.com/v3/venues/${vid}/`;
@@ -217,14 +244,13 @@ function EventDetail({}) {
   const formatDate = (datetime) => {
     const date = new Date(datetime);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hour = String(date.getHours()).padStart(2, '0');
-    const minute = String(date.getMinutes()).padStart(2, '0');
-    
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hour = String(date.getHours()).padStart(2, "0");
+    const minute = String(date.getMinutes()).padStart(2, "0");
+
     return `${year}-${month}-${day} ${hour}:${minute}`;
-  }
-  
+  };
 
   return (
     <div className="outer-container">
@@ -287,7 +313,7 @@ function EventDetail({}) {
               <div className="post-header">
                 <span className="post-title">{post.title}</span>
                 <span className="post-author">
-                  {formatDate(post.datetime)} By: {post.name} 
+                  {formatDate(post.datetime)} By: {post.name}
                 </span>
               </div>
               <div className="post-content">{post.text}</div>
@@ -322,6 +348,18 @@ function EventDetail({}) {
             </tbody>
           </table>
           <button onClick={handleAddPost}>Add</button>
+        </div>
+
+        <div>
+          <h1>Poll:</h1>
+          {polls &&
+            polls.map((poll) => {
+              const pollData = {
+                title: poll.title,
+                description: poll.description,
+              };
+              return <PollCard pollData={pollData} key={poll._id.toString()} />;
+            })}
         </div>
       </div>
     </div>

@@ -70,8 +70,17 @@ const getAll = async () => {
  * @param {String} event_id
  */
 const getByEventId = async (event_id) => {
-  const pollsData = await polls();
-  const pollList = await pollsData.findAll({ _id: event_id });
+  const pollCollection = await polls();
+
+  let pollList = await pollCollection.find({ event_id: event_id }).toArray();
+
+  if (!pollList) throw "Error: Could not get all polls.";
+
+  pollList = pollList.map((poll) => {
+    poll._id = poll._id.toString();
+    return poll;
+  });
+
   return pollList;
 };
 
