@@ -83,11 +83,18 @@ small {
   font-size: 0.75rem;
 }
 
+.welcome {
+  display: inline-block;
+  margin-right: 6px;
+}
+
 .profile-photo {
   width: 2.8rem;
   height: 2.8rem;
   border-radius: 50%;
   overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .text-muted {
