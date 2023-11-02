@@ -4,17 +4,11 @@ import axios from "axios";
 import {
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
-  List,
-  ListItemButton,
-  ListItemText,
-  Divider,
   Grid,
   Button,
   FormControl,
   FormControlLabel,
-  FormLabel,
   FormHelperText,
   RadioGroup,
   Radio,
@@ -94,9 +88,12 @@ export const PollCard = ({ pollData, userData }) => {
 
   return (
     <Grid item>
-      <Card sx={{ width: 345 }} style={{ backgroundColor: "snow" }}>
+      <Card
+        sx={{ width: 345, height: "100%" }}
+        style={{ backgroundColor: "snow" }}
+      >
         <CardHeader title={title} />
-        <CardContent>
+        <CardContent style={{ textAlign: "left" }}>
           <p>{description}</p>
           <form onSubmit={handleSubmit}>
             <FormControl sx={{ m: 3 }} variant="standard">
@@ -112,9 +109,15 @@ export const PollCard = ({ pollData, userData }) => {
                     );
                   })}
               </RadioGroup>
-              <FormHelperText>{helperText}</FormHelperText>
-              <Button sx={{ mt: 1, mr: 1 }} type="submit" variant="outlined">
-                Confirm
+              {/* <FormHelperText>{helperText}</FormHelperText> */}
+              <br></br>
+              <Button
+                style={{ borderRadius: 100, width: "100%" }}
+                sx={{ mt: 1, mr: 1 }}
+                type="submit"
+                variant="outlined"
+              >
+                Vote!
               </Button>
             </FormControl>
           </form>

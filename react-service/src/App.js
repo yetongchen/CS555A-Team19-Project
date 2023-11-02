@@ -13,7 +13,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/firebase";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
-import { PollForm } from "./components/PollForm";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -38,7 +37,6 @@ function App() {
               element={user ? <Navigate to={"/"} /> : <Login />}
             />
             <Route path="/events/:id" element={<EventDetail />} />
-            <Route path="/events/:id/createPoll" element={<PollForm />} />
             <Route path="/events/date" element={<EventOfDate />} />
             <Route
               path="/register"
