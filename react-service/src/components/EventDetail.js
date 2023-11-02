@@ -7,8 +7,9 @@ import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import axios from "axios";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
+import { PollForm } from "./PollForm";
 import { PollCard } from "./PollCard";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 
 import "../App.css";
 
@@ -44,6 +45,7 @@ function EventDetail({}) {
   const [newPostContent, setNewPostContent] = useState("");
   const eventId = id;
 
+  const [create, setCreate] = useState(false);
   const [polls, setPolls] = useState([]);
 
   useEffect(() => {
@@ -107,7 +109,7 @@ function EventDetail({}) {
     if (id) {
       getPolls();
     }
-  }, [id]);
+  }, [id, polls]);
 
   async function getVenueById(vid) {
     const apiUrl = `https://www.eventbriteapi.com/v3/venues/${vid}/`;
@@ -351,6 +353,20 @@ function EventDetail({}) {
           </table>
           <button onClick={handleAddPost}>Add</button>
         </div>
+
+        <Button
+          variant="outlined"
+          onClick={() => {
+            if (create) {
+              setCreate(false);
+            } else {
+              setCreate(true);
+            }
+          }}
+        >
+          Click here to create a new poll
+        </Button>
+        {create ? <PollForm /> : null}
 
         <br></br>
         <h1>Polls:</h1>

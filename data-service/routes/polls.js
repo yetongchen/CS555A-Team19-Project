@@ -76,7 +76,6 @@ router
 
     try {
       const { org_id, title, description, options } = data;
-      console.log(data);
       const newPoll = await pollData.create(
         eventID,
         org_id,
