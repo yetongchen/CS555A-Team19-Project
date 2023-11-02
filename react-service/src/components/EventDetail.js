@@ -8,6 +8,7 @@ import axios from "axios";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 import { PollCard } from "./PollCard";
+import { Grid, Typography } from "@mui/material";
 
 import "../App.css";
 
@@ -351,15 +352,29 @@ function EventDetail({}) {
           <button onClick={handleAddPost}>Add</button>
         </div>
 
-        <div>
-          <h1>Poll:</h1>
-          <br></br>
-          {polls &&
+        <br></br>
+        <h1>Polls:</h1>
+        <Grid
+          container
+          spacing={2}
+          // alignItems="center"
+          justifyContent="center"
+          paddingTop="1%"
+        >
+          {polls && userInfo ? (
             polls.map((poll) => {
-              // const userID = userInfo._id;
-              return <PollCard pollData={poll} key={poll._id.toString()} />;
-            })}
-        </div>
+              return (
+                <PollCard
+                  pollData={poll}
+                  userData={userInfo}
+                  key={poll._id.toString()}
+                />
+              );
+            })
+          ) : (
+            <h2>No polls yet ...</h2>
+          )}
+        </Grid>
       </div>
     </div>
   );

@@ -97,16 +97,16 @@ const vote = async (poll_id, user_id, option) => {
   let voted_option = undefined;
 
   const pollCollection = await polls();
-  await pollCollection.find().forEach((doc) => {
-    for (let option in doc.options) {
-      if (doc.options[option].includes(user_id)) {
-        // console.log("option: " + option);
-        voted_option = option;
-        voted = true;
-        break;
-      }
+
+  const poll = await get(poll_id);
+  const options = poll.options;
+  for (let option in options) {
+    if (options[option].includes(user_id)) {
+      voted_option = option;
+      voted = true;
+      break;
     }
-  });
+  }
 
   if (!voted) {
     // not yet voted
