@@ -30,21 +30,17 @@ function UserProfile() {
         const user = auth.currentUser;
         if (user) {
           const userId = user.uid;
-          const response = await axios.get(`/users/${userId}`);
+          const response = await axios.get(`http://localhost:4000/users/${userId}`);
           const userData = response.data;
-  
+
           setUserInfo({
             name: userData.name,
             email: userData.email
           });
-  
-          
-          axios.get(`/api/user/${userId}`).then(response => {
-            setUserComments(response.data.map(post => post.text));
-            setFilteredComments(response.data.map(post => post.text));
-          });
-  
-          
+
+          setUserComments(userData.posts.map(post => post.text));
+          setFilteredComments(userData.posts.map(post => post.text));
+
           setSavedEvents(userData.events);
         }
       } catch (e) {
@@ -86,7 +82,7 @@ function UserProfile() {
     if (user) {
       const userId = user.uid;
       try {
-        await axios.patch(`/users/${userId}`, {
+        await axios.patch(`http://localhost:4000/users/${userId}`, {
           name: editName,
           email: editEmail
         });
