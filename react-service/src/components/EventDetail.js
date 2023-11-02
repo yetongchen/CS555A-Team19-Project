@@ -354,27 +354,31 @@ function EventDetail({}) {
 
         <br></br>
         <h1>Polls:</h1>
-        <Grid
-          container
-          spacing={2}
-          // alignItems="center"
-          justifyContent="center"
-          paddingTop="1%"
-        >
-          {polls && userInfo ? (
-            polls.map((poll) => {
-              return (
-                <PollCard
-                  pollData={poll}
-                  userData={userInfo}
-                  key={poll._id.toString()}
-                />
-              );
-            })
-          ) : (
-            <h2>No polls yet ...</h2>
-          )}
-        </Grid>
+        {polls.length > 0 ? (
+          <Grid
+            container
+            spacing={2}
+            // alignItems="center"
+            justifyContent="center"
+            paddingTop="1%"
+          >
+            {polls && userInfo ? (
+              polls.map((poll) => {
+                return (
+                  <PollCard
+                    pollData={poll}
+                    userData={userInfo}
+                    key={poll._id.toString()}
+                  />
+                );
+              })
+            ) : (
+              <h2>Loading ...</h2>
+            )}
+          </Grid>
+        ) : (
+          <h2>No polls yet ...</h2>
+        )}
       </div>
     </div>
   );
