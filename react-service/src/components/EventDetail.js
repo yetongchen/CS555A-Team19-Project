@@ -354,8 +354,13 @@ function EventDetail({}) {
           <button onClick={handleAddPost}>Add</button>
         </div>
 
+        <br></br>
         <Button
           variant="outlined"
+          style={{
+            fontSize: 18,
+            borderRadius: 100,
+          }}
           onClick={() => {
             if (create) {
               setCreate(false);

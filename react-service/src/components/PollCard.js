@@ -92,11 +92,19 @@ export const PollCard = ({ pollData, userData }) => {
         sx={{ width: 345, height: "100%" }}
         style={{ backgroundColor: "snow" }}
       >
-        <CardHeader title={title} />
-        <CardContent style={{ textAlign: "left" }}>
+        <CardContent>
+          <h1>{title}</h1>
+
+          <br></br>
+          <h2>Description:</h2>
           <p>{description}</p>
+        </CardContent>
+
+        <CardContent style={{ textAlign: "left" }}>
           <form onSubmit={handleSubmit}>
             <FormControl sx={{ m: 3 }} variant="standard">
+              <h2>Options:</h2>
+              <br></br>
               <RadioGroup value={value} onChange={handleRadioChange}>
                 {options &&
                   Object.keys(options).map((option) => {
@@ -112,12 +120,19 @@ export const PollCard = ({ pollData, userData }) => {
               {/* <FormHelperText>{helperText}</FormHelperText> */}
               <br></br>
               <Button
-                style={{ borderRadius: 100, width: "100%" }}
-                sx={{ mt: 1, mr: 1 }}
+                style={{
+                  borderRadius: 100,
+                  fontWeight: "bold",
+                  backgroundColor: "#FFC085",
+                }}
+                sx={{
+                  mt: 1,
+                  mr: 1,
+                }}
                 type="submit"
-                variant="outlined"
+                variant="standard"
               >
-                Vote!
+                Vote
               </Button>
             </FormControl>
           </form>
