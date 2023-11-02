@@ -30,8 +30,8 @@ function EventOfDate() {
   let date = searchParams.get("date");
   let city = searchParams.get("city");
   let state = searchParams.get("state");
-  state = state ? state.replace(/\s+/g, '-') : state;
-  city = city ? city.replace(/\s+/g, '-') : city;
+  state = state ? state.replace(/\s+/g, "-") : state;
+  city = city ? city.replace(/\s+/g, "-") : city;
   let event_ids = null;
   let pageDisplay = 20;
 
