@@ -366,7 +366,16 @@ function EventDetail({}) {
         >
           Click here to create a new poll
         </Button>
-        {create ? <PollForm /> : null}
+        <Grid
+          container
+          spacing={2}
+          // direction="column"
+          // alignItems="center"
+          justifyContent="center"
+          paddingTop="1%"
+        >
+          {create ? <PollForm /> : null}
+        </Grid>
 
         <br></br>
         <h1>Polls:</h1>

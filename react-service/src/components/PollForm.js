@@ -2,6 +2,19 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  RadioGroup,
+  Radio,
+} from "@mui/material";
+
 const createPoll = async (eventID, poll) => {
   const newPoll = await axios.post(
     `http://localhost:4000/polls/event/${eventID}`,
@@ -60,63 +73,74 @@ export const PollForm = () => {
         setOptions([]);
       }
     } else {
-      alert("Make sure to enter all the field and add at least 2 options.");
+      alert(
+        "Make sure there are no empty fields and at least 2 options are added."
+      );
     }
   };
 
   return (
-    <div>
-      <h1>Poll Form</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Title:
-          <input
-            type="text"
-            name="title"
-            value={title || ""}
-            onChange={handleTitleChange}
-          />
-        </label>
-        <label>
-          Description:
-          <input
-            type="text"
-            name="description"
-            value={description || ""}
-            onChange={handleDescriptionChange}
-          />
-        </label>
+    <Grid item>
+      <Card sx={{ width: "auto" }} style={{ backgroundColor: "snow" }}>
         <br></br>
-        <input type="submit" />
-        <br></br>
-      </form>
+        <h1>Poll Form</h1>
 
-      <br></br>
-      <form onSubmit={handleAddOption}>
-        <label>
-          Options:
-          <input
-            type="text"
-            name="title"
-            value={option || ""}
-            onChange={handleOptionChange}
-          />
-        </label>
-        <input type="submit" value="Add Option" />
-      </form>
+        <CardContent style={{ textAlign: "left" }}>
+          <form onSubmit={handleAddOption}>
+            <label>
+              Option:&nbsp;
+              <input
+                type="text"
+                name="title"
+                value={option || ""}
+                onChange={handleOptionChange}
+              />
+            </label>
+            <input type="submit" value="Add Option" />
+          </form>
 
-      <br></br>
-      <h2>Added Options:</h2>
-      {options.length > 0 ? (
-        <ul>
-          {options &&
-            options.map((option) => {
-              return <li>{option}</li>;
-            })}
-        </ul>
-      ) : (
-        <p>No options yet...</p>
-      )}
-    </div>
+          <br></br>
+          <h2>Options:</h2>
+          {options.length > 0 ? (
+            <ul>
+              {options &&
+                options.map((option) => {
+                  return <li>&nbsp;&nbsp;&nbsp;&nbsp;- {option}</li>;
+                })}
+            </ul>
+          ) : (
+            <p>No options yet...</p>
+          )}
+
+          <br></br>
+          <br></br>
+          <h2>Details:</h2>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Title:&nbsp;
+              <input
+                type="text"
+                name="title"
+                value={title || ""}
+                onChange={handleTitleChange}
+              />
+            </label>
+
+            <br></br>
+            <br></br>
+            <label>
+              Description:&nbsp;
+              <input
+                type="text"
+                name="description"
+                value={description || ""}
+                onChange={handleDescriptionChange}
+              />
+            </label>
+            <input type="submit" />
+          </form>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 };
