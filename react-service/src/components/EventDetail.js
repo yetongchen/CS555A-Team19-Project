@@ -356,10 +356,10 @@ function EventDetail({}) {
 
         <br></br>
         <Button
-          variant="outlined"
+          variant="standard"
           style={{
             fontSize: 18,
-            borderRadius: 100,
+            backgroundColor: "#FFC085",
           }}
           onClick={() => {
             if (create) {
@@ -384,7 +384,7 @@ function EventDetail({}) {
 
         <br></br>
         <h1>Polls:</h1>
-        {polls.length > 0 ? (
+        {polls && polls.length > 0 ? (
           <Grid
             container
             spacing={2}
@@ -392,7 +392,7 @@ function EventDetail({}) {
             justifyContent="center"
             paddingTop="1%"
           >
-            {polls && userInfo ? (
+            {userInfo ? (
               polls.map((poll) => {
                 return (
                   <PollCard

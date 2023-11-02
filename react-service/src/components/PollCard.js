@@ -125,10 +125,6 @@ export const PollCard = ({ pollData, userData }) => {
                   fontWeight: "bold",
                   backgroundColor: "#FFC085",
                 }}
-                sx={{
-                  mt: 1,
-                  mr: 1,
-                }}
                 type="submit"
                 variant="standard"
               >

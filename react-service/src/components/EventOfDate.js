@@ -112,7 +112,7 @@ function EventOfDate() {
             overflow: "auto",
           }}
         >
-          {cardsData}
+          {cardsData ? cardsData : <h1>Fetching Events...</h1>}
         </Grid>
         <Box
           justifyContent={"center"}
