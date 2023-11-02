@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
     });
 
     python.on("close", (code) => {
-      console.log("child process exited with code ", code);
+      console.log(`child process exited with code ${code}`);
     });
   } catch (e) {
     res.status(400).json(e);
