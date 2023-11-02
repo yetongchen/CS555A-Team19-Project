@@ -38,13 +38,13 @@ function UserProfile() {
             email: userData.email
           });
   
-          // 设置评论
+          
           axios.get(`/api/user/${userId}`).then(response => {
             setUserComments(response.data.map(post => post.text));
             setFilteredComments(response.data.map(post => post.text));
           });
   
-          // 设置用户保存的活动
+          
           setSavedEvents(userData.events);
         }
       } catch (e) {
@@ -141,13 +141,15 @@ function UserProfile() {
 
 
       <div className="user-profile-content">
-        <Tabs defaultActiveKey="1">
+      <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="Events" key="1">
             <Input placeholder="Search Events" onChange={handleSearchEvents} />
             <List
               dataSource={currentEvents}
               renderItem={(event, index) => (
-                <List.Item key={index}>{event}</List.Item>
+                <List.Item key={index}>
+                  <EventOfDateCard event={event} />
+                </List.Item>
               )}
             />
             <Pagination 
