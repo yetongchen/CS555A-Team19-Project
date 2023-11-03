@@ -1,4 +1,5 @@
 import { posts } from "../config/mongoCollections.js";
+import { users } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import validation from '../validation/postValidation.js';
 
@@ -8,8 +9,6 @@ import validation from '../validation/postValidation.js';
  * @param {String} name
  * @param {String} title
  * @param {String} text
- * @param {String} poll_id
- * @param {Array} comments
  * @returns post Object
  */
 
@@ -21,8 +20,12 @@ const createPost = async (
     text
 ) => {
     //validation
-    //user_id = validation.checkStringObjectID(user_id);
-    //event_id = validation.checkStringObjectID(event_id);
+    user_id = validation.checkString(user_id);
+    const userCollection = await users();
+    let user_exist = await userCollection.findOne({_id: user_id});
+    if (!user_exist) throw "The user does not exist";
+
+    event_id = validation.checkString(event_id); //more validation
     name = validation.checkUsername(name);
     title = validation.checkTitle(title);
     text = validation.checkText(text);
@@ -48,13 +51,17 @@ const createPost = async (
     }
 
     //save post_id in the user collection
-    // postData._id = postData._id.toString();
-    // const insertuser = await userdb.putPostIn(postData._id, user_id);
-    // if (!insertuser) {
-    //     throw "post_id insert in user error";
-    // }
-
-    const newPost = await getPostByPostId(postInfo.insertedId.toString());
+    postInfo.insertedId = postInfo.insertedId.toString();
+    if (!user_exist.posts) throw "user object do not have posts array";
+    user_exist.posts.push(postInfo.insertedId);
+    const userInfo = await userCollection.updateOne({_id: user_id},
+        {$set : {posts: user_exist.posts}});
+    console.log("save post id to user: ", userInfo);
+    if (!userInfo.acknowledged) {
+        throw "Could not add post_id in user object";
+    }
+    
+    const newPost = await getPostByPostId(postInfo.insertedId);
 
     return newPost;
 }
@@ -69,10 +76,18 @@ const removePostByPostId = async (
     post_id = validation.checkStringObjectID(post_id);
 
     const postCollection = await posts();
-    const post = postCollection.findOne({_id: new ObjectId(post_id)});
+    const post = await postCollection.findOne({_id: new ObjectId(post_id)});
     if (!post) {
         throw "This post does not exist."
     }
+    console.log("post to be deleted: ", post)
+
+    let user_id = validation.checkString(post.user_id);
+    const userCollection = await users();
+    let user_exist = await userCollection.findOne({_id: user_id});
+    if (!user_exist) throw "The user dose not exist";
+    if (!user_exist.posts) throw "user object do not have posts array";
+    if (!user_exist.posts.includes(post_id)) throw "The user do not have a post with this post_id";
 
     const deleteInfo = await postCollection.deleteOne({_id: new ObjectId(post_id)});
     if (deleteInfo.deletedCount === 0) {
@@ -80,9 +95,16 @@ const removePostByPostId = async (
     }
     
     //remove post from user collection
-    // const removeInfo = await userdb.removeCommentFromU(commentid, userid);
-    // if (!(removeInfo && removeInfo2)) 
-    //     throw `could not remove comment correctlly`;
+    const index = user_exist.posts.indexOf(post_id);
+    if (index > -1) { // only splice array when item is found
+        user_exist.posts.splice(index, 1); // 2nd parameter means remove one item only
+    }
+    const removeInfo = await userCollection.updateOne({_id: user_id},
+        {$set : {posts: user_exist.posts}});
+    console.log("remove user id from user: ", removeInfo);
+
+    if (!(removeInfo && deleteInfo)) 
+        throw `could not remove post correctlly`;
     
     return {deletePost: true};
 }

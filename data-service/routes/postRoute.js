@@ -2,8 +2,7 @@ import express from "express";
 import data from "../data/index.js";
 import postValidation from "../validation/postValidation.js";
 
-const checkFirstname = postValidation.checkFirstname;
-const checkLastname = postValidation.checkLastname;
+const checkString = postValidation.checkString;
 const checkUsername = postValidation.checkUsername;
 const checkStringObjectID = postValidation.checkStringObjectID;
 const checkTitle = postValidation.checkTitle;
@@ -31,78 +30,94 @@ router.get("/", async (req, res) => {
 
     let data = await postsCollection.find({}).toArray();
     res.status(200).json(data);
-  } catch (error) {
-    res.json(error);
+  } catch (e) {
+    res.json(e);
   }
 });
 
 router.route("/new").post(async (req, res) => {
   try {
-    console.log(req.body);
-    //let user_id = checkStringObjectID(req.body.user_id);
-    let user_id = req.body.user_id;
-    let event_id = req.body.event_id;
-    let name = checkUsername(req.body.name);
-    let title = checkTitle(req.body.title);
-    let text = checkText(req.body.text);
-    // let _id = req.body.uid;
-
+    //console.log("/post/new req.body: \n", req.body);
+    req.body.user_id = checkString(req.body.user_id);
+    req.body.event_id = checkString(req.body.event_id);
+    req.body.name = checkUsername(req.body.name);
+    req.body.title = checkTitle(req.body.title);
+    req.body.text = checkText(req.body.text);
+  } catch (e) {
+    return res.status(400).json(e);
+  }
+  try {
     let result = await createPost(
       req.body.user_id,
-      event_id,
-      name,
-      title,
-      text,
-      // _id
+      req.body.event_id,
+      req.body.name,
+      req.body.title,
+      req.body.text
     );
-
-    console.log(result);
-    res.json(result);
+    //console.log("/post/new.post: \n", result);
+    res.status(200).json(result);
   } catch (e) {
-    res.status(400).json(e);
+    res.status(500).json(e);
   }
 });
 
 router.route("/detail/:post_id").get(async (req, res) => {
   try {
-    const checkedPostId = checkStringObjectID(req.params.post_id);
-    const postInfo = await getPostByPostId(checkedPostId);
-    console.log(postInfo);
+    req.params.post_id = checkStringObjectID(req.params.post_id);
+  } catch (e) {
+    return res.status(400).json(e);
+  }
+  try {
+    const postInfo = await getPostByPostId(req.params.post_id);
+    console.log("/post/detail/:post_id.get: \n", postInfo);
     res.status(200).json(postInfo);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(500).json(e);
   }
 });
 
 router.route("/detail/:post_id").delete(async (req, res) => {
   try {
-    const checkedPostId = checkStringObjectID(req.params.post_id);
-    const postInfo = await removePostByPostId(checkedPostId);
-    console.log(postInfo);
+    req.params.post_id = checkStringObjectID(req.params.post_id);
+  } catch (e) {
+    return res.status(400).json(e);
+  }
+  try {
+    const postInfo = await removePostByPostId(req.params.post_id);
+    console.log("/post/detail/:post_id.delete: \n", postInfo);
     res.status(200).json(postInfo);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(500).json(e);
   }
 });
 
 router.route("/event/:event_id").get(async (req, res) => {
   try {
+    req.params.event_id = checkString(req.params.event_id);
+  } catch (e) {
+    return res.status(400).json(e);
+  }
+  try {
     const postList = await getPostByEventId(req.params.event_id);
-    console.log(postList);
+    console.log("/post/event/:event_id.get: \n", postList);
     res.status(200).json(postList);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(500).json(e);
   }
 });
 
 router.route("/user/:user_id").get(async (req, res) => {
   try {
-    const checkedUserId = checkStringObjectID(req.params.user_id);
-    const postList = await getPostByUserId(checkedUserId);
-    console.log(postList);
+    req.params.user_id = checkString(req.params.user_id);
+  } catch (e) {
+    return res.status(400).json(e);
+  }
+  try {
+    const postList = await getPostByUserId(req.params.user_id);
+    console.log("/post/user/:user_id.get: \n", postList);
     res.status(200).json(postList);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(500).json(e);
   }
 });
 
