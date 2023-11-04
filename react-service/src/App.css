@@ -21,7 +21,7 @@ section {
   position: absolute;
   left: -10%;
   width: 120%;
-  /* height: 100vh; */
+  height: 100vh; 
   background: url(/src/images/login.jpg);
 }
 
