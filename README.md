@@ -93,19 +93,25 @@ To get a local copy up and running follow these simple example steps.
    ```
 2. Install MongoDB
 
+3. Open two terminals: one for hosting the data service and the other for hosting the React service.
+
 ### Run data service
 
 1. Go to the data-service directory
     ```sh
       cd data-service
     ```
-2. Install NPM packages
+2. Run below code in terminal to install NPM packages
     ```sh
       npm install
     ```
-3. Run
+3. Run below code in terminal
     ```sh
       npm start
+    ```
+4. Run below code in terminal
+    ```sh
+      pip install -r requirements.txt
     ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -115,11 +121,11 @@ To get a local copy up and running follow these simple example steps.
     ```sh
       cd react-service
     ```
-2. Install NPM packages
+2. Run below code in terminal to install NPM packages
     ```sh
       npm install
     ```
-3. Run
+3. Run below code in terminal
     ```sh
       npm start
     ```
