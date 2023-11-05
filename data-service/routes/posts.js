@@ -14,11 +14,6 @@ const getPostByPostId = data.posts.getPostByPostId;
 const removePostByPostId = data.posts.removePostByPostId;
 const getPostByUserId = data.posts.getPostByUserId;
 
-// import {
-//   createPost,
-//   getPostByPostId,
-//   removePostByPostId,
-// } from "../data/postData.js";
 import { posts } from "../config/mongoCollections.js";
 
 const router = express.Router();

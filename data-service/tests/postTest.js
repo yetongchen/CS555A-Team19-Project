@@ -1,4 +1,4 @@
-import postData from '../data/postData.js';
+import postData from '../data/posts.js';
 import { dbConnection, closeConnection } from '../config/mongoConnection.js';
 
 const db = await dbConnection();

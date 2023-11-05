@@ -24,6 +24,20 @@ app.use(
   })
 );
 
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+// __dirname在ES Modules中不可用，使用以下方式获取
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// 假设你的图片存储在项目根目录下的 'public' 文件夹中
+const publicPath = join(__dirname, 'public');
+//const publicPath = fileURLToPath('/public')
+
+// 将public文件夹设置为静态资源目录
+app.use('/public', express.static(publicPath));
+
+
 configRoutes(app);
 
 app.listen(4000, () => {

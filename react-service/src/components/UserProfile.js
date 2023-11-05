@@ -5,7 +5,7 @@ import { getAuth, onAuthStateChanged} from 'firebase/auth';
 import EventOfDateCard from './EventOfDateCard';
 import PostCard from "./PostCard";
 import {Grid} from "@mui/material";
-
+import noImage from "../images/no-image.png";
 
 function UserProfile() {
   //const [userInfo, setUserInfo] = useState({});
@@ -13,7 +13,8 @@ function UserProfile() {
   const [filteredComments, setFilteredComments] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editName, setEditName] = useState("");
-  const [editEmail, setEditEmail] = useState("");
+  const [editImg, setEditImg] = useState("");
+  const [showImg, setShowImg] = useState("");
   const [savedEvents, setSavedEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]); 
   const [currentPageComments, setCurrentPageComments] = useState(1); 
@@ -102,40 +103,6 @@ function UserProfile() {
     getPostCards();
   }, [userComments]);
 
-
-  // useEffect(() => {
-  //   async function fetchUserData() {
-  //     try {
-  //       const user = auth.currentUser;
-  //       if (user) {
-  //         const userId = user.uid;
-  //         const response = await axios.get(`/users/${userId}`);
-  //         const userData = response.data;
-  
-  //         setUserInfo({
-  //           name: userData.name,
-  //           email: userData.email
-  //         });
-  
-          
-  //         axios.get(`/api/user/${userId}`).then(response => {
-  //           setUserComments(response.data.map(post => post.text));
-  //           setFilteredComments(response.data.map(post => post.text));
-  //         });
-  
-          
-  //         setSavedEvents(userData.events);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }
-  //   fetchUserData();
-  // }, [auth]);
-
-
-
-
   const handleSearchComments = (e) => {
     const value = e.target.value.toLowerCase();
     const filtered = userComments.filter(comment => comment.toLowerCase().includes(value));
@@ -157,38 +124,59 @@ function UserProfile() {
   const showModal = () => {
     if (userInfo) {
       setEditName(userInfo.name);
-    setEditEmail(userInfo.email);
-    setIsModalVisible(true);
+      setEditImg(userInfo.imageURL);
+      setShowImg(userInfo.imageURL);
+      setIsModalVisible(true);
     }
   };
 
-  const handleOk = async () => {
-    const user = auth.currentUser;
-    if (user) {
-      const userId = user.uid;
-      try {
-        await axios.patch(`http://localhost:4000/users/${userId}`, {
-          name: editName,
-          email: editEmail
-        });
-        setUserInfo({
-          name: editName,
-          email: editEmail
-        });
-      } catch (e) {
-        console.log(e);
-      }
+  const handleImageChange = (event) => {
+    // console.log(event.target.value);
+    let file = document.querySelector("input[type=file]").files[0];
+    let reader = new FileReader();
+
+    reader.onloadend = function () {
+      setShowImg(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      setShowImg(null);
     }
-    setIsModalVisible(false);
+    console.log(event.target.files);
+    setEditImg(event.target.files[0]);
+    console.log(editImg);
   };
+
+const handleOk = async () => {
+  if (userInfo && editImg) {
+    const userId = userInfo._id;
+    console.log("edit image: ", editImg);
+
+    // 使用 FormData 来包装文件数据
+    const formData = new FormData();
+    formData.append('name', editName);
+    formData.append('imageURL', editImg); // 'image' 是后端将要解析的字段名
+
+    try {
+      const response = await axios.patch(`http://localhost:4000/users/${userId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data' // 确保设置正确的请求头
+        }
+      });
+      setUserInfo(response.data);
+      window.location.reload();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  setIsModalVisible(false);
+};
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-
-
-
-
 
 
   return (
@@ -199,15 +187,28 @@ function UserProfile() {
         onOk={handleOk}
         onCancel={handleCancel}
       >
+        <img
+            src={showImg? showImg : noImage}
+            loading="lazy"
+            alt="logo"
+        />
+          
+        <div>
+          <label>
+          <input
+            id="imageURL"
+            type="file"
+            name = "imageURL"
+            accept="image/png, image/jpeg, image/jpg"
+            onChange={handleImageChange}
+          />
+          </label>
+        </div>
+        <br />
         <Input
           value={editName}
           onChange={e => setEditName(e.target.value)}
           placeholder="Name"
-        />
-        <Input
-          value={editEmail}
-          onChange={e => setEditEmail(e.target.value)}
-          placeholder="Email"
         />
       </Modal>
 
@@ -225,14 +226,6 @@ function UserProfile() {
       <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="Events" key="1">
             <Input placeholder="Search Events" onChange={handleSearchEvents} />
-            {/* <List
-              dataSource={currentEvents}
-              renderItem={(event, index) => (
-                <List.Item key={index}>
-                  <EventOfDateCard event={event} />
-                </List.Item>
-              )}
-            /> */}
             <Grid
               container
               spacing={1}
@@ -264,12 +257,6 @@ function UserProfile() {
 
           <Tabs.TabPane tab="Comments" key="2">
             <Input placeholder="Search Comments" onChange={handleSearchComments} />
-            {/* <List
-              dataSource={currentComments}
-              renderItem={(comment, index) => (
-                <List.Item key={index}>{comment}</List.Item>
-              )}
-            /> */}
             <Grid
               container
               spacing={1}

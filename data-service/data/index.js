@@ -1,5 +1,5 @@
 import polls from "./polls.js";
-import postData from "./postData.js";
+import postData from "./posts.js";
 import * as users from "./users.js";
 
 export const pollData = polls;
