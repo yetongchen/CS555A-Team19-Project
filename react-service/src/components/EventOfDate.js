@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, redirect, Link } from "react-router-dom";
-import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Pagination,
+  PaginationItem,
+  CircularProgress,
+} from "@mui/material";
 import "../App.css";
 import EventOfDateCard from "./EventOfDateCard";
 import axios from "axios";
@@ -65,12 +71,14 @@ function EventOfDate() {
     }
   };
 
+  // revise this function since every re-render page will require to scrape data from eventbrite
+  // 
   useEffect(() => {
     async function getEventIDs() {
       try {
         let res = null;
         const { data } = await axios.post("http://localhost:4000/eventIDs", {
-          pages: 5,
+          pages: 3,
           date,
           state,
           city,
@@ -112,7 +120,15 @@ function EventOfDate() {
             overflow: "auto",
           }}
         >
-          {cardsData ? cardsData : <h1>Fetching Events...</h1>}
+          {cardsData ? (
+            cardsData
+          ) : (
+            <Box sx={{ display: "block", alignItems: "center", marginRight: "6%" }}>
+              <h1>Fetching Events...</h1>
+              <br />
+              <CircularProgress />
+            </Box>
+          )}
         </Grid>
         <Box
           justifyContent={"center"}
