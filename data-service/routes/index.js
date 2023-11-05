@@ -1,5 +1,5 @@
 import users from "./users.js";
-import postRoute from "./postRoute.js";
+import postRoute from "./posts.js";
 import eventIDs from "./eventIDs.js";
 import geo from "./geolocation.js";
 import polls from "./polls.js";
