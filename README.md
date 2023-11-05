@@ -85,6 +85,28 @@ To develop this project, you will need the following tools:
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
+### How to start the project:
+
+1 - Install docker:  https://www.docker.com/
+
+2 - Make sure the following ports are not occupied: `27017`(MongoDB service), `4000` (backend service), `3000` (frontend service)
+
+3 - Execute the following terminal command in the project root directory: 
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+  This command will build each service's image in docker, including data seeding process.
+   
+  You might have to wait a while for everything to be set up in docker. 
+    
+  Then, you can open http://localhost:4000 on browser to start your testing.
+
+4 - Make sure the services are started correctly in docker, enjoy！
+
+<!--
 ### Prerequisites
 
 1. Open your terminal, enter the command below, and choose a folder in which to clone the repository.
@@ -131,7 +153,7 @@ To get a local copy up and running follow these simple example steps.
     ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
+-->
 <!-- USAGE EXAMPLES -->
 
 
