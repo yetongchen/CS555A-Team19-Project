@@ -87,7 +87,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### How to start the project:
 
-1 - Install docker:  https://www.docker.com/
+1 - Install docker:  https://www.docker.com/get-started/
 
 2 - Make sure the following ports are not occupied: `27017`(MongoDB service), `4000` (backend service), `3000` (frontend service)
 
