@@ -62,7 +62,7 @@ const Header = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar className="AppBar" position="static">
+      <AppBar position="relative">
         <Toolbar variant="dense">
           <IconButton
             size="medium"
