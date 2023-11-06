@@ -3,14 +3,7 @@ import { users } from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import validation from '../validation/postValidation.js';
 
-/**
- * @param {String} user_id
- * @param {String} event_id
- * @param {String} name
- * @param {String} title
- * @param {String} text
- * @returns post Object
- */
+const createError = (message) => new Error (message);
 
 const createPost = async (
     user_id,
@@ -19,13 +12,12 @@ const createPost = async (
     title,
     text
 ) => {
-    //validation
     user_id = validation.checkString(user_id);
     const userCollection = await users();
     let user_exist = await userCollection.findOne({_id: user_id});
-    if (!user_exist) throw "The user does not exist";
+    if (!user_exist) throw createError("User does not exist.");
 
-    event_id = validation.checkString(event_id); //more validation
+    event_id = validation.checkString(event_id); //need more validation
     name = validation.checkUsername(name);
     title = validation.checkTitle(title);
     text = validation.checkText(text);
@@ -47,51 +39,45 @@ const createPost = async (
     const postCollection = await posts();
     const postInfo = await postCollection.insertOne(postData);
     if (!postInfo.acknowledged || !postInfo.insertedId) {
-        throw "Could not add this post";
+        throw createError("Cannot add this post.");
     }
 
     //save post_id in the user collection
-    postInfo.insertedId = postInfo.insertedId.toString();
-    if (!user_exist.posts) throw "user object do not have posts array";
-    user_exist.posts.push(postInfo.insertedId);
-    const userInfo = await userCollection.updateOne({_id: user_id},
-        {$set : {posts: user_exist.posts}});
-    console.log("save post id to user: ", userInfo);
+    user_exist.posts = user_exist.posts || [];
+    user_exist.posts.push(postInfo.insertedId.toString());
+
+    const userInfo = await userCollection.updateOne(
+        {_id: user_id},
+        {$set : {posts: user_exist.posts}});      
+    //console.log("save post id to user: ", userInfo);
+
     if (!userInfo.acknowledged) {
-        throw "Could not add post_id in user object";
+        throw createError("Cannot update user with post ID.");
     }
     
-    const newPost = await getPostByPostId(postInfo.insertedId);
-
-    return newPost;
+    return await getPostByPostId(postInfo.insertedId.toString());
 }
 
-/**
- * @param {String} post_id
- * @returns {deletePost: true}
- */
-const removePostByPostId = async (
-    post_id
-) => {
+const removePostByPostId = async (post_id) => {
     post_id = validation.checkStringObjectID(post_id);
 
     const postCollection = await posts();
     const post = await postCollection.findOne({_id: new ObjectId(post_id)});
-    if (!post) {
-        throw "This post does not exist."
-    }
-    console.log("post to be deleted: ", post)
+    if (!post) throw createError("Post does not exist.");
+    //console.log("post to be deleted: ", post)
 
     let user_id = validation.checkString(post.user_id);
     const userCollection = await users();
     let user_exist = await userCollection.findOne({_id: user_id});
-    if (!user_exist) throw "The user dose not exist";
-    if (!user_exist.posts) throw "user object do not have posts array";
-    if (!user_exist.posts.includes(post_id)) throw "The user do not have a post with this post_id";
+    if (!user_exist) throw createError("User dose not exist.");
+
+    if (!user_exist.posts || !user_exist.posts.includes(post_id)) {
+        throw createError("User does not have this post.");
+    }
 
     const deleteInfo = await postCollection.deleteOne({_id: new ObjectId(post_id)});
     if (deleteInfo.deletedCount === 0) {
-        throw `Could not delete post with id of ${post_id}`;
+        throw createError(`Cannot delete post with ID: ${post_id}`);
     }
     
     //remove post from user collection
@@ -99,68 +85,43 @@ const removePostByPostId = async (
     if (index > -1) { // only splice array when item is found
         user_exist.posts.splice(index, 1); // 2nd parameter means remove one item only
     }
-    const removeInfo = await userCollection.updateOne({_id: user_id},
+    const updateInfo = await userCollection.updateOne(
+        {_id: user_id},
         {$set : {posts: user_exist.posts}});
-    console.log("remove user id from user: ", removeInfo);
+    //console.log("remove user id from user: ", removeInfo);
 
-    if (!(removeInfo && deleteInfo)) 
-        throw `could not remove post correctlly`;
+    if (!updateInfo.acknowledged) {
+        throw createError("Cannot remove post ID from user.");
+    }
     
     return {deletePost: true};
 }
 
-/**
- * @param {String} post_id
- * @returns post Object
- */
-const getPostByPostId = async (
-    post_id
-) => {
-    //validadtion
+const getPostByPostId = async (post_id) => {
     post_id = validation.checkStringObjectID(post_id);
-
     const postCollection = await posts();
     const post = await postCollection.findOne({_id: new ObjectId(post_id)});
-    if (!post)
-        throw `can not find post with id of ${post_id}`; 
-
+    if (!post) throw createError(`Cannot find post with ID: ${post_id}`);
     post._id = post._id.toString();
     return post;
 }
 
-/**
- * @param {String} event_id
- * @returns array of post Object
- */
-const getPostByEventId = async (
-    event_id
-) => {
-    //validadtion
-    //event_id = validation.checkStringObjectID(event_id);
-
+const getPostByEventId = async (event_id) => {
     const postCollection = await posts();
     const postByEventId = await postCollection.find({event_id: event_id}).toArray();
-    if (!postByEventId)
-        throw `can not find post of event with id of ${event_id}`; 
-
+    if (!postByEventId) throw createError(`Cannot find posts for event with ID: ${event_id}`);
     return postByEventId;
 }
 
-/**
- * @param {String} user_id
- * @returns array of post Object
- */
-const getPostByUserId = async (
-    user_id
-) => {
-    //validadtion
-    user_id = validation.checkStringObjectID(user_id);
+const getPostByUserId = async (user_id) => {
+    user_id = validation.checkString(user_id);
+    const userCollection = await users();
+    let user_exist = await userCollection.findOne({_id: user_id});
+    if (!user_exist) throw createError("User does not exist.");
 
     const postCollection = await posts();
     const postByUserId = await postCollection.find({user_id: user_id}).toArray();
-    if (!postByUserId)
-        throw `can not find post of user with id of ${user_id}`; 
-
+    if (!postByUserId) throw createError(`Cannot find posts for user with ID: ${user_id}`);
     return postByUserId;
 }
 

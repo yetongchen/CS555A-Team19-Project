@@ -18,7 +18,7 @@ const checkString = (str) => {
 const checkUsername = (username) => {
   if (!username) throw "Please provide a username";
   if (typeof username != "string") throw "username type should be string";
-  username = username.trim().toLowerCase();
+  //username = username.trim().toLowerCase();
   if (username.length < minNameLength)
     throw `username length should be at least ${minNameLength} character`;
   if (username.length > maxNameLength)
