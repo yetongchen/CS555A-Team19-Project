@@ -6,7 +6,7 @@ import { AppBar, Toolbar, Typography, IconButton, Button } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import axios from "axios";
-//import profile from "../images/profile-1.jpg";
+import noImage from "../images/no-image.png";
 
 const Header = () => {
   const [user, setUser] = useState(null);
@@ -83,8 +83,9 @@ const Header = () => {
               <NavLink to="/profile">
                 <div className="welcome">Welcome, {userInfo.name}</div>
                 {userInfo ? (<div className="profile-photo">
-                  <img src={userInfo.imageURL}></img>
-                </div>) : null}
+                  <img src={userInfo.imageURL} alt="user avatar"></img></div>) 
+                  : (<div className="profile-photo">
+                  <img src={noImage} alt="user avatar"></img> </div>)}
               </NavLink>
             </Typography>
           )}

@@ -11,7 +11,6 @@ import "../App.css";
 import axios from "axios";
 import { Grid, Skeleton } from "@mui/material";
 import noImage from "../images/no-image.png";
-import { async } from "@firebase/util";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
 

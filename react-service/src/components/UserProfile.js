@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, List, Pagination, Input, Tabs, Modal } from 'antd';
+import { Pagination, Input, Tabs, Modal } from 'antd';
 import { getAuth, onAuthStateChanged} from 'firebase/auth';
 import EventOfDateCard from './EventOfDateCard';
 import PostCard from "./PostCard";
@@ -117,8 +117,8 @@ function UserProfile() {
     setCurrentPageEvents(1);
   };
 
-  const currentComments = filteredComments.slice((currentPageComments - 1) * pageSize, currentPageComments * pageSize); 
-  const currentEvents = filteredEvents.slice((currentPageEvents - 1) * pageSize, currentPageEvents * pageSize); 
+  //const currentComments = filteredComments.slice((currentPageComments - 1) * pageSize, currentPageComments * pageSize); 
+  //const currentEvents = filteredEvents.slice((currentPageEvents - 1) * pageSize, currentPageEvents * pageSize); 
 
 
   const showModal = () => {
