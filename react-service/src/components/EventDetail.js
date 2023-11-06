@@ -126,33 +126,33 @@ function EventDetail({}) {
     }
   }
 
-  function formatDateTime(start, end) {
+  function formatEventDateTime(start, end) {
     const startDate = new Date(start.local);
     const endDate = new Date(end.local);
-
-    const options = {
+  
+    const dateOptions = {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
     };
-    const startDateString = startDate.toLocaleDateString("en-US", options);
+    const startDateString = startDate.toLocaleDateString("en-US", dateOptions);
 
-    const startTime = startDate.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
-    const endTime = endDate.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
+    // Function to format time
+    const formatTime = (date) => date.toLocaleTimeString("en-US", {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
     });
 
+    const startTime = formatTime(startDate);
+    const endTime = formatTime(endDate);
+    
     const timeZone = start.timezone;
-
+  
     return `${startDateString} · ${startTime} - ${endTime} ${timeZone}`;
   }
+  
 
   function formatVenueAddress(venue) {
     let addressParts = [];
@@ -244,7 +244,7 @@ function EventDetail({}) {
   };
 
   // formate posts date
-  const formatDate = (datetime) => {
+  const formatPostDate = (datetime) => {
     const date = new Date(datetime);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -254,6 +254,28 @@ function EventDetail({}) {
 
     return `${year}-${month}-${day} ${hour}:${minute}`;
   };
+
+  
+  const [hasJoined, setHasJoined] = useState(false);
+  useEffect(() =>{
+    if (userInfo && userInfo.events && userInfo.events.includes(eventId)) {
+      setHasJoined(true);
+    }
+  }, [userInfo, eventId]);
+
+    const joinEvent = async () => {
+    if (!userInfo) {
+      console.error("User must be logged in to join event");
+      return;
+    }
+    setHasJoined(true);
+    try {
+      const response = await axios.post(`http://localhost:4000/users/addEventToUser/${userInfo._id}/${eventId}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="outer-container">
@@ -269,8 +291,15 @@ function EventDetail({}) {
           <div className="event-time-location">
             <CalendarMonthOutlinedIcon />
             <h2>Date and Time: </h2>
-            {event.start && event.end && formatDateTime(event.start, event.end)}
-            <button className="join-button">Join</button>
+            {event.start && event.end && formatEventDateTime(event.start, event.end)}
+            {/* <button className="join-button" onClick={joinEvent}>Join</button> */}
+            <button 
+              className={hasJoined ? "join-button joined" : "join-button"} 
+              onClick={joinEvent} 
+              disabled={hasJoined}
+            >
+              {hasJoined ? "Joined" : "Join"}
+            </button>
           </div>
 
           <div className="event-address">
@@ -317,7 +346,7 @@ function EventDetail({}) {
                 <div className="post-header">
                   <span className="post-title">{post.title}</span>
                   <span className="post-author">
-                    {formatDate(post.datetime)} By: {post.name}
+                    {formatPostDate(post.datetime)} By: {post.name}
                   </span>
                 </div>
                 <div className="post-content">{post.text}</div>

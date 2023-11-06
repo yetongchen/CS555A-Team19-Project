@@ -110,7 +110,7 @@ export const addPostToUser = async (userId, postId) => {
 
   try {
     const userCollection = await users();
-    const updatedInfo = await userCollection.updateOne({_id: new ObjectId(id)}, { $push: { posts: postId } });
+    const updatedInfo = await userCollection.updateOne({_id: userId}, { $push: { posts: postId } });
     if (!updatedInfo)
       throw `Error: Update failed, could not find a user with id of ${userId}`;
     return updatedInfo;
@@ -135,7 +135,7 @@ export const addEventToUser = async (userId, eventId) => {
 
   try {
     const userCollection = await users();
-    const updatedInfo = await userCollection.updateOne({_id: new ObjectId(id)}, { $push: { events: eventId } });
+    const updatedInfo = await userCollection.updateOne({_id: userId}, { $push: { events: eventId } });
     if (!updatedInfo)
       throw `Error: Update failed, could not find a user with id of ${userId}`;
     return updatedInfo;
