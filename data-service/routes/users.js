@@ -1,6 +1,7 @@
 import express from "express";
-import { createUser, getUserById, updateUserPatch } from "../data/users.js";
+import { createUser, getUserById, updateUserPatch, addEventToUser} from "../data/users.js";
 import { users } from "../config/mongoCollections.js";
+import postValidation from "../validation/postValidation.js";
 
 const router = express.Router();
 
@@ -68,6 +69,24 @@ router.route("/:userId")
     } catch (e) {
       res.status(400).json({ error: e });
     }
+});
+
+
+router.route("/addEventToUser/:userId/:eventId").post(async (req, res) => {
+  let { userId, eventId } = req.params;
+  try {
+    userId = postValidation.checkString(userId);
+    eventId = postValidation.checkString(eventId);
+  } catch (e) {
+    return res.status(400).json({ error: e.toString() });
+  }
+
+  try {
+    let updateInfo = await addEventToUser(userId, eventId);
+    res.status(200).json({ message: 'Joined the event successfully', updateInfo });
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
 });
 
 export default router;

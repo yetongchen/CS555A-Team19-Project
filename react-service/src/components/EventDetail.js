@@ -255,20 +255,27 @@ function EventDetail({}) {
     return `${year}-${month}-${day} ${hour}:${minute}`;
   };
 
-  //
-  // const joinEvent = async () => {
-  //   try {
-  //     const response = await axios.post(`http://localhost:4000/users/addEventToUser/${userInfo._id}/${eventId}`);
-  //     console.log(response.data);
-  //     return response.data;
-  //   } catch (error) {
-  //     if (error.response) {
-  //       console.error(error.response.data);
-  //     } else {
-  //       console.error(error.message); // 未捕获到响应时的错误消息
-  //     }
-  //   }
-  // }
+  
+  const [hasJoined, setHasJoined] = useState(false);
+  useEffect(() =>{
+    if (userInfo && userInfo.events && userInfo.events.includes(eventId)) {
+      setHasJoined(true);
+    }
+  }, [userInfo, eventId]);
+
+    const joinEvent = async () => {
+    if (!userInfo) {
+      console.error("User must be logged in to join event");
+      return;
+    }
+    setHasJoined(true);
+    try {
+      const response = await axios.post(`http://localhost:4000/users/addEventToUser/${userInfo._id}/${eventId}`);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="outer-container">
@@ -285,8 +292,14 @@ function EventDetail({}) {
             <CalendarMonthOutlinedIcon />
             <h2>Date and Time: </h2>
             {event.start && event.end && formatEventDateTime(event.start, event.end)}
-            <button className="join-button">Join</button>
             {/* <button className="join-button" onClick={joinEvent}>Join</button> */}
+            <button 
+              className={hasJoined ? "join-button joined" : "join-button"} 
+              onClick={joinEvent} 
+              disabled={hasJoined}
+            >
+              {hasJoined ? "Joined" : "Join"}
+            </button>
           </div>
 
           <div className="event-address">
