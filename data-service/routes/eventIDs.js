@@ -18,8 +18,8 @@ router.post("/", async (req, res) => {
     const city = data.city;
 
     const python = spawn("python3", [
-      "../data-service/data/EventIDCrawler.py",  // for local
-      //"data/EventIDCrawler.py", // for docker container
+      //"../data-service/data/EventIDCrawler.py",  // for local
+      "data/EventIDCrawler.py", // for docker container
       pages,
       date,
       state,
