@@ -76,12 +76,15 @@ function EventOfDate() {
           city,
         });
         event_ids = data.eventIDs;
+        const timeRange = { start: "17:00", end: "20:00" };
         res =
           event_ids &&
           event_ids
             .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
             .map((id) => {
-              return <EventOfDateCard eventId={id} key={id} />;
+              return (
+                <EventOfDateCard eventId={id} key={id} timeRange={timeRange} />
+              );
             });
         setCardsData(res);
         setLastPage(Math.ceil(event_ids.length / pageDisplay));
