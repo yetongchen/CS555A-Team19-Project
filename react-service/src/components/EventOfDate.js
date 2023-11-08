@@ -3,6 +3,7 @@ import { useSearchParams, redirect, Link } from "react-router-dom";
 import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
 import "../App.css";
 import EventOfDateCard from "./EventOfDateCard";
+import TicketMasterCard from "./TicketMasterCard";
 import axios from "axios";
 
 // Jason template
@@ -34,6 +35,39 @@ function EventOfDate() {
   city = city ? city.replace(/\s+/g, "-") : city;
   let event_ids = null;
   let pageDisplay = 20;
+
+  let pageDisplayForTM = 10;
+
+  const [ticketmasterData, setTicketmasterData] = useState(undefined);
+
+  useEffect(() => {
+    let data = null;
+    async function getEvents() {
+      const apiKey = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
+      const startDateTime = "2023-11-11T17:00:00Z";
+
+      const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${startDateTime}`;
+      try {
+        const response = await axios.get(url);
+        data = response.data;
+
+        setTicketmasterData(data._embedded.events);
+      } catch (error) {
+        console.error("Error when get event detail", error);
+      }
+    }
+    getEvents();
+  }, []);
+
+  // useEffect(() => {
+  //   if (ticketmasterData && cardsData) {
+  //     const TMCards = ticketmasterData.map((data) => {
+  //       return <TicketMasterCard data={data} />;
+  //     });
+  //     console.log(cardsData);
+  //     console.log(TMCards);
+  //   }
+  // }, [ticketmasterData]);
 
   const handleChange = (event, value) => {
     setCurrentPage(value);
@@ -76,14 +110,17 @@ function EventOfDate() {
           city,
         });
         event_ids = data.eventIDs;
-        const timeRange = { start: "17:00", end: "20:00" };
         res =
           event_ids &&
           event_ids
             .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
             .map((id) => {
               return (
-                <EventOfDateCard eventId={id} key={id} timeRange={timeRange} />
+                <EventOfDateCard
+                  eventId={id}
+                  key={id}
+                  // timeRange={{ start: "17:00", end: "20:00" }}
+                />
               );
             });
         setCardsData(res);
@@ -115,7 +152,16 @@ function EventOfDate() {
             overflow: "auto",
           }}
         >
-          {cardsData ? cardsData : <h1>Fetching Events...</h1>}
+          {cardsData && cardsData}
+          {ticketmasterData &&
+            ticketmasterData
+              .slice(
+                pageDisplayForTM * (currentPage - 1),
+                pageDisplayForTM * currentPage
+              )
+              .map((data) => {
+                return <TicketMasterCard data={data} key={data.id} />;
+              })}
         </Grid>
         <Box
           justifyContent={"center"}
