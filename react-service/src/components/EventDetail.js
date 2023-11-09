@@ -208,9 +208,20 @@ function EventDetail({}) {
       const response = await axios.get(
         `http://localhost:4000/post/event/${id}`
       );
-      return response.data;
+      if(response.data.error){
+        console.log(response.data);
+        setError(response.data.error);
+      }else{
+        setError(null);
+        return response.data;
+      }
     } catch (error) {
       console.log(error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError(error.message);
+      }
     }
   };
 
@@ -228,6 +239,11 @@ function EventDetail({}) {
   // add post
   const handleAddPost = async () => {
     setError(null);
+    if (!userInfo) {
+      console.error("User must be logged in to add post");
+      setError("You must be logged in to add a post");
+      return;
+    }
     try {
       const postData = {
         user_id: userInfo._id,
@@ -243,15 +259,24 @@ function EventDetail({}) {
       );
 
       const newPost = response.data;
-
-      let updatedPosts = await postsForEvent(id);
-      setPosts(updatedPosts);
-      setNewPostTitle("");
-      setNewPostContent("");
-      return newPost;
+      if(newPost.error){
+        console.log(newPost.error);
+        setError(newPost.error);
+      }else{
+        setError(null);
+        let updatedPosts = await postsForEvent(id);
+        setPosts(updatedPosts);
+        setNewPostTitle("");
+        setNewPostContent("");
+        return newPost;
+      }
     } catch (error) {
       console.log(error);
-      setError(error.message);
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError(error.message);
+      }
     }
   };
 
