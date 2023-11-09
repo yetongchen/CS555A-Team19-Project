@@ -47,6 +47,7 @@ function EventDetail({}) {
 
   const [create, setCreate] = useState(false);
   const [polls, setPolls] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, setUser);
@@ -82,7 +83,10 @@ function EventDetail({}) {
         if (eventData.venue_id) {
           getVenueById(eventData.venue_id)
             .then(setVenue)
-            .catch((error) => console.error("Error fetching venue", error));
+            .catch((error) => {
+              console.error("Error fetching event", error);
+              setError('There was a problem fetching event details.');
+            });
         }
       })
       .catch((error) => {
@@ -92,6 +96,7 @@ function EventDetail({}) {
 
   useEffect(() => {
     async function getPolls() {
+      setError(null);
       console.log("useEffect fired");
 
       try {
@@ -103,6 +108,7 @@ function EventDetail({}) {
         if (results && results.length > 0) setPolls(results);
       } catch (error) {
         console.log(error);
+        setError("There was a problem fetching polls.");
       }
     }
 
@@ -113,6 +119,7 @@ function EventDetail({}) {
 
   async function getVenueById(vid) {
     const apiUrl = `https://www.eventbriteapi.com/v3/venues/${vid}/`;
+    setError(null);
 
     try {
       const response = await axios.get(apiUrl, {
@@ -123,6 +130,7 @@ function EventDetail({}) {
       return response.data;
     } catch (error) {
       console.log(error);
+      setError("There was a problem fetching venue details.");
     }
   }
 
@@ -207,16 +215,19 @@ function EventDetail({}) {
   };
 
   const displayPostForEvent = async (id) => {
+    setError(null);
     try {
       const posts = await postsForEvent(id);
       return posts;
     } catch (error) {
       console.log(error);
+      setError(error.message);
     }
   };
 
   // add post
   const handleAddPost = async () => {
+    setError(null);
     try {
       const postData = {
         user_id: userInfo._id,
@@ -240,6 +251,7 @@ function EventDetail({}) {
       return newPost;
     } catch (error) {
       console.log(error);
+      setError(error.message);
     }
   };
 
@@ -264,16 +276,20 @@ function EventDetail({}) {
   }, [userInfo, eventId]);
 
     const joinEvent = async () => {
+    setError(null);
     if (!userInfo) {
       console.error("User must be logged in to join event");
+      setError("You must be logged in to join an event");
       return;
     }
     setHasJoined(true);
+    setError(null);
     try {
       const response = await axios.post(`http://localhost:4000/users/addEventToUser/${userInfo._id}/${eventId}`);
       return response.data;
     } catch (error) {
       console.log(error);
+      setError(error.message);
     }
   }
 
@@ -384,6 +400,8 @@ function EventDetail({}) {
         </div>
 
         <br></br>
+        {error && <p style={{color: 'red'}}>{error}</p>}
+
         <Button
           variant="standard"
           style={{
