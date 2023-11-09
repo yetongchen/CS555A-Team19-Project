@@ -6,6 +6,7 @@ import {
   Pagination,
   PaginationItem,
   CircularProgress,
+  Checkbox,
 } from "@mui/material";
 import "../App.css";
 import EventOfDateCard from "./EventOfDateCard";
@@ -39,7 +40,6 @@ function EventOfDate() {
   let date = searchParams.get("date");
   let start_date = searchParams.get("start_date");
   let end_date = searchParams.get("end_date");
-  console.log(start_date);
   let city = searchParams.get("city");
   let state = searchParams.get("state");
   state = state ? state.replace(/\s+/g, "-") : state;
@@ -54,9 +54,7 @@ function EventOfDate() {
     let data = null;
     async function getEvents() {
       const apiKey = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
-      const startDateTime = "2023-11-11T17:00:00Z";
-
-      const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${startDateTime}`;
+      const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${start_date}Z`;
       try {
         const response = await axios.get(url);
         data = response.data;
@@ -66,7 +64,10 @@ function EventOfDate() {
         console.error("Error when get event detail", error);
       }
     }
-    getEvents();
+
+    if (start_date) {
+      getEvents();
+    }
   }, []);
 
   // useEffect(() => {
