@@ -1,96 +1,67 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, redirect, Link } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
 import "../App.css";
 import EventOfDateCard from "./EventOfDateCard";
 import axios from "axios";
 
-// Jason template
-// const getEventIDs = async () => {
-//   const { data } = await axios.post("http://localhost:4000/eventIDs", {
-//     pages: 10,
-//     date: "2023-10-31",
-//     state: "NJ",
-//     city: "hoboken",
-//   });
-
-//   return data.eventIDs;
-// };
-
-// const event_ids = await getEventIDs();
-
 function EventOfDate() {
   const [searchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page"))
-  );
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page"), 10) || 1);
   const [lastPage, setLastPage] = useState(undefined);
   const [cardsData, setCardsData] = useState(null);
+  const [loading, setLoading] = useState(true); // 新增加载状态
 
   let date = searchParams.get("date");
-  let city = searchParams.get("city");
   let state = searchParams.get("state");
+  let city = searchParams.get("city");
   state = state ? state.replace(/\s+/g, "-") : state;
   city = city ? city.replace(/\s+/g, "-") : city;
-  let event_ids = null;
-  let pageDisplay = 20;
 
   const handleChange = (event, value) => {
     setCurrentPage(value);
-    if (currentPage < 0) {
-      if (city) {
-        return redirect(
-          `events/date/?page=1&date=${date}&state=${state}&city=${city}`
-        );
-      } else {
-        return redirect(`events/date/?page=1&date=${date}&state=${state}`);
-      }
-    } else if (currentPage > lastPage) {
-      if (city) {
-        return redirect(
-          `events/date/?page=${lastPage}&date=${date}&state=${state}&city=${city}`
-        );
-      } else {
-        return redirect(
-          `events/date/?page=${lastPage}&date=${date}&state=${state}`
-        );
-      }
-    }
-    if (city) {
-      return redirect(
-        `events/date/?page=${value}&date=${date}&state=${state}&city=${city}`
-      );
-    } else {
-      return redirect(`events/date/?page=${value}&date=${date}&state=${state}`);
-    }
+    let search = `?page=${value}&date=${date}`;
+    if (state) search += `&state=${state}`;
+    if (city) search += `&city=${city}`;
+    navigate(`/events/date/${search}`);
   };
 
   useEffect(() => {
     async function getEventIDs() {
       try {
-        let res = null;
+        setLoading(true); // 开始加载时设置为true
         const { data } = await axios.post("http://localhost:4000/eventIDs", {
           pages: 5,
           date,
           state,
           city,
         });
-        event_ids = data.eventIDs;
-        res =
-          event_ids &&
-          event_ids
-            .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
-            .map((id) => {
-              return <EventOfDateCard eventId={id} key={id} />;
-            });
-        setCardsData(res);
-        setLastPage(Math.ceil(event_ids.length / pageDisplay));
+
+        if (data.eventIDs && data.eventIDs.length > 0) {
+          const pageDisplay = 20;
+          const paginatedEventIds = data.eventIDs.slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage);
+          const cards = paginatedEventIds.map((id) => <EventOfDateCard eventId={id} key={id} />);
+          setCardsData(cards);
+          setLastPage(Math.ceil(data.eventIDs.length / pageDisplay));
+        } else {
+          setCardsData(<h1>Oops. No Events for today! Try another day.</h1>);
+          setLastPage(0);
+        }
       } catch (error) {
-        console.log(error);
+        if (error.response && error.response.status === 429) {
+          setCardsData(<h1>Server is busy. Too many requests. Come back 10 minutes later.</h1>);
+        } else {
+          console.error("Error fetching events:", error);
+          setCardsData(<h1>Error fetching events. Please try again later.</h1>);
+        }
+      } finally {
+        setLoading(false); // 加载结束时设置为false
       }
     }
+
     getEventIDs();
-  }, [currentPage]);
+  }, [currentPage, date, state, city]); // Included dependencies
 
   return (
     <section className="event-by-date-section">
@@ -112,35 +83,41 @@ function EventOfDate() {
             overflow: "auto",
           }}
         >
-          {cardsData ? cardsData : <h1>Fetching Events...</h1>}
+          {loading ? (
+            <h1>Loading...</h1>
+          ) : (
+            cardsData
+          )}
         </Grid>
-        <Box
-          justifyContent={"center"}
-          alignItems={"center"}
-          display={"flex"}
-          sx={{ marginRight: "6%" }}
-        >
-          <Pagination
-            page={currentPage}
-            count={lastPage}
-            onChange={handleChange}
-            sx={{ marginBottom: "1%", marginTop: "1%" }}
-            renderItem={(item) => (
-              <PaginationItem
-                component={Link}
-                to={
-                  city
-                    ? `?page=${item.page}&date=${date}&state=${state}&city=${city}`
-                    : `?page=${item.page}&date=${date}&state=${state}`
-                }
-                {...item}
-              />
-            )}
-          />
-        </Box>
+        {lastPage > 1 && (
+          <Box
+            justifyContent={"center"}
+            alignItems={"center"}
+            display={"flex"}
+            sx={{ marginRight: "6%" }}
+          >
+            <Pagination
+              page={currentPage}
+              count={lastPage}
+              onChange={handleChange}
+              sx={{ marginBottom: "1%", marginTop: "1%" }}
+              renderItem={(item) => (
+                <PaginationItem
+                  component="button" // Changed to button for better accessibility
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent form submission
+                    handleChange(e, item.page);
+                  }}
+                  {...item}
+                />
+              )}
+            />
+          </Box>
+        )}
       </div>
     </section>
   );
 }
 
 export default EventOfDate;
+
