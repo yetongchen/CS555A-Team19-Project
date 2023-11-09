@@ -102,7 +102,7 @@ docker-compose up
    
   You might have to wait a while for everything to be set up in docker. 
     
-  Then, you can open http://localhost:4000 on browser to start your testing.
+  Then, you can open http://localhost:3000 on browser to start your testing.
 
 4 - Make sure the services are started correctly in docker, enjoy！
 

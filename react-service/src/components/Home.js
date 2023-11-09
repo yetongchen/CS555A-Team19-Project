@@ -49,51 +49,57 @@ const Home = () => {
   const Carousel = ({ images }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const handleNext = () => {
+    const goToNext = () => {
       setCurrentIndex((prevIndex) =>
-        prevIndex + 1 === images.length ? 0 : prevIndex + 1
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
       );
     };
-    const handlePrevious = () => {
+    const goToPrevious = () => {
       setCurrentIndex((prevIndex) =>
-        prevIndex - 1 < 0 ? images.length - 1 : prevIndex - 1
+        prevIndex === 0 ? images.length - 1 : prevIndex - 1
       );
     };
-    const handleDotClick = (index) => {
+    const goToImage = (index) => {
       setCurrentIndex(index);
     };
 
+    // Automatically switch to the next image every 3 seconds
+    useEffect(() => {
+      const interval = setInterval(goToNext, 5000);
+      // Clear the interval when the component unmounts
+      return () => clearInterval(interval);
+    }, []);
+
+    const transformValue = `translateX(-${currentIndex * 100}%)`;
+
     return (
-      <div className="carousel-images">
-        <img key={currentIndex} src={images[currentIndex]} />
+      <div className="carousel-images" >
+        <div className="carousel-wrapper">
+        <div className="carousel-images-container" style={{ transform: transformValue }}>
+          {images.map((image, index) => (
+           <img key={index} src={image} alt={`Image ${index}`} />
+          ))}
+        </div>
+        {/* <img key={currentIndex} src={images[currentIndex]} /> */}
         <div className="slide_direction">
-          <div className="left" onClick={handlePrevious}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="20"
-              viewBox="0 96 960 960"
-              width="20"
-            >
-              <path d="M400 976 0 576l400-400 56 57-343 343 343 343-56 57Z" />
+          <button onClick={goToPrevious} className="left-arrow">
+            <svg viewBox="0 0 24 24">
+              <path fillRule="evenodd" clipRule="evenodd" d="M4 12l8 8 1.5-1.5L8 13h12v-2H8l5.5-5.5L12 4z"></path>
+            </svg> 
+          </button>
+          <button onClick={goToNext} className="right-arrow">
+            <svg viewBox="0 0 24 24">
+              <path fillRule="evenodd" clipRule="evenodd" d="M10.5 5.5L16 11H4v2h12l-5.5 5.5L12 20l8-8-8-8z"></path>
             </svg>
-          </div>
-          <div className="right" onClick={handleNext}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="20"
-              viewBox="0 96 960 960"
-              width="20"
-            >
-              <path d="m304 974-56-57 343-343-343-343 56-57 400 400-400 400Z" />
-            </svg>
-          </div>
+          </button>
+        </div>
         </div>
         <div className="carousel-indicator">
           {images.map((_, index) => (
             <div
               key={index}
               className={`dot ${currentIndex === index ? "active" : ""}`}
-              onClick={() => handleDotClick(index)}
+              onClick={() => goToImage(index)}
             ></div>
           ))}
         </div>
