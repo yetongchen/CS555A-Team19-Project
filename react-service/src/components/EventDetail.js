@@ -47,6 +47,7 @@ function EventDetail({}) {
 
   const [create, setCreate] = useState(false);
   const [polls, setPolls] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, setUser);
@@ -82,7 +83,10 @@ function EventDetail({}) {
         if (eventData.venue_id) {
           getVenueById(eventData.venue_id)
             .then(setVenue)
-            .catch((error) => console.error("Error fetching venue", error));
+            .catch((error) => {
+              console.error("Error fetching event", error);
+              setError('There was a problem fetching event details.');
+            });
         }
       })
       .catch((error) => {
@@ -92,6 +96,7 @@ function EventDetail({}) {
 
   useEffect(() => {
     async function getPolls() {
+      setError(null);
       console.log("useEffect fired");
 
       try {
@@ -103,6 +108,7 @@ function EventDetail({}) {
         if (results && results.length > 0) setPolls(results);
       } catch (error) {
         console.log(error);
+        setError("There was a problem fetching polls.");
       }
     }
 
@@ -113,6 +119,7 @@ function EventDetail({}) {
 
   async function getVenueById(vid) {
     const apiUrl = `https://www.eventbriteapi.com/v3/venues/${vid}/`;
+    setError(null);
 
     try {
       const response = await axios.get(apiUrl, {
@@ -123,6 +130,7 @@ function EventDetail({}) {
       return response.data;
     } catch (error) {
       console.log(error);
+      setError("There was a problem fetching venue details.");
     }
   }
 
@@ -200,23 +208,42 @@ function EventDetail({}) {
       const response = await axios.get(
         `http://localhost:4000/post/event/${id}`
       );
-      return response.data;
+      if(response.data.error){
+        console.log(response.data);
+        setError(response.data.error);
+      }else{
+        setError(null);
+        return response.data;
+      }
     } catch (error) {
       console.log(error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError(error.message);
+      }
     }
   };
 
   const displayPostForEvent = async (id) => {
+    setError(null);
     try {
       const posts = await postsForEvent(id);
       return posts;
     } catch (error) {
       console.log(error);
+      setError(error.message);
     }
   };
 
   // add post
   const handleAddPost = async () => {
+    setError(null);
+    if (!userInfo) {
+      console.error("User must be logged in to add post");
+      setError("You must be logged in to add a post");
+      return;
+    }
     try {
       const postData = {
         user_id: userInfo._id,
@@ -232,14 +259,24 @@ function EventDetail({}) {
       );
 
       const newPost = response.data;
-
-      let updatedPosts = await postsForEvent(id);
-      setPosts(updatedPosts);
-      setNewPostTitle("");
-      setNewPostContent("");
-      return newPost;
+      if(newPost.error){
+        console.log(newPost.error);
+        setError(newPost.error);
+      }else{
+        setError(null);
+        let updatedPosts = await postsForEvent(id);
+        setPosts(updatedPosts);
+        setNewPostTitle("");
+        setNewPostContent("");
+        return newPost;
+      }
     } catch (error) {
       console.log(error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError(error.message);
+      }
     }
   };
 
@@ -264,16 +301,20 @@ function EventDetail({}) {
   }, [userInfo, eventId]);
 
     const joinEvent = async () => {
+    setError(null);
     if (!userInfo) {
       console.error("User must be logged in to join event");
+      setError("You must be logged in to join an event");
       return;
     }
     setHasJoined(true);
+    setError(null);
     try {
       const response = await axios.post(`http://localhost:4000/users/addEventToUser/${userInfo._id}/${eventId}`);
       return response.data;
     } catch (error) {
       console.log(error);
+      setError(error.message);
     }
   }
 
@@ -383,8 +424,15 @@ function EventDetail({}) {
           <button onClick={handleAddPost}>Add</button>
         </div>
 
+        <br></br>
+        {error && <p style={{color: 'red'}}>{error}</p>}
+
         <Button
-          variant="outlined"
+          variant="standard"
+          style={{
+            fontSize: 18,
+            backgroundColor: "#FFC085",
+          }}
           onClick={() => {
             if (create) {
               setCreate(false);
@@ -408,7 +456,7 @@ function EventDetail({}) {
 
         <br></br>
         <h1>Polls:</h1>
-        {polls.length > 0 ? (
+        {polls && polls.length > 0 ? (
           <Grid
             container
             spacing={2}
@@ -416,7 +464,7 @@ function EventDetail({}) {
             justifyContent="center"
             paddingTop="1%"
           >
-            {polls && userInfo ? (
+            {userInfo ? (
               polls.map((poll) => {
                 return (
                   <PollCard
