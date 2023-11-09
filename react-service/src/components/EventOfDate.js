@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import "../App.css";
 import EventOfDateCard from "./EventOfDateCard";
+import TicketMasterCard from "./TicketMasterCard";
 import axios from "axios";
 
 // Jason template
@@ -36,11 +37,47 @@ function EventOfDate() {
   const [loading, setLoading] = useState(true);
 
   let date = searchParams.get("date");
+  let start_date = searchParams.get("start_date");
+  let end_date = searchParams.get("end_date");
+  console.log(start_date);
   let city = searchParams.get("city");
   let state = searchParams.get("state");
   state = state ? state.replace(/\s+/g, "-") : state;
   city = city ? city.replace(/\s+/g, "-") : city;
   let pageDisplay = 20;
+
+  let pageDisplayForTM = 10;
+
+  const [ticketmasterData, setTicketmasterData] = useState(undefined);
+
+  useEffect(() => {
+    let data = null;
+    async function getEvents() {
+      const apiKey = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
+      const startDateTime = "2023-11-11T17:00:00Z";
+
+      const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${startDateTime}`;
+      try {
+        const response = await axios.get(url);
+        data = response.data;
+
+        setTicketmasterData(data._embedded.events);
+      } catch (error) {
+        console.error("Error when get event detail", error);
+      }
+    }
+    getEvents();
+  }, []);
+
+  // useEffect(() => {
+  //   if (ticketmasterData && cardsData) {
+  //     const TMCards = ticketmasterData.map((data) => {
+  //       return <TicketMasterCard data={data} />;
+  //     });
+  //     console.log(cardsData);
+  //     console.log(TMCards);
+  //   }
+  // }, [ticketmasterData]);
 
   const handleChange = (event, value) => {
     setCurrentPage(value);
@@ -99,119 +136,83 @@ function EventOfDate() {
           event_ids
             .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
             .map((id) => {
-              return <EventOfDateCard eventId={id} key={id} />;
+              return (
+                <EventOfDateCard
+                  eventId={id}
+                  key={id}
+                  // timeRange={{ start: "17:00", end: "20:00" }}
+                />
+              );
             });
         setCardsData(res);
         setLastPage(Math.ceil(event_ids.length / pageDisplay));
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        return <h1>Page Not Found</h1>
+        return <h1>Page Not Found</h1>;
       }
     }
     getEventIDs();
   }, [currentPage, event_ids]);
 
-  if (loading) {
-    return (
-      <section className="event-by-date-section">
-        <div className="event-by-date-div">
-          <Grid
-            container
-            spacing={1}
-            sx={{
-              marginTop: "3%",
-              marginBottom: "1%",
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "row",
-              maxWidth: "auto",
-              maxHeight: "auto",
-              alignItems: "center",
-              flexGrow: 1,
-              flexBasis: 0,
-              overflow: "auto",
-            }}
-          ></Grid>
-          <Box
-            sx={{
-              display: "block",
-              alignItems: "center",
-              marginRight: "6%",
-            }}
-          >
-            <h1>Fetching Events...</h1>
-            <br />
-            <CircularProgress />
-          </Box>
-        </div>
-      </section>
-    );
-  } else {
-    return (
-      <section className="event-by-date-section">
-        <div className="event-by-date-div">
-          <Grid
-            container
-            spacing={1}
-            sx={{
-              marginTop: "3%",
-              marginBottom: "1%",
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "row",
-              maxWidth: "auto",
-              maxHeight: "auto",
-              alignItems: "center",
-              flexGrow: 1,
-              flexBasis: 0,
-              overflow: "auto",
-            }}
-          >
-            {cardsData ? (
-              cardsData
-            ) : (
-              <Box
-                sx={{
-                  display: "block",
-                  alignItems: "center",
-                  marginRight: "6%",
-                }}
-              >
-                <h1>Fetching Events...</h1>
-                <br />
-                <CircularProgress />
-              </Box>
+  return (
+    <section className="event-by-date-section">
+      <div className="event-by-date-div">
+        <Grid
+          container
+          spacing={1}
+          sx={{
+            marginTop: "3%",
+            marginBottom: "1%",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "row",
+            maxWidth: "auto",
+            maxHeight: "auto",
+            alignItems: "center",
+            flexGrow: 1,
+            flexBasis: 0,
+            overflow: "auto",
+          }}
+        >
+          {cardsData && cardsData}
+          {ticketmasterData &&
+            ticketmasterData
+              .slice(
+                pageDisplayForTM * (currentPage - 1),
+                pageDisplayForTM * currentPage
+              )
+              .map((data) => {
+                return <TicketMasterCard data={data} key={data.id} />;
+              })}
+        </Grid>
+        <Box
+          justifyContent={"center"}
+          alignItems={"center"}
+          display={"flex"}
+          sx={{ marginRight: "6%" }}
+        >
+          <Pagination
+            page={currentPage}
+            count={lastPage}
+            onChange={handleChange}
+            sx={{ marginBottom: "1%", marginTop: "1%" }}
+            renderItem={(item) => (
+              <PaginationItem
+                component={Link}
+                to={
+                  city
+                    ? `?page=${item.page}&date=${date}&state=${state}&city=${city}`
+                    : `?page=${item.page}&date=${date}&state=${state}`
+                }
+                {...item}
+              />
             )}
-          </Grid>
-          <Box
-            justifyContent={"center"}
-            alignItems={"center"}
-            display={"flex"}
-            sx={{ marginRight: "6%" }}
-          >
-            <Pagination
-              page={currentPage}
-              count={lastPage}
-              onChange={handleChange}
-              sx={{ marginBottom: "1%", marginTop: "1%" }}
-              renderItem={(item) => (
-                <PaginationItem
-                  component={Link}
-                  to={
-                    city
-                      ? `?page=${item.page}&date=${date}&state=${state}&city=${city}`
-                      : `?page=${item.page}&date=${date}&state=${state}`
-                  }
-                  {...item}
-                />
-              )}
-            />
-          </Box>
-        </div>
-      </section>
-    );
-  }
+          />
+        </Box>
+      </div>
+    </section>
+  );
 }
 
 export default EventOfDate;
