@@ -34,6 +34,8 @@ RUN npm install
 # Copy the rest of your app's source code to the app directory
 COPY . .
 
+RUN mkdir -p /app/public
+
 # Expose the port that your app listens on
 EXPOSE 4000
 

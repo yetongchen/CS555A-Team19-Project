@@ -1,4 +1,5 @@
 import { users } from "../config/mongoCollections.js";
+import validation from "../validation/postValidation.js";
 
 export const createUser = async (name, email, _id) => {
   const userCollection = await users();
@@ -10,6 +11,7 @@ export const createUser = async (name, email, _id) => {
     _id: _id,
     name: name,
     email: email.toLowerCase(),
+    imageURL: "",
     posts: [],
     events: []
   };
@@ -67,10 +69,20 @@ export const updateUserPatch = async (id,userInfo) => {
   if(userInfo.events){
     if(!Array.isArray(userInfo.events)) throw 'Events must be an array';
   }
+
+  const oldUserInfo = await getUserById(id);
+  if (
+    userInfo.imageURL !== undefined &&
+    userInfo.imageURL !== oldUserInfo.imageURL) {
+    userInfo.imageURL = validation.checkString(userInfo.imageURL);
+  } else {
+    userInfo.imageURL = oldUserInfo.imageURL;
+  }
+
   try {
     const userCollection = await users();
     const updatedInfo = await userCollection.findOneAndUpdate(
-      {_id: new ObjectId(id)},
+      {_id: id},
       { $set: userInfo },
       {returnDocument: 'after'}
       );

@@ -2,7 +2,39 @@ import express from "express";
 import { createUser, getUserById, updateUserPatch } from "../data/users.js";
 import { users } from "../config/mongoCollections.js";
 
+import multer from 'multer';
+import {v4 as uuid} from 'uuid';
+
 const router = express.Router();
+
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // __dirname在ES Modules中不可用，使用以下方式获取
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    // 图片存储在后端根目录下的 'public' 文件夹中
+    const dest = join(__dirname, '../public');
+    cb(null, dest);
+  },
+  filename: (req, file, cb) => {
+      const fileName = file.originalname.toLowerCase().split(' ').join('-');
+      cb(null, uuid() + '-' + fileName)
+  }
+});
+let upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    console.log("file in multer: ", file);
+      if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
+          cb(null, true);
+      } else {
+          cb(null, false);
+          return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+      }
+  }
+});
 
 //Only for testing
 router.get("/", async (req, res) => {
@@ -45,8 +77,9 @@ router.route("/:userId")
     res.status(500).json(err);
   }
 })
-.patch(async (req, res) => {
+.patch(upload.single("imageURL"), async (req, res) => {
   let userInfo = req.body;
+  console.log("patch req.body: ", req.body)
   if (!userInfo || Object.keys(userInfo).length === 0) {
     return res
       .status(400)
@@ -54,20 +87,38 @@ router.route("/:userId")
   }
   try{
     req.params.userId = req.params.userId.trim();
-      if(req.params.userId.length === 0) throw 'Id cannot be an empty string or just spaces';
-      if(typeof req.params.userId !== 'string' && typeof req.params.userId !== 'object') 
-        throw 'Id must be a string or ObjectId';
-      if(userInfo.name){
-        if(typeof userInfo.name !== 'string') throw 'Name must be a string';
-        if (userInfo.name.trim().length === 0)
-          throw 'Name cannot be an empty string or just spaces';
-        userInfo.name = userInfo.name.trim();
-      }
-       const updatedUser = await updateUserPatch(req.params.userId, userInfo);
-       res.json(updatedUser);
-    } catch (e) {
-      res.status(400).json({ error: e });
+    if(req.params.userId.length === 0) throw 'Id cannot be an empty string or just spaces';
+    if(typeof req.params.userId !== 'string' && typeof req.params.userId !== 'object') 
+      throw 'Id must be a string or ObjectId';
+    if(userInfo.name){
+      if(typeof userInfo.name !== 'string') throw 'Name must be a string';
+      if (userInfo.name.trim().length === 0)
+        throw 'Name cannot be an empty string or just spaces';
+      userInfo.name = userInfo.name.trim();
     }
+  } catch (e) {
+      return res.status(400).json({ error: e });
+  }
+
+  try {
+    await getUserById(req.params.userId);
+  } catch (e) {
+    return res.status(400).json({error: e});
+  }
+  ;
+  console.log("req.file: ", req.file);
+  if (req.file) {
+    const url = req.protocol + '://' + req.get('host');
+    console.log('the req file: ', req.file);
+    userInfo.imageURL = url + '/public/' + req.file.filename;
+  }
+
+  try {
+    const updatedUser = await updateUserPatch(req.params.userId, userInfo);
+    res.json(updatedUser);
+  } catch (e) {
+    res.status(500).json({error: e});
+  }   
 });
 
 export default router;

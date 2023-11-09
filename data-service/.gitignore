@@ -12,6 +12,9 @@ package-lock.json
 # production
 /build
 
+# image upload
+/public
+
 # misc
 .DS_Store
 .idea

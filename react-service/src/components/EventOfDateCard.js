@@ -134,7 +134,9 @@ function EventOfDateCard({ eventId }) {
 
           <CardContent orientation="horizontal">
             <div>
-              {eventData && eventData.description ? (
+              {eventData &&
+              eventData.description &&
+              eventData.description.text ? (
                 <Typography level="body-xs">
                   <a>
                     {eventData.description.text.length <= 100

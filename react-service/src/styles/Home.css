@@ -447,3 +447,10 @@ abbr[title] {
 .dot.active {
   background-color: #363949;
 }
+
+/* Time picker */
+.time-picker{
+  margin-left: 14%;
+  border: #111e88;
+  border-radius: 2;
+}
