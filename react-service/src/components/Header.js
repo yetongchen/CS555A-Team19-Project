@@ -82,10 +82,9 @@ const Header = () => {
             <Typography variant="body1" component="span">
               <NavLink to="/profile">
                 <div className="welcome">Welcome, {userInfo.name}</div>
-                {userInfo ? (<div className="profile-photo">
-                  <img src={userInfo.imageURL} alt="user avatar"></img></div>) 
-                  : (<div className="profile-photo">
-                  <img src={noImage} alt="user avatar"></img> </div>)}
+                {userInfo.imageURL && (<div className="profile-photo">
+                  <img src={userInfo.imageURL} alt="user avatar"></img></div>
+                )}
               </NavLink>
             </Typography>
           )}
