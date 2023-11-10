@@ -34,7 +34,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run --spec 'cypress/e2e/Home.cy.js,cypress/e2e/login.cy.js,cypress/e2e/spec.cy.js'"
   },
   "eslintConfig": {
     "extends": [
