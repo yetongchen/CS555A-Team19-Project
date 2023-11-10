@@ -19,6 +19,7 @@ jobs:
     - name: Execute tests
       run: |
         docker-compose exec -T data-service npm run test
+        docker-compose exec -T react-service npm run cypress:run
 
     - name: Shutdown Docker Compose services
       run: docker-compose down
