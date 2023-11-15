@@ -11,23 +11,22 @@ import "../App.css";
 import axios from "axios";
 import { Grid, Skeleton } from "@mui/material";
 import noImage from "../images/no-image.png";
-import { async } from "@firebase/util";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
 
 // formate posts date
 const formatDate = (datetime) => {
-    const date = new Date(datetime);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hour = String(date.getHours()).padStart(2, '0');
-    const minute = String(date.getMinutes()).padStart(2, '0');
+  const date = new Date(datetime);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hour = String(date.getHours()).padStart(2, "0");
+  const minute = String(date.getMinutes()).padStart(2, "0");
 
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-}
+  return `${year}-${month}-${day} ${hour}:${minute}`;
+};
 
-function PostCard({ postId }) {
+function PostCard({ postId, onDelete }) {
   const [eventId, setEventId] = useState(null);
   const [eventData, setEventData] = useState(null);
   const [postData, setPostData] = useState(null);
@@ -36,17 +35,17 @@ function PostCard({ postId }) {
   useEffect(() => {
     let data = null;
     async function getPostById(id) {
-        const url = `http://localhost:4000/post/detail/${id}`;
-        try {
-          const response = await axios.get(url);
-          data = response.data;
-          //console.log("postData", data);
-          setPostData(data);
-        } catch (error) {
-          console.error("Error when get post detail", error);
-          setPostData(undefined);
-        }
-    };
+      const url = `http://localhost:4000/post/detail/${id}`;
+      try {
+        const response = await axios.get(url);
+        data = response.data;
+        //console.log("postData", data);
+        setPostData(data);
+      } catch (error) {
+        console.error("Error when get post detail", error);
+        setPostData(undefined);
+      }
+    }
     getPostById(postId);
   }, [postId]);
 
@@ -66,12 +65,12 @@ function PostCard({ postId }) {
         setEventData(undefined);
         setLoading(false);
       }
-    };
-    
+    }
+
     if (postData) {
-        console.log("postData: ", postData);
-        setEventId(postData.event_id);
-        getEventById(postData.event_id);
+      console.log("postData: ", postData);
+      setEventId(postData.event_id);
+      getEventById(postData.event_id);
     }
   }, [postData]);
 
@@ -140,7 +139,9 @@ function PostCard({ postId }) {
             )}
 
             {postData ? (
-              <Typography level="body-sm">{formatDate(postData.datetime)}</Typography>
+              <Typography level="body-sm">
+                {formatDate(postData.datetime)}
+              </Typography>
             ) : (
               <Typography level="title-lg">
                 The date is no longer valid
@@ -173,14 +174,35 @@ function PostCard({ postId }) {
             <div>
               {eventData ? (
                 <Typography level="body-xs">
-                  <a>
-                  {eventData && eventData.name.text}
-                  </a>
+                  <a>{eventData && eventData.name.text}</a>
                 </Typography>
               ) : (
                 <a>No event information available</a>
               )}
             </div>
+            {/* delete button */}
+            {eventData ? (
+              <Button
+                variant="solid"
+                size="md"
+                color="danger"
+                aria-label="Delete post"
+                sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+                onClick={onDelete}
+              >
+                Delete
+              </Button>
+            ) : (
+              <Button
+                variant="solid"
+                size="md"
+                color="danger"
+                aria-label="Delete post"
+                sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+              >
+                Delete
+              </Button>
+            )}
             {eventData ? (
               <Button
                 variant="solid"

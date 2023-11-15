@@ -1,6 +1,20 @@
 import { users } from "../config/mongoCollections.js";
 import validation from "../validation/postValidation.js";
 
+const validateEmail = (email) => {
+  if (!email) throw 'You must provide a user email to search for';
+  if (typeof email !== 'string') throw 'User email must be a string';
+  if (email.trim().length === 0) throw 'User email cannot be an empty string or just spaces';
+  return email.trim().toLowerCase();
+};
+
+const validateId = (id) => {
+  if (!id) throw 'You must provide an id to search for';
+  if (typeof id !== 'string' && typeof id !== 'object') throw 'Id must be a string or ObjectId';
+  if (id.trim().length === 0) throw 'id cannot be an empty string or just spaces';
+  return id.trim();
+};
+
 export const createUser = async (name, email, _id) => {
   const userCollection = await users();
   let usernameDuplication = await userCollection.findOne({
@@ -31,11 +45,7 @@ export const getUserById = async (id) => {
 };
 
 export const getUserByEmail = async (email) => {
-  if (!email) throw 'You must provide an user name to search for';
-  if (typeof email !== 'string') throw 'User name must be a string';
-  if (email.trim().length === 0)
-      throw 'User email cannot be an empty string or just spaces';
-  email = email.trim();
+  email = validateEmail(email);
   try {
       const userCollection = await users();
       const user = await userCollection.findOne({ email: email.toLowerCase()});
@@ -46,11 +56,7 @@ export const getUserByEmail = async (email) => {
 };
 
 export const updateUserPatch = async (id,userInfo) => {
-  if(!id) throw 'You must provide an id to search for';
-  if(typeof id !== 'string' && typeof id !== 'object') 
-     throw 'Id must be a string or ObjectId';
-  if (id.trim().length === 0)
-    throw 'id cannot be an empty string or just spaces';
+  id = validateId(id);
   if(userInfo.name){
     if(typeof userInfo.name !== 'string') throw 'Name must be a string';
     if (userInfo.name.trim().length === 0)
@@ -58,10 +64,7 @@ export const updateUserPatch = async (id,userInfo) => {
     userInfo.name = userInfo.name.trim();
   }
   if(userInfo.email){
-    if(typeof userInfo.email !== 'string') throw 'Email must be a string';
-    if (userInfo.email.trim().length === 0)
-      throw 'Email cannot be an empty string or just spaces';
-    userInfo.email = userInfo.email.trim();
+    userInfo.email = validateEmail(userInfo.email);
   }
   if(userInfo.posts){
     if(!Array.isArray(userInfo.posts)) throw 'Posts must be an array';
@@ -95,22 +98,11 @@ export const updateUserPatch = async (id,userInfo) => {
 };
 
 export const addPostToUser = async (userId, postId) => {
-  if(!userId) throw 'You must provide an id to search for';
-  if(typeof userId !== 'string' && typeof userId !== 'object') 
-     throw 'Id must be a string or ObjectId';
-  if (userId.trim().length === 0)
-     throw 'id cannot be an empty string or just spaces';
-  userId = userId.trim();
-  if(!postId) throw 'You must provide an id to search for';
-  if(typeof postId !== 'string' && typeof postId !== 'object') 
-     throw 'Id must be a string or ObjectId';
-  if (postId.trim().length === 0)
-     throw 'id cannot be an empty string or just spaces';
-  postId = postId.trim();
-
+  userId = validateId(userId);
+  postId = validateId(postId);
   try {
     const userCollection = await users();
-    const updatedInfo = await userCollection.updateOne({_id: new ObjectId(id)}, { $push: { posts: postId } });
+    const updatedInfo = await userCollection.updateOne({_id: userId}, { $push: { posts: postId } });
     if (!updatedInfo)
       throw `Error: Update failed, could not find a user with id of ${userId}`;
     return updatedInfo;
@@ -120,22 +112,12 @@ export const addPostToUser = async (userId, postId) => {
 };
 
 export const addEventToUser = async (userId, eventId) => {
-  if(!userId) throw 'You must provide an id to search for';
-  if(typeof userId !== 'string' && typeof userId !== 'object') 
-     throw 'Id must be a string or ObjectId';
-  if (userId.trim().length === 0)
-     throw 'id cannot be an empty string or just spaces';
-  userId = userId.trim();
-  if(!eventId) throw 'You must provide an id to search for';
-  if(typeof eventId !== 'string' && typeof eventId !== 'object') 
-     throw 'Id must be a string or ObjectId';
-  if (eventId.trim().length === 0)
-      throw 'id cannot be an empty string or just spaces';
-  eventId = eventId.trim();
-
+  userId = validateId(userId);
+  eventId = validateId(eventId);
+  
   try {
     const userCollection = await users();
-    const updatedInfo = await userCollection.updateOne({_id: new ObjectId(id)}, { $push: { events: eventId } });
+    const updatedInfo = await userCollection.updateOne({_id: userId}, { $push: { events: eventId } });
     if (!updatedInfo)
       throw `Error: Update failed, could not find a user with id of ${userId}`;
     return updatedInfo;

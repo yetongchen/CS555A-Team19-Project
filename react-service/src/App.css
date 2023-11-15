@@ -183,11 +183,21 @@ section {
   width: 100px;
   height: 30px;
   float: right;
+  cursor: pointer;
 }
 
 .join-button:hover {
   background-color: #f4b070;
-  /* 鼠标悬停时稍深一点的橘色 */
+}
+
+.join-button:disabled {
+  background-color: #cccccc; 
+  cursor: default; 
+}
+
+.join-button.joined {
+  background-color: #cccccc;
+  pointer-events: none; 
 }
 
 .event-address {

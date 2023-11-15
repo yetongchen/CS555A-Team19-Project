@@ -16,4 +16,16 @@ describe('Event Detail Tests', () => {
     cy.get('.event-time-location').invoke('text').should('match', /(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/);
   });
 
+  it('should allow a user to add a post', () => {
+    cy.get('input[type="text"]').type('Test Post Title');
+
+    cy.get('textarea').type('This is the content for the test post.');
+
+    cy.get('button').contains('Add').click();
+  }); 
+
+  it('should display the date and time with correct format', () => {
+    cy.get('.event-time-location').invoke('text').should('match', /(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4} · \d{1,2}:\d{2} [APM]{2} - \d{1,2}:\d{2} [APM]{2} [A-Za-z\/]+.*$/);
+  });
+
 });
