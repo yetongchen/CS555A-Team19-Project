@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, redirect, Link } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Grid,
@@ -27,7 +28,15 @@ function EventOfDate() {
 
   let date = searchParams.get("date");
   let state = searchParams.get("state");
+  const [event_ids, setEventIds] = useState(undefined);
+  const [loading, setLoading] = useState(true); // 新增加载状态
+
+  let date = searchParams.get("date");
+  console.log(date);
+  let start_date = searchParams.get("start_date");
+  let end_date = searchParams.get("end_date");
   let city = searchParams.get("city");
+  let state = searchParams.get("state");
   state = state ? state.replace(/\s+/g, "-") : state;
   city = city ? city.replace(/\s+/g, "-") : city;
   let pageDisplay = 20;
@@ -68,16 +77,48 @@ function EventOfDate() {
 
   const handleChange = (event, value) => {
     setCurrentPage(value);
-    let search = `?page=${value}&date=${date}`;
-    if (state) search += `&state=${state}`;
-    if (city) search += `&city=${city}`;
-    navigate(`/events/date/${search}`);
+    let search = `?page=${value}`;
+    if (state & city && start_date && end_date) {
+      search += `&start_date=${start_date}&end_date=${end_date}&state=${state}&city=${city}`;
+      navigate(`/events/date/${search}`);
+    } else if (state & date) {
+      search += `&state=${state}&date=${date}`;
+      navigate(`/events/date/${search}`);
+    }
+    // if (currentPage < 0) {
+    //   if (city) {
+    //     return redirect(
+    //       `events/date/?page=1&date=${date}&state=${state}&city=${city}`
+    //     );
+    //   } else {
+    //     return redirect(`events/date/?page=1&date=${date}&state=${state}`);
+    //   }
+    // } else if (currentPage > lastPage) {
+    //   if (city) {
+    //     return redirect(
+    //     `events/date/?page=${lastPage}&date=${date}&state=${state}&city=${city}`
+    //   );
+    // } else {
+    //   return redirect(
+    //     `events/date/?page=${lastPage}&date=${date}&state=${state}`
+    //   );
+    // }
+    // }
+    // if (city) {
+    //   return redirect(
+    //     `events/date/?page=${value}&date=${date}&state=${state}&city=${city}`
+    //   );
+    // } else {
+    //   return redirect(`events/date/?page=${value}&date=${date}&state=${state}`);
+    // }
   };
 
   useEffect(() => {
     async function getEventIDs() {
       try {
         setLoading(true); // 开始加载时设置为true
+        setLoading(true);
+        let res = null;
         const { data } = await axios.post("http://localhost:4000/eventIDs", {
           pages: 3,
           date,
@@ -148,6 +189,7 @@ function EventOfDate() {
     }
     getEventIDs();
   }, [currentPage, date, state, city]); // Included dependencies
+  }, [currentPage]); // Included dependencies
 
   return (
     <section className="event-by-date-section">
@@ -171,6 +213,11 @@ function EventOfDate() {
         >
           {cardsData && cardsData}
           {ticketmasterData &&
+          {loading ? <h1>Loading...</h1> : cardsData}
+          {loading ? (
+            <></>
+          ) : (
+            ticketmasterData &&
             ticketmasterData
               .slice(
                 pageDisplayForTM * (currentPage - 1),
@@ -180,6 +227,8 @@ function EventOfDate() {
                 return <TicketMasterCard data={data} key={data.id} />;
               })}
           {loading ? <h1>Loading...</h1> : cardsData}
+              })
+          )}
         </Grid>
         {lastPage > 1 && (
           <Box

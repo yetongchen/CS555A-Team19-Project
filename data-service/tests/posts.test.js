@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import postData from '../data/posts.js';
+import { createUser } from "../data/users.js";
 import { dbConnection, closeConnection } from '../config/mongoConnection.js';
 
 //const db = await dbConnection();
@@ -15,7 +16,9 @@ let event_id = "692750504407";
 let name = "Yetong Chen";
 
 before(async () => {
-    await dbConnection();
+    const db = await dbConnection();
+    await db.dropDatabase();
+    await createUser(name, "cissieslab@gmail.com", user_id);
 });
 
 describe('Post Functions', function() {
