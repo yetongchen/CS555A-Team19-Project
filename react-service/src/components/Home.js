@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import { motion, AnimatePresence } from "framer-motion";
-import * as statesList from "../state.json"
+import * as statesList from "../state.json";
 import moment from "moment";
 import "../styles/Home.css";
 import { useGeolocated } from "react-geolocated";
@@ -26,18 +26,9 @@ import {
 const Home = () => {
   const [startDate, setStartDate] = useState(dayjs(new Date()));
   const [endDate, setEndDate] = useState(dayjs(new Date()));
-
-  // console.log(
-  //   moment(new Date(startDate.$d), "YYYY-MM-DD HH:mm:ss").format(
-  //     "YYYY-MM-DD HH:mm:ss"
-  //   )
-  // );
-
+  const [date, setDate] = useState(new Date());
   const [state, setState] = useState("");
   const [coordsInfo, setCoords] = useState(undefined);
-  // const [value, setValue] = useState(
-  //   dayjs(new Date().toISOString().slice(0, -8))
-  // );
 
   const posters = [
     "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F591759059%2F226667758798%2F1%2Foriginal.20230906-185327?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C2160%2C1080&s=99cc3629ad04e9bf79a60e74c70a170a",
@@ -112,27 +103,27 @@ const Home = () => {
 
   // When the user only select state and click the calendlar, it will fire to events/date/?page=1&date=${dateParms}&state=${state}
   // When the user use geolocation and click the calendlar, it will fire to `events/date/?page=1&date=${dateParms}&state=${coordsInfo.nearest[0].prov}&city=${coordsInfo.nearest[0].city}
-  // const hadleClickDate = (event, value) => {
-  //   let dateParms = `${event.getFullYear()}-${
-  //     event.getUTCMonth() + 1
-  //   }-${event.getDate()}`;
+  const hadleClickDate = (event, value) => {
+    let dateParms = `${event.getFullYear()}-${
+      event.getUTCMonth() + 1
+    }-${event.getDate()}`;
 
-  //   if (coordsInfo) {
-  //     let state = coordsInfo.nearest[0].prov[0];
-  //     let city = coordsInfo.nearest[0].city[0];
-  //     state = state ? state.replace(/\s+/g, "-") : state;
-  //     city = city ? city.replace(/\s+/g, "-") : city;
-  //     console.log(state, city);
-  //     navigate(
-  //       `events/date/?page=1&date=${dateParms}&state=${state}&city=${city}`
-  //     );
-  //     setState(coordsInfo.nearest[0].prov);
-  //   } else if (state) {
-  //     navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
-  //   } else {
-  //     navigate("/");
-  //   }
-  // };
+    if (coordsInfo) {
+      let state = coordsInfo.nearest[0].prov[0];
+      let city = coordsInfo.nearest[0].city[0];
+      state = state ? state.replace(/\s+/g, "-") : state;
+      city = city ? city.replace(/\s+/g, "-") : city;
+      console.log(state, city);
+      navigate(
+        `events/date/?page=1&date=${dateParms}&state=${state}&city=${city}`
+      );
+      setState(coordsInfo.nearest[0].prov);
+    } else if (state) {
+      navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
+    } else {
+      navigate("/");
+    }
+  };
 
   // To handle state drop down list
   const handleChange = (event) => {
@@ -189,8 +180,8 @@ const Home = () => {
   };
 
   // Get all the keys from stateList and create components for each state
-  const keys = Object.keys(statesList);
-  const statesData = keys.map((ele) => {
+  const values = Object.values(statesList.default);
+  const statesData = values.map((ele) => {
     return (
       <MenuItem value={ele} key={ele}>
         {ele}
@@ -263,18 +254,7 @@ const Home = () => {
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">State</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="State"
-                  value={state}
-                  onChange={handleChange}
-                >
-                  {statesData}
-                </Select>
-              </FormControl>
+
               <Button
                 variant="outlined"
                 href="#outlined-buttons"
@@ -301,11 +281,39 @@ const Home = () => {
             marginTop: 0,
           }}
         >
-          <Calendar
-          // onChange={setDate}
-          // value={date}
-          // onClickDay={hadleClickDate}
-          />
+          <Box
+            sx={{
+              display: "block",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "3%",
+              minWidth: "5%",
+            }}
+          >
+            <FormControl
+              fullWidth
+              sx={{
+                marginBottom: "3%",
+              }}
+            >
+              <InputLabel id="demo-simple-select-label">State</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="State"
+                value={state}
+                onChange={handleChange}
+              >
+                {statesData}
+              </Select>
+            </FormControl>
+
+            <Calendar
+              onChange={setDate}
+              value={date}
+              onClickDay={hadleClickDate}
+            />
+          </Box>
         </div>
 
         <p className="text-center">

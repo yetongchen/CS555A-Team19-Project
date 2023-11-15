@@ -37,9 +37,9 @@ function EventOfDate() {
   const [loading, setLoading] = useState(true);
 
   let date = searchParams.get("date");
+  console.log(date);
   let start_date = searchParams.get("start_date");
   let end_date = searchParams.get("end_date");
-  console.log(start_date);
   let city = searchParams.get("city");
   let state = searchParams.get("state");
   state = state ? state.replace(/\s+/g, "-") : state;
@@ -84,7 +84,7 @@ function EventOfDate() {
     if (currentPage < 0) {
       if (city) {
         return redirect(
-          `events/date/?page=1&date=${date}&state=${state}&city=${city}`
+          `events/date/?page=1&start_date=${start_date}&end_date=${end_date}&state=${state}&city=${city}`
         );
       } else {
         return redirect(`events/date/?page=1&date=${date}&state=${state}`);
@@ -92,7 +92,7 @@ function EventOfDate() {
     } else if (currentPage > lastPage) {
       if (city) {
         return redirect(
-          `events/date/?page=${lastPage}&date=${date}&state=${state}&city=${city}`
+          `events/date/?page=${lastPage}&start_date=${start_date}&end_date=${end_date}&state=${state}&city=${city}`
         );
       } else {
         return redirect(
@@ -102,7 +102,7 @@ function EventOfDate() {
     }
     if (city) {
       return redirect(
-        `events/date/?page=${value}&date=${date}&state=${state}&city=${city}`
+        `events/date/?page=${value}&start_date=${start_date}&end_date=${end_date}&state=${state}&city=${city}`
       );
     } else {
       return redirect(`events/date/?page=${value}&date=${date}&state=${state}`);
@@ -202,7 +202,7 @@ function EventOfDate() {
                 component={Link}
                 to={
                   city
-                    ? `?page=${item.page}&date=${date}&state=${state}&city=${city}`
+                    ? `?page=${item.page}&start_date=${start_date}&end_date=${end_date}&state=${state}&city=${city}`
                     : `?page=${item.page}&date=${date}&state=${state}`
                 }
                 {...item}
