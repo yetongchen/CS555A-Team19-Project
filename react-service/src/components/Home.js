@@ -1,14 +1,31 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import { motion, AnimatePresence } from "framer-motion";
+import * as statesList from "../state.json";
+import moment from "moment";
 import "../styles/Home.css";
 import { useGeolocated } from "react-geolocated";
+import dayjs from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import axios from "axios";
 
-import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import {
+  Box,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Button,
+  Stack,
+} from "@mui/material";
 
 const Home = () => {
+  const [startDate, setStartDate] = useState(dayjs(new Date()));
+  const [endDate, setEndDate] = useState(dayjs(new Date()));
   const [date, setDate] = useState(new Date());
   const [state, setState] = useState("");
   const [coordsInfo, setCoords] = useState(undefined);
@@ -83,7 +100,7 @@ const Home = () => {
 
   // To get the current location
   const navigate = useNavigate();
-  let { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
+  let { coords } = useGeolocated({
     positionOptions: {
       enableHighAccuracy: false,
     },
@@ -100,8 +117,8 @@ const Home = () => {
     if (coordsInfo) {
       let state = coordsInfo.nearest[0].prov[0];
       let city = coordsInfo.nearest[0].city[0];
-      state = state ? state.replace(/\s+/g, '-') : state;
-      city = city ? city.replace(/\s+/g, '-') : city;
+      state = state ? state.replace(/\s+/g, "-") : state;
+      city = city ? city.replace(/\s+/g, "-") : city;
       console.log(state, city);
       navigate(
         `events/date/?page=1&date=${dateParms}&state=${state}&city=${city}`
@@ -116,75 +133,51 @@ const Home = () => {
 
   // To handle state drop down list
   const handleChange = (event) => {
+    event.preventDefault();
     setState(event.target.value);
   };
 
-  // A list of states and their abbr.
-  const statesList = {
-    AL: "Alabama",
-    AK: "Alaska",
-    AS: "American Samoa",
-    AZ: "Arizona",
-    AR: "Arkansas",
-    CA: "California",
-    CO: "Colorado",
-    CT: "Connecticut",
-    DE: "Delaware",
-    DC: "District Of Columbia",
-    FM: "Federated States Of Micronesia",
-    FL: "Florida",
-    GA: "Georgia",
-    GU: "Guam",
-    HI: "Hawaii",
-    ID: "Idaho",
-    IL: "Illinois",
-    IN: "Indiana",
-    IA: "Iowa",
-    KS: "Kansas",
-    KY: "Kentucky",
-    LA: "Louisiana",
-    ME: "Maine",
-    MH: "Marshall Islands",
-    MD: "Maryland",
-    MA: "Massachusetts",
-    MI: "Michigan",
-    MN: "Minnesota",
-    MS: "Mississippi",
-    MO: "Missouri",
-    MT: "Montana",
-    NE: "Nebraska",
-    NV: "Nevada",
-    NH: "New Hampshire",
-    NJ: "New Jersey",
-    NM: "New Mexico",
-    NY: "New York",
-    NC: "North Carolina",
-    ND: "North Dakota",
-    MP: "Northern Mariana Islands",
-    OH: "Ohio",
-    OK: "Oklahoma",
-    OR: "Oregon",
-    PW: "Palau",
-    PA: "Pennsylvania",
-    PR: "Puerto Rico",
-    RI: "Rhode Island",
-    SC: "South Carolina",
-    SD: "South Dakota",
-    TN: "Tennessee",
-    TX: "Texas",
-    UT: "Utah",
-    VT: "Vermont",
-    VI: "Virgin Islands",
-    VA: "Virginia",
-    WA: "Washington",
-    WV: "West Virginia",
-    WI: "Wisconsin",
-    WY: "Wyoming",
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(
+      state,
+      moment(new Date(startDate.$d), "YYYY-MM-DD HH:mm:ss").format(
+        "YYYY-MM-DDTHH:mm:ss"
+      ),
+      moment(new Date(endDate.$d), "YYYY-MM-DD HH:mm:ss").format(
+        "YYYY-MM-DDTHH:mm:ss"
+      )
+    );
+    let start_date = moment(
+      new Date(startDate.$d),
+      "YYYY-MM-DD HH:mm:ss"
+    ).format("YYYY-MM-DDTHH:mm:ss");
+    let end_date = moment(new Date(endDate.$d), "YYYY-MM-DD HH:mm:ss").format(
+      "YYYY-MM-DDTHH:mm:ss"
+    );
+    if (coordsInfo) {
+      let state = coordsInfo.nearest[0].prov[0];
+      let city = coordsInfo.nearest[0].city[0];
+      state = state ? state.replace(/\s+/g, "-") : state;
+      city = city ? city.replace(/\s+/g, "-") : city;
+      console.log(state, city);
+
+      navigate(
+        `events/date/?page=1&start_date=${start_date}&end_date=${end_date}&state=${state}&city=${city}`
+      );
+      setState(coordsInfo.nearest[0].prov);
+    } else if (state) {
+      navigate(
+        `events/date/?page=1&start_date=${start_date}&end_date=${end_date}&state=${state}`
+      );
+    } else {
+      navigate("/");
+    }
   };
 
   // Get all the keys from stateList and create components for each state
-  const keys = Object.keys(statesList);
-  const statesData = keys.map((ele) => {
+  const values = Object.values(statesList.default);
+  const statesData = values.map((ele) => {
     return (
       <MenuItem value={ele} key={ele}>
         {ele}
@@ -219,29 +212,61 @@ const Home = () => {
     <div className="main">
       <Carousel images={posters} />
       <div id="calendar">
-        <Box
-          sx={{
-            minWidth: 120,
-            maxWidth: 120,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginLeft: "20%",
-          }}
-        >
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">State</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="State"
-              value={state}
-              onChange={handleChange}
+        <form>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "3%",
+            }}
+          >
+            <Stack
+              spacing={{ xs: 1, sm: 2 }}
+              direction="row"
+              useFlexGap
+              flexWrap="wrap"
             >
-              {statesData}
-            </Select>
-          </FormControl>
-        </Box>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DateTimePicker", "DateTimePicker"]}
+                >
+                  <DateTimePicker
+                    label="Start Date"
+                    value={startDate}
+                    onChange={(newDate) => setStartDate(newDate)}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DateTimePicker", "DateTimePicker"]}
+                >
+                  <DateTimePicker
+                    label="End Date"
+                    value={endDate}
+                    onChange={(newDate) => setEndDate(newDate)}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+
+              <Button
+                variant="outlined"
+                href="#outlined-buttons"
+                type="submit"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "right",
+                }}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Stack>
+          </Box>
+        </form>
         <div
           className="calendar-container"
           style={{
@@ -252,15 +277,43 @@ const Home = () => {
             marginTop: 0,
           }}
         >
-          <Calendar
-            onChange={setDate}
-            value={date}
-            onClickDay={hadleClickDate}
-          />
-          {/* onClickDay needs to pass the date value props to eventofDate for retrieving the event ID from file eventId */}
+          <Box
+            sx={{
+              display: "block",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "3%",
+              minWidth: "5%",
+            }}
+          >
+            <FormControl
+              fullWidth
+              sx={{
+                marginBottom: "3%",
+              }}
+            >
+              <InputLabel id="demo-simple-select-label">State</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="State"
+                value={state}
+                onChange={handleChange}
+              >
+                {statesData}
+              </Select>
+            </FormControl>
+
+            <Calendar
+              onChange={setDate}
+              value={date}
+              onClickDay={hadleClickDate}
+            />
+          </Box>
         </div>
+
         <p className="text-center">
-          <span className="bold">SelectedDate:</span> {date.toDateString()}
+          <span className="bold">{new Date().toString().slice(0, -18)}</span>
         </p>
       </div>
     </div>

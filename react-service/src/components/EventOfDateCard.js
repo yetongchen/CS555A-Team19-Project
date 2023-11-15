@@ -14,7 +14,7 @@ import noImage from "../images/no-image.png";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
 
-function EventOfDateCard({ eventId }) {
+function EventOfDateCard({ eventId, timeRange }) {
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +25,7 @@ function EventOfDateCard({ eventId }) {
       try {
         const response = await axios.get(apiUrl);
         data = response.data;
-        console.log(data);
+
         if (data) data.start.local = data.start.local.replace("T", " ");
         setEventData(data);
         setLoading(false);
@@ -88,11 +88,22 @@ function EventOfDateCard({ eventId }) {
       </Grid>
     );
   } else {
+    if (timeRange) {
+      const event_dateTime = new Date(eventData.start.local);
+
+      const event_date = event_dateTime.toLocaleDateString();
+      const start_dateTime = new Date(`${event_date} ${timeRange.start}`);
+      const end_dateTime = new Date(`${event_date} ${timeRange.end}`);
+
+      if (event_dateTime < start_dateTime || event_dateTime > end_dateTime)
+        return;
+    }
+
     return (
       <Grid item xs={8} sm={8} md={5} lg={4} xl={3}>
         <Card className="event-by-date-card" sx={{ width: 320, height: 370 }}>
           <div>
-            {eventData ? (
+            {eventData && eventData.name ? (
               <Typography level="title-lg">
                 {eventData && eventData.name.text}
               </Typography>
@@ -102,7 +113,7 @@ function EventOfDateCard({ eventId }) {
               </Typography>
             )}
 
-            {eventData ? (
+            {eventData && eventData.start ? (
               <Typography level="body-sm">{eventData.start.local}</Typography>
             ) : (
               <Typography level="title-lg">
@@ -134,12 +145,14 @@ function EventOfDateCard({ eventId }) {
 
           <CardContent orientation="horizontal">
             <div>
-              {eventData ? (
+              {eventData &&
+              eventData.description &&
+              eventData.description.text ? (
                 <Typography level="body-xs">
                   <a>
-                    {eventData.description.text.length <= 200
+                    {eventData.description.text.length <= 100
                       ? eventData.description.text
-                      : eventData.description.text.substr(0, 200) + "..."}
+                      : eventData.description.text.substr(0, 100) + "..."}
                   </a>
                 </Typography>
               ) : (
