@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams, redirect, Link } from "react-router-dom";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -6,7 +7,10 @@ import {
   Pagination,
   PaginationItem,
   CircularProgress,
+  Checkbox,
 } from "@mui/material";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
 import "../App.css";
 import EventOfDateCard from "./EventOfDateCard";
 import TicketMasterCard from "./TicketMasterCard";
@@ -20,15 +24,16 @@ function EventOfDate() {
   );
   const [lastPage, setLastPage] = useState(undefined);
   const [cardsData, setCardsData] = useState(null);
+
+  let date = searchParams.get("date");
+  let state = searchParams.get("state");
   const [event_ids, setEventIds] = useState(undefined);
   const [loading, setLoading] = useState(true); // 新增加载状态
 
-  let date = searchParams.get("date");
   console.log(date);
   let start_date = searchParams.get("start_date");
   let end_date = searchParams.get("end_date");
   let city = searchParams.get("city");
-  let state = searchParams.get("state");
   state = state ? state.replace(/\s+/g, "-") : state;
   city = city ? city.replace(/\s+/g, "-") : city;
   let pageDisplay = 20;
@@ -41,9 +46,7 @@ function EventOfDate() {
     let data = null;
     async function getEvents() {
       const apiKey = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
-      const startDateTime = "2023-11-11T17:00:00Z";
-
-      const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${startDateTime}`;
+      const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${start_date}Z`;
       try {
         const response = await axios.get(url);
         data = response.data;
@@ -53,7 +56,10 @@ function EventOfDate() {
         console.error("Error when get event detail", error);
       }
     }
-    getEvents();
+
+    if (start_date) {
+      getEvents();
+    }
   }, []);
 
   // useEffect(() => {
@@ -76,37 +82,12 @@ function EventOfDate() {
       search += `&state=${state}&date=${date}`;
       navigate(`/events/date/${search}`);
     }
-    // if (currentPage < 0) {
-    //   if (city) {
-    //     return redirect(
-    //       `events/date/?page=1&date=${date}&state=${state}&city=${city}`
-    //     );
-    //   } else {
-    //     return redirect(`events/date/?page=1&date=${date}&state=${state}`);
-    //   }
-    // } else if (currentPage > lastPage) {
-    //   if (city) {
-    //     return redirect(
-    //     `events/date/?page=${lastPage}&date=${date}&state=${state}&city=${city}`
-    //   );
-    // } else {
-    //   return redirect(
-    //     `events/date/?page=${lastPage}&date=${date}&state=${state}`
-    //   );
-    // }
-    // }
-    // if (city) {
-    //   return redirect(
-    //     `events/date/?page=${value}&date=${date}&state=${state}&city=${city}`
-    //   );
-    // } else {
-    //   return redirect(`events/date/?page=${value}&date=${date}&state=${state}`);
-    // }
   };
 
   useEffect(() => {
     async function getEventIDs() {
       try {
+        setLoading(true); // 开始加载时设置为true
         setLoading(true);
         let res = null;
         const { data } = await axios.post("http://localhost:4000/eventIDs", {
@@ -115,6 +96,8 @@ function EventOfDate() {
           state,
           city,
         });
+        console.log(data);
+        setEventIds(data.eventIDs);
 
         if (data.eventIDs && data.eventIDs.length > 0) {
           const pageDisplay = 20;
@@ -148,6 +131,34 @@ function EventOfDate() {
     }
 
     getEventIDs();
+  }, []);
+
+  useEffect(() => {
+    function getEventIDs() {
+      try {
+        let res = null;
+        res =
+          event_ids &&
+          event_ids
+            .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
+            .map((id) => {
+              return (
+                <EventOfDateCard
+                  eventId={id}
+                  key={id}
+                  // timeRange={{ start: "17:00", end: "20:00" }}
+                />
+              );
+            });
+        setCardsData(res);
+        setLastPage(Math.ceil(event_ids.length / pageDisplay));
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        return <h1>Page Not Found</h1>;
+      }
+    }
+    getEventIDs();
   }, [currentPage]); // Included dependencies
 
   return (
@@ -170,9 +181,10 @@ function EventOfDate() {
             overflow: "auto",
           }}
         >
+          {cardsData && cardsData}
           {loading ? <h1>Loading...</h1> : cardsData}
           {loading ? (
-            <></>
+            <h1>Loading...</h1>
           ) : (
             ticketmasterData &&
             ticketmasterData
