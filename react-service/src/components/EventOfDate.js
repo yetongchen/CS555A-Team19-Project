@@ -8,8 +8,6 @@ import {
   CircularProgress,
   Checkbox,
 } from "@mui/material";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
 import "../App.css";
 import EventOfDateCard from "./EventOfDateCard";
 import TicketMasterCard from "./TicketMasterCard";
