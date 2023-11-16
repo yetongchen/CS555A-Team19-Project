@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, redirect, Link } from "react-router-dom";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, redirect, Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Grid,
@@ -9,8 +8,6 @@ import {
   CircularProgress,
   Checkbox,
 } from "@mui/material";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { Box, Grid, Pagination, PaginationItem } from "@mui/material";
 import "../App.css";
 import EventOfDateCard from "./EventOfDateCard";
 import TicketMasterCard from "./TicketMasterCard";
@@ -24,19 +21,16 @@ function EventOfDate() {
   );
   const [lastPage, setLastPage] = useState(undefined);
   const [cardsData, setCardsData] = useState(null);
-  const [loading, setLoading] = useState(true); // 新增加载状态
 
   let date = searchParams.get("date");
   let state = searchParams.get("state");
   const [event_ids, setEventIds] = useState(undefined);
   const [loading, setLoading] = useState(true); // 新增加载状态
 
-  let date = searchParams.get("date");
   console.log(date);
   let start_date = searchParams.get("start_date");
   let end_date = searchParams.get("end_date");
   let city = searchParams.get("city");
-  let state = searchParams.get("state");
   state = state ? state.replace(/\s+/g, "-") : state;
   city = city ? city.replace(/\s+/g, "-") : city;
   let pageDisplay = 20;
@@ -85,32 +79,6 @@ function EventOfDate() {
       search += `&state=${state}&date=${date}`;
       navigate(`/events/date/${search}`);
     }
-    // if (currentPage < 0) {
-    //   if (city) {
-    //     return redirect(
-    //       `events/date/?page=1&date=${date}&state=${state}&city=${city}`
-    //     );
-    //   } else {
-    //     return redirect(`events/date/?page=1&date=${date}&state=${state}`);
-    //   }
-    // } else if (currentPage > lastPage) {
-    //   if (city) {
-    //     return redirect(
-    //     `events/date/?page=${lastPage}&date=${date}&state=${state}&city=${city}`
-    //   );
-    // } else {
-    //   return redirect(
-    //     `events/date/?page=${lastPage}&date=${date}&state=${state}`
-    //   );
-    // }
-    // }
-    // if (city) {
-    //   return redirect(
-    //     `events/date/?page=${value}&date=${date}&state=${state}&city=${city}`
-    //   );
-    // } else {
-    //   return redirect(`events/date/?page=${value}&date=${date}&state=${state}`);
-    // }
   };
 
   useEffect(() => {
@@ -188,7 +156,6 @@ function EventOfDate() {
       }
     }
     getEventIDs();
-  }, [currentPage, date, state, city]); // Included dependencies
   }, [currentPage]); // Included dependencies
 
   return (
@@ -212,10 +179,9 @@ function EventOfDate() {
           }}
         >
           {cardsData && cardsData}
-          {ticketmasterData &&
           {loading ? <h1>Loading...</h1> : cardsData}
           {loading ? (
-            <></>
+            <h1>Loading...</h1>
           ) : (
             ticketmasterData &&
             ticketmasterData
@@ -225,8 +191,6 @@ function EventOfDate() {
               )
               .map((data) => {
                 return <TicketMasterCard data={data} key={data.id} />;
-              })}
-          {loading ? <h1>Loading...</h1> : cardsData}
               })
           )}
         </Grid>
