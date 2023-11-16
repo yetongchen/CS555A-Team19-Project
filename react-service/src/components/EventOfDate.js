@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, redirect, Link } from "react-router-dom";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, redirect, Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Grid,
