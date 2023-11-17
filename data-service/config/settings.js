@@ -1,4 +1,3 @@
-// /* This is local */
 /* This is local */
 // export const mongoConfig = {
 //   serverUrl: "mongodb://localhost:27017",
