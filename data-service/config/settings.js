@@ -6,6 +6,6 @@
 
 /* This is docker container */
 export const mongoConfig = {
-  serverUrl: 'mongodb://mongodb:27017',
+  serverUrl: 'mongodb://mongodb:27017?useNewUrlParser=true&useUnifiedTopology=true',
   database: 'CS555'
-};
+}
