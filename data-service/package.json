@@ -1,7 +1,7 @@
 {
   "main": "app.js",
   "scripts": {
-    "test": "mocha --exit",
+    "test": "npx mocha tests/posts.test.js && npx mocha tests/userTest.js && npx mocha tests/pollTest.js",
     "start": "node app.js"
   },
   "type": "module",

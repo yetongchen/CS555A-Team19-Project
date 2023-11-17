@@ -1,25 +1,22 @@
 import { expect } from "chai";
 import postData from '../data/posts.js';
+import { createUser } from "../data/users.js";
 import { dbConnection, closeConnection } from '../config/mongoConnection.js';
-
-//const db = await dbConnection();
-//await db.dropDatabase();
 
 let post1 = null;
 let post2 = null;
-// let post3 = null;
-// let post4 = null;
-
 let user_id = "4tbeMum8S3eGSZEpKVWc7iMvgFN2";
 let event_id = "692750504407";
 let name = "Yetong Chen";
+let db = null;
 
 before(async () => {
-    await dbConnection();
+    db = await dbConnection();
+    await createUser(name, "cissieslab@gmail.com", user_id);
 });
 
 describe('Post Functions', function() {
-    describe('createPost', async function() {
+    describe('createPost', function() {
         it('should create a post and return new post 1', async function() {
         post1 = await postData.createPost(user_id, event_id, name, 'TestTitle1', 'TestText1');
         expect(post1).to.be.an('object');
@@ -37,7 +34,7 @@ describe('Post Functions', function() {
         });
     });
 
-    describe('removePostByPostId', async function() {
+    describe('removePostByPostId', function() {
         it('should remove a post by its ID', async function() {
             // remove post2 just created
             const result = await postData.removePostByPostId(post2._id.toString());
@@ -46,14 +43,14 @@ describe('Post Functions', function() {
         });
     });
 
-    describe('getPostByPostId', async function() {
+    describe('getPostByPostId', function() {
         it('should retrieve a post by its ID', async function() {
             const retrievedPost = await postData.getPostByPostId(post1._id.toString());
             expect(retrievedPost).to.be.an('object');
         });
     });
 
-    describe('getPostByEventId', async function() {
+    describe('getPostByEventId', function() {
         it('should retrieve posts by event ID', async function() {
             const postsByEvent = await postData.getPostByEventId(event_id);
             expect(postsByEvent).to.be.an('array');
@@ -61,7 +58,7 @@ describe('Post Functions', function() {
         });
     });
 
-    describe('getPostByUserId', async function() {
+    describe('getPostByUserId', function() {
         it('should retrieve posts by user ID', async function() {
             const postsByUser = await postData.getPostByUserId(user_id);
             expect(postsByUser).to.be.an('array');
@@ -71,7 +68,8 @@ describe('Post Functions', function() {
 });
 
 after(async () => {
-    await closeConnection();
+    await db.dropDatabase();
+    await closeConnection();  
 });
 
 // //createPost

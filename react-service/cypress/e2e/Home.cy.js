@@ -1,7 +1,7 @@
 context('Navigation', () => {
     beforeEach(() => {
       cy.visit('localhost:3000')
-      cy.get('.AppBar').contains('Login').click()
+      cy.get('button').contains('Login').click()
     })
 
     it('cy.reload() - reload the page', () => {
