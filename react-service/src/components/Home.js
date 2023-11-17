@@ -31,10 +31,10 @@ const Home = () => {
   const [coordsInfo, setCoords] = useState(undefined);
 
   const posters = [
-    "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F591759059%2F226667758798%2F1%2Foriginal.20230906-185327?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C2160%2C1080&s=99cc3629ad04e9bf79a60e74c70a170a",
-    "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F578568249%2F330313065629%2F1%2Foriginal.20230818-215114?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C349%2C1350%2C675&s=857802a2a75afa3769e2fff791258164",
-    "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F590779259%2F184921408699%2F1%2Foriginal.20230905-195559?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C54%2C750%2C375&s=b3561f33a2dda0911d8a49b5568cb7f0",
-    "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F576228759%2F182195127389%2F1%2Foriginal.20230816-001530?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C1080%2C540&s=c8ab8ec1d01fa69c566073ce632a91fc",
+    "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F560482929%2F254534975312%2F1%2Foriginal.20230723-200119?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C1225%2C3300%2C1650&s=50c0e5e35bfab03a3b3f01a7ac18272e",
+    "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F612368789%2F1761888616903%2F1%2Foriginal.20231003-214737?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=180%2C0%2C1486%2C743&s=644b255f70bc1f3c01ef1e375613ed5e",
+    "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F598563219%2F1010958667043%2F1%2Foriginal.20230915-043654?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C8%2C1284%2C642&s=4c8dafbdcf941ee77700f06e823266cf",
+    "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F632082469%2F240047042758%2F1%2Foriginal.20231031-154943?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C2160%2C1080&s=669d4513fef4a8645e29ad2da3820237",
   ];
 
   const Carousel = ({ images }) => {
