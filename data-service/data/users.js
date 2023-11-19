@@ -1,5 +1,7 @@
 import { users } from "../config/mongoCollections.js";
 import validation from "../validation/postValidation.js";
+import postData from "./posts.js";
+import { ObjectId } from "mongodb";
 
 const validateEmail = (email) => {
   if (!email) throw 'You must provide a user email to search for';
@@ -74,6 +76,7 @@ export const updateUserPatch = async (id,userInfo) => {
   }
 
   const oldUserInfo = await getUserById(id);
+  console.log("Old User Info:", oldUserInfo);  // 日志输出旧的用户信息
   if (
     userInfo.imageURL !== undefined &&
     userInfo.imageURL !== oldUserInfo.imageURL) {
@@ -81,6 +84,16 @@ export const updateUserPatch = async (id,userInfo) => {
   } else {
     userInfo.imageURL = oldUserInfo.imageURL;
   }
+
+  // if (userInfo.name !== undefined && userInfo.name !== oldUserInfo.name) {
+  //   for (const postId of oldUserInfo.posts) {
+  //     await postData.updateUserNameInPostById(postId, userInfo.name);
+  //   }
+  // } else {
+  //   userInfo.name = oldUserInfo.name;
+  // } 
+  const isNameChanged = userInfo.name !== undefined && userInfo.name !== oldUserInfo.name;
+  console.log("Is Name Changed:", isNameChanged);  // 日志输出是否更改了用户名
 
   try {
     const userCollection = await users();
@@ -91,8 +104,22 @@ export const updateUserPatch = async (id,userInfo) => {
       );
     if (!updatedInfo)
       throw `Error: Update failed, could not find a user with id of ${id}`;
-    return updatedInfo;
+    console.log("Updated User Info:", updatedInfo); 
+    const updatedPosts = [];
+    if (isNameChanged) {
+      console.log("Updating Posts...");
+      for (const postId of oldUserInfo.posts) {
+        console.log("Updating Post ID:", postId);
+        const objectId = new ObjectId(postId);
+        const updatedPost = await postData.updateUserNameInPostById(objectId, userInfo.name);
+        updatedPosts.push(updatedPost);
+      }
+    }
+    // return updatedInfo;
+    console.log("Updated Posts:", updatedPosts); 
+    return { updatedUserInfo: updatedInfo, updatedPosts };
   } catch (error) {
+    console.error("Error in updateUserPatch:", error);
     throw error;
   }
 };

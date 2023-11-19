@@ -10,6 +10,7 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { PollForm } from "./PollForm";
 import { PollCard } from "./PollCard";
 import { Button, Grid, Typography } from "@mui/material";
+import { NavLink } from "react-router-dom";
 
 import "../App.css";
 
@@ -191,12 +192,27 @@ function EventDetail({}) {
     }
     return addressParts.join(" ");
   }
-
+  
   // display all the posts
+  // useEffect(() => {
+  //   displayPostForEvent(eventId)
+  //     .then((posts) => {
+  //       setPosts(posts);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching posts for event", error);
+  //     });
+  // }, [eventId]);
   useEffect(() => {
     displayPostForEvent(eventId)
-      .then((posts) => {
-        setPosts(posts);
+      .then(async (posts) => {
+        const postsWithUserInfo = await Promise.all(
+          posts.map(async (post) => {
+            const userInfo = await axios.get(`http://localhost:4000/users/${post.user_id}`);
+            return { ...post, userInfo }; // 将用户信息添加到帖子对象中
+          })
+        );
+        setPosts(postsWithUserInfo);
       })
       .catch((error) => {
         console.error("Error fetching posts for event", error);
@@ -228,7 +244,7 @@ function EventDetail({}) {
   const displayPostForEvent = async (id) => {
     setError(null);
     try {
-      const posts = await postsForEvent(id);
+      const posts = await postsForEvent(id);     
       return posts;
     } catch (error) {
       console.log(error);
@@ -389,6 +405,11 @@ function EventDetail({}) {
                   <span className="post-author">
                     {formatPostDate(post.datetime)} By: {post.name}
                   </span>
+        {post.userInfo && post.userInfo.imageURL && (
+          <div className="post-photo">
+            <img src={post.userInfo.imageURL} alt="User Avatar" />
+          </div>
+        )}
                 </div>
                 <div className="post-content">{post.text}</div>
               </div>
