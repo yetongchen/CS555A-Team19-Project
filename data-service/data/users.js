@@ -59,12 +59,12 @@ export const getUserByEmail = async (email) => {
 
 export const updateUserPatch = async (id,userInfo) => {
   id = validateId(id);
-  if(userInfo.name){
-    if(typeof userInfo.name !== 'string') throw 'Name must be a string';
-    if (userInfo.name.trim().length === 0)
-      throw 'Name cannot be an empty string or just spaces';
-    userInfo.name = userInfo.name.trim();
-  }
+  // if(userInfo.name){
+  //   if(typeof userInfo.name !== 'string') throw 'Name must be a string';
+  //   if (userInfo.name.trim().length === 0)
+  //     throw 'Name cannot be an empty string or just spaces';
+  //   userInfo.name = userInfo.name.trim();
+  // }
   if(userInfo.email){
     userInfo.email = validateEmail(userInfo.email);
   }
@@ -109,9 +109,9 @@ export const updateUserPatch = async (id,userInfo) => {
     if (isNameChanged) {
       console.log("Updating Posts...");
       for (const postId of oldUserInfo.posts) {
-        console.log("Updating Post ID:", postId);
-        const objectId = new ObjectId(postId);
-        const updatedPost = await postData.updateUserNameInPostById(objectId, userInfo.name);
+        const postIdstr = postId.toString();
+        console.log("post id:", postIdstr);
+        const updatedPost = await postData.updateUserNameInPostById(postIdstr, userInfo.name);
         updatedPosts.push(updatedPost);
       }
     }

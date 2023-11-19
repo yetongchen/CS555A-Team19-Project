@@ -126,12 +126,11 @@ const getPostByUserId = async (user_id) => {
 }
 
 const updateUserNameInPostById = async (postId, newName) => {
-    postId = validation.checkStringObjectID(postId);
     newName = validation.checkUsername(newName);
   
     const postCollection = await posts();
     const updateResult = await postCollection.updateOne(
-      { _id: postId },
+      { _id: new ObjectId(postId) },
       { $set: { name: newName } },
       { returnDocument: 'after' }
     );
