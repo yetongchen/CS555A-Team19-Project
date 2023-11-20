@@ -209,7 +209,9 @@ function EventDetail({}) {
         const postsWithUserInfo = await Promise.all(
           posts.map(async (post) => {
             const userInfo = await axios.get(`http://localhost:4000/users/${post.user_id}`);
-            return { ...post, userInfo }; // 将用户信息添加到帖子对象中
+            post.imageURL = userInfo.data.imageURL;
+            console.log("displayPostForEvent userInfo: ", post);
+            return post; // 将用户信息添加到帖子对象中
           })
         );
         setPosts(postsWithUserInfo);
@@ -404,12 +406,12 @@ function EventDetail({}) {
                   <span className="post-title">{post.title}</span>
                   <span className="post-author">
                     {formatPostDate(post.datetime)} By: {post.name}
-                  </span>
-        {post.userInfo && post.userInfo.imageURL && (
-          <div className="post-photo">
-            <img src={post.userInfo.imageURL} alt="User Avatar" />
-          </div>
-        )}
+                  {post && post.imageURL && (
+                    <div className="post-photo">
+                      <img src={post.imageURL} alt="User Avatar" />
+                    </div>
+                  )}</span>
+                  
                 </div>
                 <div className="post-content">{post.text}</div>
               </div>
