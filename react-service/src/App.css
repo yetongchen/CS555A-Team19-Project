@@ -507,3 +507,12 @@ section {
   flex-shrink: 0;
   margin-bottom: 5px;
 }
+
+.post-photo {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}

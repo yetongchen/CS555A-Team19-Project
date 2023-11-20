@@ -125,13 +125,31 @@ const getPostByUserId = async (user_id) => {
     return postByUserId;
 }
 
+const updateUserNameInPostById = async (postId, newName) => {
+    newName = validation.checkUsername(newName);
+  
+    const postCollection = await posts();
+    const updateResult = await postCollection.updateOne(
+      { _id: new ObjectId(postId) },
+      { $set: { name: newName } },
+      { returnDocument: 'after' }
+    );
+  
+    if (!updateResult.acknowledged) {
+      throw createError("Failed to update user name in post.");
+    }
+  
+    return updateResult;
+  }
+  
 const exportedMethods = {
     createPost,
     removePostByPostId,
     //updatePost,
     getPostByPostId,
     getPostByEventId,
-    getPostByUserId
+    getPostByUserId,
+    updateUserNameInPostById
 };
 
 export default exportedMethods;
