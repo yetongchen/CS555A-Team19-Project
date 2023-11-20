@@ -288,10 +288,13 @@ section {
 }
 
 .post-container {
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
   padding: 10px;
   margin-bottom: 5px;
   border-radius: 5px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
 .post-header {
@@ -311,10 +314,13 @@ section {
 }
 
 .post-container {
-  background-color: #dddad8;
+  /* background-color: #f5f5f5; */
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 10px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
 .post-header {
@@ -509,6 +515,7 @@ section {
 }
 
 .post-photo {
+  margin-left: 6px;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
