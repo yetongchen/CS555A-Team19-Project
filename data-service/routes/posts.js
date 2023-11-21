@@ -44,6 +44,7 @@ router.route("/new").post(async (req, res) => {
   try {
     let result = await createPost(
       req.body.user_id,
+      req.body.imageURL,
       req.body.event_id,
       req.body.name,
       req.body.title,
