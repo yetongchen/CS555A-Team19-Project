@@ -5,6 +5,7 @@ import { dbConnection, closeConnection } from '../config/mongoConnection.js';
 
 let post1 = null;
 let post2 = null;
+let imageURL = "";
 let user_id = "4tbeMum8S3eGSZEpKVWc7iMvgFN2";
 let event_id = "692750504407";
 let name = "Yetong Chen";
@@ -18,7 +19,7 @@ before(async () => {
 describe('Post Functions', function() {
     describe('createPost', function() {
         it('should create a post and return new post 1', async function() {
-        post1 = await postData.createPost(user_id, event_id, name, 'TestTitle1', 'TestText1');
+        post1 = await postData.createPost(user_id, imageURL, event_id, name, 'TestTitle1', 'TestText1');
         expect(post1).to.be.an('object');
         expect(post1).to.have.property('user_id', user_id);
         expect(post1).to.have.property('event_id', event_id);
@@ -26,7 +27,7 @@ describe('Post Functions', function() {
         });
 
         it('should create a post and return new post 2', async function() {
-        post2 = await postData.createPost(user_id, event_id, name, 'TestTitle2', 'TestText2');
+        post2 = await postData.createPost(user_id, imageURL, event_id, name, 'TestTitle2', 'TestText2');
         expect(post2).to.be.an('object');
         expect(post2).to.have.property('user_id', user_id);
         expect(post2).to.have.property('event_id', event_id);
