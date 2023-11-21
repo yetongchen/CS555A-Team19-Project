@@ -243,6 +243,7 @@ function EventDetail({}) {
     try {
       const postData = {
         user_id: userInfo._id,
+        imageURL: userInfo.imageURL,
         event_id: eventId,
         name: userInfo.name,
         title: newPostTitle,
