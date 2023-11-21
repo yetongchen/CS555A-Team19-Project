@@ -300,32 +300,6 @@ section {
 .post-header {
   display: flex;
   justify-content: space-between;
-  /* 使标题和作者名在两侧 */
-  margin-bottom: 5px;
-  /* 和正文之间的距离 */
-}
-
-.post-title {
-  font-weight: bold;
-}
-
-.post-author {
-  font-style: italic;
-}
-
-.post-container {
-  /* background-color: #f5f5f5; */
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  border: 1px solid #eaeaea;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-}
-
-.post-header {
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 5px;
 }
 
@@ -399,7 +373,6 @@ section {
 .post-input-container button:hover {
   background-color: #f4b070;
 }
-
 
 
 .user-profile-container {

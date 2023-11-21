@@ -5,12 +5,11 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import axios from "axios";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { PollForm } from "./PollForm";
 import { PollCard } from "./PollCard";
-import { Button, Grid, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Button, Grid } from "@mui/material";
 
 import "../App.css";
 
@@ -193,18 +192,8 @@ function EventDetail({}) {
     return addressParts.join(" ");
   }
   
-  // display all the posts
-  // useEffect(() => {
-  //   displayPostForEvent(eventId)
-  //     .then((posts) => {
-  //       setPosts(posts);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching posts for event", error);
-  //     });
-  // }, [eventId]);
   useEffect(() => {
-    displayPostForEvent(eventId)
+    postsForEvent(eventId)
       .then(async (posts) => {
         const postsWithUserInfo = await Promise.all(
           posts.map(async (post) => {
@@ -240,17 +229,6 @@ function EventDetail({}) {
       } else {
         setError(error.message);
       }
-    }
-  };
-
-  const displayPostForEvent = async (id) => {
-    setError(null);
-    try {
-      const posts = await postsForEvent(id);     
-      return posts;
-    } catch (error) {
-      console.log(error);
-      setError(error.message);
     }
   };
 
@@ -410,7 +388,8 @@ function EventDetail({}) {
                     <div className="post-photo">
                       <img src={post.imageURL} alt="User Avatar" />
                     </div>
-                  )}</span>
+                  )}
+                  </span>
                   
                 </div>
                 <div className="post-content">{post.text}</div>
