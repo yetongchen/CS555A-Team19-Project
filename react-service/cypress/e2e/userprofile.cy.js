@@ -19,47 +19,47 @@ describe('User Profile', () => {
 
 
 
-  // it('allows the user to change their profile picture and username', () => {
-  //   //cy.url().should('eq', 'http://localhost:3000/profile');
+  it('allows the user to change their profile picture and username', () => {
+    //cy.url().should('eq', 'http://localhost:3000/profile');
 
-  //   cy.contains('Edit Profile').click();
+    cy.contains('Edit Profile').click();
 
-  //   cy.get('.ant-modal').should('be.visible');
+    cy.get('.ant-modal').should('be.visible');
 
-  //   cy.get('input[name="imageURL"]').should('exist').attachFile('profileImgTest.jpg');
+    cy.get('input[name="imageURL"]').should('exist').attachFile('profileImgTest.jpg');
 
-  //   cy.get('input[placeholder="Name"]').clear().type('newusername');
+    cy.get('input[placeholder="Name"]').clear().type('newusername');
 
-  //   cy.contains('button', 'OK').click();
+    cy.contains('button', 'OK').click();
 
-  //   cy.wait(1000); 
+    cy.wait(1000); 
 
-  //   cy.get('.user-profile').should('contain', 'newusername');
-  // });
-
-
+    cy.get('.user-profile').should('contain', 'newusername');
+  });
 
 
-  // it('navigates through paginated events', () => {
-  //   cy.contains('Events').click();
+
+
+  it('navigates through paginated events', () => {
+    cy.contains('Events').click();
   
-  //   cy.get('.ant-pagination').should('exist');
+    cy.get('.ant-pagination').should('exist');
   
-  //   cy.get('.ant-pagination').find('li').contains('2').click();
+    cy.get('.ant-pagination').find('li').contains('2').click();
   
-  //   cy.get('.event-card').should('have.length', 10);
-  // });
+    cy.get('.event-card').should('have.length', 10);
+  });
 
 
 
 
-  // it('navigates through paginated comments', () => {
-  //   cy.contains('Comments').click();
+  it('navigates through paginated comments', () => {
+    cy.contains('Comments').click();
   
-  //   cy.get('.ant-pagination').should('exist');
+    cy.get('.ant-pagination').should('exist');
   
-  //   cy.get('.ant-pagination').find('li').contains('2').click();
+    cy.get('.ant-pagination').find('li').contains('2').click();
   
-  //   cy.get('.comment-card').should('have.length', 10);
-  // });
+    cy.get('.comment-card').should('have.length', 10);
+  });
 });
