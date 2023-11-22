@@ -17,7 +17,7 @@ jobs:
       run: docker-compose up --build -d
 
     - name: Wait for services to be ready
-      run: sleep 60
+      run: sleep 90s
 
     - name: Execute tests
       run: |

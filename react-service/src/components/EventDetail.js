@@ -80,6 +80,10 @@ function EventDetail({}) {
     getEventById(eventId)
       .then((eventData) => {
         setEvent(eventData);
+        if (eventData.logo && eventData.logo.original.url  && document.getElementById("event-container")){
+          document.getElementById("event-container").style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url('${eventData.logo.original.url}')`;
+          document.getElementById("event-container").style.backgroundAttachment = 'fixed';
+        }
         if (eventData.venue_id) {
           getVenueById(eventData.venue_id)
             .then(setVenue)
@@ -317,7 +321,7 @@ function EventDetail({}) {
 
   return (
     <div className="outer-container">
-      <div className="event-container">
+      <div className="event-container" id="event-container">
         <img
           className="event-image"
           src={event.logo && event.logo.original.url}
@@ -430,12 +434,7 @@ function EventDetail({}) {
         <br></br>
         {error && <p style={{color: 'red'}}>{error}</p>}
 
-        <Button
-          variant="standard"
-          style={{
-            fontSize: 18,
-            backgroundColor: "#FFC085",
-          }}
+        <button className="add-poll-button"
           onClick={() => {
             if (create) {
               setCreate(false);
@@ -444,8 +443,8 @@ function EventDetail({}) {
             }
           }}
         >
-          Click here to create a new poll
-        </Button>
+          Create a new poll
+        </button>
         <Grid
           container
           spacing={2}
