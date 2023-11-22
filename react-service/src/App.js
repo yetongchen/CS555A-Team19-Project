@@ -5,6 +5,7 @@ import { AuthProvider } from "./firebase/Auth";
 import Login from "./components/Login";
 import SignUpPage from "./components/SignUpPage";
 import EventDetail from "./components/EventDetail";
+import TicketMasterDetail from "./components/TicketmasterDetail";
 import EventOfDate from "./components/EventOfDate";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -37,6 +38,7 @@ function App() {
               element={user ? <Navigate to={"/"} /> : <Login />}
             />
             <Route path="/events/:id" element={<EventDetail />} />
+            <Route path="/event/ticketmaster/:id" element={<TicketMasterDetail />}/>
             <Route path="/events/date" element={<EventOfDate />} />
             <Route
               path="/register"

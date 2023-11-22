@@ -65,7 +65,7 @@ function TicketMasterCard({ data }) {
               sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
             >
               <a
-                // href={`/events/${eventId}`}
+                href={`/event/ticketmaster/${data.id}`}
                 style={{ color: "white" }}
                 target="_blank"
               >
