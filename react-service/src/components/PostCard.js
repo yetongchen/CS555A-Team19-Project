@@ -111,9 +111,10 @@ function PostCard({ postId, onDelete }) {
             <Button
               variant="solid"
               size="md"
-              color="primary"
+              // color="primary"
               aria-label="Explore Bahamas Islands"
               sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+              style={{ backgroundColor: "#6f48eb" }}
             >
               <a href="#" style={{ color: "white" }}>
                 Explore
@@ -207,9 +208,10 @@ function PostCard({ postId, onDelete }) {
               <Button
                 variant="solid"
                 size="md"
-                color="primary"
+                // color="primary"
                 aria-label="Explore Bahamas Islands"
                 sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+                style={{ backgroundColor: "#6f48eb" }}
               >
                 <a
                   href={`/events/${eventId}`}
@@ -223,9 +225,10 @@ function PostCard({ postId, onDelete }) {
               <Button
                 variant="solid"
                 size="md"
-                color="primary"
+                // color="primary"
                 aria-label="Explore Bahamas Islands"
                 sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+                style={{ backgroundColor: "#6f48eb" }}
               >
                 <a href={`#`} style={{ color: "white" }}>
                   Explore

@@ -14,7 +14,7 @@ import { Grid } from "@mui/material";
 import "../App.css";
 import noImage from '../images/no-image.png';
 
-function TicketmasterDetail({props}) {
+function TicketMasterDetail({props}) {
   const { id } = useParams();
 
   const [eventData, setEventData] = useState(undefined);
@@ -458,4 +458,4 @@ function TicketmasterDetail({props}) {
 }
 }
 
-export default TicketmasterDetail;
+export default TicketMasterDetail;
