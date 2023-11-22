@@ -17,27 +17,24 @@ function UserProfile() {
   const [showImg, setShowImg] = useState("");
   const [savedEvents, setSavedEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
-
   const [currentPageComments, setCurrentPageComments] = useState(1);
   const [currentPageEvents, setCurrentPageEvents] = useState(1);
   const pageSize = 10;
 
+  //const auth = getAuth();
   const [user, setUser] = useState(null);
-  const auth = getAuth(); 
-  const [userInfo, setUserInfo] = useState(null); 
+  const auth = getAuth(); // 获取 Firebase Auth 的实例
+  const [userInfo, setUserInfo] = useState(null); // 新状态来存储从你的后端获取的用户信息
 
   const [eventCardsData, seteventCardsData] = useState(null);
   const [postCardsData, setpostCardsData] = useState(null);
 
-
-  // subscribe to auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, setUser);
     return () => unsubscribe();
   }, [auth]);
 
-  
-  // get user information
+  // 新的 useEffect 钩子来获取用户信息
   useEffect(() => {
     const fetchUserInfo = async () => {
       if (user) {
@@ -51,15 +48,13 @@ function UserProfile() {
           console.error("Error fetching user info:", error);
         }
       } else {
+        // 如果用户未登录，清除 userInfo
         setUserInfo(null);
       }
     };
 
     fetchUserInfo();
   }, [user]);
-
-
-
 
   useEffect(() => {
     async function setData() {
@@ -73,8 +68,6 @@ function UserProfile() {
     }
     setData();
   }, [userInfo]);
-
-
 
   useEffect(() => {
     async function getEventCards() {
@@ -91,8 +84,6 @@ function UserProfile() {
     }
     getEventCards();
   }, [savedEvents]);
-
-
 
   useEffect(() => {
     async function getPostCards() {
@@ -145,9 +136,6 @@ function UserProfile() {
     }
   };
 
-
-
-
   const handleSearchComments = (e) => {
     const value = e.target.value.toLowerCase();
     const filtered = userComments.filter((comment) =>
@@ -156,9 +144,6 @@ function UserProfile() {
     setFilteredComments(filtered);
     setCurrentPageComments(1);
   };
-
-
-
 
   const handleSearchEvents = (e) => {
     const value = e.target.value.toLowerCase();
@@ -169,8 +154,8 @@ function UserProfile() {
     setCurrentPageEvents(1);
   };
 
-
-
+  //const currentComments = filteredComments.slice((currentPageComments - 1) * pageSize, currentPageComments * pageSize);
+  //const currentEvents = filteredEvents.slice((currentPageEvents - 1) * pageSize, currentPageEvents * pageSize);
 
   const showModal = () => {
     if (userInfo) {
@@ -181,9 +166,8 @@ function UserProfile() {
     }
   };
 
-
-
   const handleImageChange = (event) => {
+    // console.log(event.target.value);
     let file = document.querySelector("input[type=file]").files[0];
     let reader = new FileReader();
 
@@ -201,18 +185,15 @@ function UserProfile() {
     console.log(editImg);
   };
 
-
-
-
   const handleOk = async () => {
     if (userInfo && editImg) {
       const userId = userInfo._id;
       console.log("edit image: ", editImg);
 
-    
+      // 使用 FormData 来包装文件数据
       const formData = new FormData();
       formData.append("name", editName);
-      formData.append("imageURL", editImg); 
+      formData.append("imageURL", editImg); // 'image' 是后端将要解析的字段名
 
       try {
         const response = await axios.patch(
@@ -220,7 +201,7 @@ function UserProfile() {
           formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data", 
+              "Content-Type": "multipart/form-data", // 确保设置正确的请求头
             },
           }
         );
@@ -233,15 +214,9 @@ function UserProfile() {
     setIsModalVisible(false);
   };
 
-
-
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-
-
-
-
 
   return (
     <div className="user-profile-container">
@@ -270,7 +245,6 @@ function UserProfile() {
           placeholder="Name"
         />
       </Modal>
-  
       <div className="user-profile-sidebar">
         <div className="user-profile">
           <h2>{userInfo && userInfo.name}</h2>
@@ -278,7 +252,6 @@ function UserProfile() {
           <button onClick={showModal}>Edit Profile</button>
         </div>
       </div>
-  
       <div className="user-profile-content">
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="Events" key="1">
@@ -300,20 +273,21 @@ function UserProfile() {
                 overflow: "auto",
               }}
             >
-              {paginatedEvents.map(eventId => (
-                <EventOfDateCard eventId={eventId} key={eventId} />
-              ))}
+              {eventCardsData}
             </Grid>
             <Pagination
               current={currentPageEvents}
-              total={savedEvents.length}
+              total={filteredEvents.length}
               pageSize={pageSize}
               onChange={(page) => setCurrentPageEvents(page)}
             />
           </Tabs.TabPane>
-  
+
           <Tabs.TabPane tab="Comments" key="2">
-            <Input placeholder="Search Comments" onChange={handleSearchComments} />
+            <Input
+              placeholder="Search Comments"
+              onChange={handleSearchComments}
+            />
             <Grid
               container
               spacing={1}
@@ -331,17 +305,11 @@ function UserProfile() {
                 overflow: "auto",
               }}
             >
-              {paginatedComments.map(commentId => (
-                <PostCard
-                  postId={commentId}
-                  key={commentId}
-                  onDelete={() => handleDeletePostById(commentId)}
-                />
-              ))}
+              {postCardsData}
             </Grid>
             <Pagination
               current={currentPageComments}
-              total={currentComments.length}
+              total={filteredComments.length}
               pageSize={pageSize}
               onChange={(page) => setCurrentPageComments(page)}
             />

@@ -1,0 +1,28 @@
+name: Docker CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build and run Docker containers
+      run: docker-compose up --build -d
+
+    - name: Wait for services to be ready
+      run: sleep 60s
+
+    - name: Execute tests
+      run: |
+        docker-compose exec -T data-service npm run test
+        docker-compose exec -T react-service npm run cypress:run
+
+    - name: Shutdown Docker Compose services
+      run: docker-compose down
