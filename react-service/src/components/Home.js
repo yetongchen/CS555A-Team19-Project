@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Form, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import { motion, AnimatePresence } from "framer-motion";
 import * as statesList from "../state.json";
@@ -68,7 +68,7 @@ const Home = () => {
         <div className="carousel-wrapper">
         <div className="carousel-images-container" style={{ transform: transformValue }}>
           {images.map((image, index) => (
-           <img key={index} src={image} alt={`Image ${index}`} />
+           <img key={index} src={image} alt={`Carousel ${index}`} />
           ))}
         </div>
         {/* <img key={currentIndex} src={images[currentIndex]} /> */}
@@ -259,6 +259,9 @@ const Home = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "right",
+                  color: "#6f48eb",
+                  borderColor: "#6f48eb",
+                  marginTop: '9px', 
                 }}
                 onClick={handleSubmit}
               >

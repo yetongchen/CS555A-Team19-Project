@@ -7,6 +7,7 @@ const createError = (message) => new Error (message);
 
 const createPost = async (
     user_id,
+    imageURL,
     event_id,
     name,
     title,
@@ -17,7 +18,7 @@ const createPost = async (
     let user_exist = await userCollection.findOne({_id: user_id});
     if (!user_exist) throw createError("User does not exist.");
 
-    event_id = validation.checkString(event_id); //need more validation
+    event_id = validation.checkString(event_id); //need more validation   
     name = validation.checkUsername(name);
     title = validation.checkTitle(title);
     text = validation.checkText(text);
@@ -27,6 +28,7 @@ const createPost = async (
 
     const postData = {
         user_id: user_id,
+        imageURL: imageURL,
         event_id: event_id,
         name: name,
         datetime: datetime,
@@ -125,13 +127,49 @@ const getPostByUserId = async (user_id) => {
     return postByUserId;
 }
 
+const updateUserNameInPostById = async (postId, newName) => {
+    newName = validation.checkUsername(newName);
+  
+    const postCollection = await posts();
+    const updateResult = await postCollection.updateOne(
+      { _id: new ObjectId(postId) },
+      { $set: { name: newName } },
+      { returnDocument: 'after' }
+    );
+  
+    if (!updateResult.acknowledged) {
+      throw createError("Failed to update user name in post.");
+    }
+  
+    return updateResult;
+  }
+
+const updateUserImageInPostById = async (postId, imageURL) => {
+    imageURL = validation.checkString(imageURL);
+  
+    const postCollection = await posts();
+    const updateResult = await postCollection.updateOne(
+      { _id: new ObjectId(postId) },
+      { $set: { imageURL: imageURL } },
+      { returnDocument: 'after' }
+    );
+  
+    if (!updateResult.acknowledged) {
+      throw createError("Failed to update user imageURL in post.");
+    }
+  
+    return updateResult;
+  }
+  
 const exportedMethods = {
     createPost,
     removePostByPostId,
     //updatePost,
     getPostByPostId,
     getPostByEventId,
-    getPostByUserId
+    getPostByUserId,
+    updateUserNameInPostById,
+    updateUserImageInPostById
 };
 
 export default exportedMethods;

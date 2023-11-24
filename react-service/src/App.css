@@ -134,7 +134,7 @@ section {
   top: 0;
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url(/src/images/login.jpg);
+  /* background: linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url(/src/images/login.jpg); */
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -144,11 +144,11 @@ section {
   padding-bottom: 50px;
 }
 
-.event-image {
+.event-container img {
   width: 100%;
   border-radius: 5px;
   max-width: 900px;
-  max-height: 350px;
+  /* max-height: 350px; */
 }
 
 .event-details {
@@ -179,15 +179,19 @@ section {
 
 .join-button {
   border-radius: 10px;
-  background-color: #FFC085;
+  /* background-color: #FFC085; */
+  background-color: #6f48eb;
+  color: #fff;
+  /* width: 100px; */
   width: 100px;
   height: 30px;
-  float: right;
+  /* float: right; */
   cursor: pointer;
 }
 
 .join-button:hover {
-  background-color: #f4b070;
+  /* background-color: #f4b070; */
+  background-color: #c899f7;
 }
 
 .join-button:disabled {
@@ -226,7 +230,7 @@ section {
 .event-link {
   text-decoration: underline;
   cursor: pointer;
-  color: #dd74ca;
+  color: #7380ec;
 }
 
 /*
@@ -288,33 +292,13 @@ section {
 }
 
 .post-container {
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
   padding: 10px;
   margin-bottom: 5px;
   border-radius: 5px;
-}
-
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  /* 使标题和作者名在两侧 */
-  margin-bottom: 5px;
-  /* 和正文之间的距离 */
-}
-
-.post-title {
-  font-weight: bold;
-}
-
-.post-author {
-  font-style: italic;
-}
-
-.post-container {
-  background-color: #dddad8;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 10px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
 .post-header {
@@ -368,7 +352,8 @@ section {
 
 .post-input-container input[type="text"]:focus,
 .post-input-container textarea:focus {
-  border-color: #FFC085;
+  /* border-color: #FFC085; */
+  border-color: #6f48eb;
   outline: none;
 }
 
@@ -382,7 +367,8 @@ section {
   width: 100px;
   padding: 10px;
   margin-top: 20px;
-  background-color: #FFC085;
+  /* background-color: #FFC085; */
+  background-color: #6f48eb;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -391,9 +377,9 @@ section {
 }
 
 .post-input-container button:hover {
-  background-color: #f4b070;
+  /* background-color: #f4b070; */
+  background-color: #c899f7;
 }
-
 
 
 .user-profile-container {
@@ -506,4 +492,32 @@ section {
   flex-basis: 30%;
   flex-shrink: 0;
   margin-bottom: 5px;
+}
+
+.post-photo {
+  margin-left: 6px;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.add-poll-button {
+  border-radius: 10px;
+  background-color: #6f48eb;
+  color: #fff;
+  width: 200px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.add-poll-button:hover {
+  background-color: #c899f7;
+}
+
+.add-poll-button:disabled {
+  background-color: #cccccc; 
+  cursor: default; 
 }

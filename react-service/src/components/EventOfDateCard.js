@@ -75,9 +75,10 @@ function EventOfDateCard({ eventId, timeRange }) {
             <Button
               variant="solid"
               size="md"
-              color="primary"
+              // color="primary"
               aria-label="Explore Bahamas Islands"
               sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+              style={{ backgroundColor: "#6f48eb" }}
             >
               <a href="#" style={{ color: "white" }}>
                 Explore
@@ -163,9 +164,10 @@ function EventOfDateCard({ eventId, timeRange }) {
               <Button
                 variant="solid"
                 size="md"
-                color="primary"
+                // color="primary"
                 aria-label="Explore Bahamas Islands"
                 sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+                style={{ backgroundColor: "#6f48eb" }}
               >
                 <a
                   href={`/events/${eventId}`}
@@ -179,9 +181,10 @@ function EventOfDateCard({ eventId, timeRange }) {
               <Button
                 variant="solid"
                 size="md"
-                color="primary"
+                // color="primary"
                 aria-label="Explore Bahamas Islands"
                 sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+                style={{ backgroundColor: "#6f48eb" }}
               >
                 <a href={`#`} style={{ color: "white" }}>
                   Explore

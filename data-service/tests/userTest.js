@@ -1,14 +1,21 @@
-import { createUser, getUserById, getUserByEmail, addPostToUser, addEventToUser } from '../data/users.js';
+import { createUser, getUserById, getUserByEmail, addPostToUser, addEventToUser, updateUserPatch } from '../data/users.js';
 import { dbConnection, closeConnection } from '../config/mongoConnection.js';
 import { expect } from "chai";
+import postData from '../data/posts.js';
 
 let user1 = null;
 let name = "Cong Guo";
 let email = "test1@gmail.com";
 let user_id = "643477cd9042a9c9256c5ac5";
-const postId = "6545871a4fe1f1f1d524b364";
+// const postId = "6545871a4fe1f1f1d524b364";
 const eventId = "716620239427";
 let db = null;
+let post1 = {
+  postId: "6545871a4fe1f1f1d524b364",
+  user_id: "643477cd9042a9c9256c5ac5",
+  event_id: "716620239427",
+  name: "Cong Guo",
+}
 
 before(async () => {
   db = await dbConnection();
@@ -60,7 +67,7 @@ describe('User Functions', function() {
 
   describe('addPostToUser', function() {
     it('should add a post ID to a user', async function() {
-      const addPostToUserResult = await addPostToUser(user1._id, postId);
+      const addPostToUserResult = await addPostToUser(user1._id, post1.postId);
       expect(addPostToUserResult).to.have.property('acknowledged', true);
       expect(addPostToUserResult).to.have.property('modifiedCount', 1);
     });
@@ -71,6 +78,26 @@ describe('User Functions', function() {
       const addEventToUserResult = await addEventToUser(user1._id, eventId);
       expect(addEventToUserResult).to.have.property('acknowledged', true);
       expect(addEventToUserResult).to.have.property('modifiedCount', 1);
+    });
+  });
+  
+  describe('updateUserPatch', function() {
+    it('should update user information and related posts', async function() {
+      const userInfo = {
+        name: 'user2_cong',
+      };
+      const updatedResult = await updateUserPatch(user1._id, userInfo);
+      const updatedUser = updatedResult.updatedUserInfo;
+      const postIds = user1.posts; 
+  
+      expect(updatedUser).to.be.an('object');
+      expect(updatedUser).to.have.property('name', userInfo.name);
+
+      for (const postId of postIds) {
+        const updatedPost = await postData.getPostByPostId(postId);
+        expect(updatedPost).to.be.an('object');
+        expect(updatedPost).to.have.property('name', userInfo.name);
+      }
     });
   });
 });

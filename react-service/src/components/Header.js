@@ -6,7 +6,6 @@ import { AppBar, Toolbar, Typography, IconButton, Button } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import axios from "axios";
-import noImage from "../images/no-image.png";
 
 const Header = () => {
   const [user, setUser] = useState(null);

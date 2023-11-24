@@ -5,39 +5,24 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import axios from "axios";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged} from "firebase/auth";
 
 import { PollForm } from "./PollForm";
 import { PollCard } from "./PollCard";
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 
 import "../App.css";
+import noImage from '../images/no-image.png';
 
-const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
-// const id = "692750504407";
-// const id = "735668072007";
-
-async function getEventById(id) {
-  const apiUrl = `https://www.eventbriteapi.com/v3/events/${id}/`;
-
-  try {
-    const response = await axios.get(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error when get event detail", error);
-    throw error;
-  }
-}
-
-function EventDetail({}) {
+function TicketMasterDetail({props}) {
   const { id } = useParams();
-  const [event, setEvent] = useState({});
-  const [venue, setVenue] = useState({});
+
+  const [eventData, setEventData] = useState(undefined);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(true);
+
   const [posts, setPosts] = useState([]);
+
   const [user, setUser] = useState(null);
   const auth = getAuth(); // 获取 Firebase Auth 的实例
   const [userInfo, setUserInfo] = useState(null); // 新状态来存储从你的后端获取的用户信息
@@ -77,26 +62,31 @@ function EventDetail({}) {
   }, [user]);
 
   useEffect(() => {
-    getEventById(eventId)
-      .then((eventData) => {
-        setEvent(eventData);
-        if (eventData.logo && eventData.logo.original.url  && document.getElementById("event-container")){
-          document.getElementById("event-container").style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url('${eventData.logo.original.url}')`;
+    console.log('Get ticketmaster event useEffect fired');
+    async function fetchData() {
+      try {
+        const API_KEY = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
+        const {data: event} = await axios.get(
+          `https://app.ticketmaster.com/discovery/v2/events/${id}?apikey=${API_KEY}`
+        );
+        if (chooseImage(event.images) && document.getElementById("event-container")){
+          document.getElementById("event-container").style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url('${chooseImage(event.images)}')`;
           document.getElementById("event-container").style.backgroundAttachment = 'fixed';
         }
-        if (eventData.venue_id) {
-          getVenueById(eventData.venue_id)
-            .then(setVenue)
-            .catch((error) => {
-              console.error("Error fetching event", error);
-              setError('There was a problem fetching event details.');
-            });
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
-  }, [eventId]);
+        setEventData(event);
+        setLoading(false);
+        setNotFound(false);
+        console.log(event);
+      } catch (e) {
+        console.error("Error fetching event", e);
+        setError('There was a problem fetching event details.');
+        setNotFound(true);
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [id]);
+
 
   useEffect(() => {
     async function getPolls() {
@@ -121,83 +111,38 @@ function EventDetail({}) {
     }
   }, [id, polls]);
 
-  async function getVenueById(vid) {
-    const apiUrl = `https://www.eventbriteapi.com/v3/venues/${vid}/`;
-    setError(null);
+  const tConvert = (time) => {
+    // Check correct time format and split into components
+    time = time
+      .toString()
+      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
-    try {
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      setError("There was a problem fetching venue details.");
+    if (time.length > 1) {
+      // If time format correct
+      time = time.slice(1); // Remove full string match value
+      time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
     }
-  }
-
-  function formatEventDateTime(start, end) {
-    const startDate = new Date(start.local);
-    const endDate = new Date(end.local);
-  
-    const dateOptions = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    const startDateString = startDate.toLocaleDateString("en-US", dateOptions);
-
-    // Function to format time
-    const formatTime = (date) => date.toLocaleTimeString("en-US", {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
-
-    const startTime = formatTime(startDate);
-    const endTime = formatTime(endDate);
-    
-    const timeZone = start.timezone;
-  
-    return `${startDateString} · ${startTime} - ${endTime} ${timeZone}`;
-  }
-  
-
-  function formatVenueAddress(venue) {
-    let addressParts = [];
-    if (venue.name) {
-      addressParts.push(venue.name);
+    return time.join(''); // return adjusted time or original string
+  };
+  const formatDate = (date) => {
+    var year = date.substring(0, 4);
+    var month = date.substring(5, 7);
+    var day = date.substring(8, 10);
+    return month + '/' + day + '/' + year;
+  };
+  const chooseImage = (images) => {
+    let image = undefined;
+    if (images){
+      let idx = 0;
+      images.reduce((a, b, i) => b.width * b.height > a ? (idx = i, b.width * b.height) : a,0);
+      image = images[idx].url;
     }
-
-    if (venue.address) {
-      if (venue.address.address_1) {
-        addressParts.push(venue.address.address_1);
-      }
-      if (venue.address.address_2) {
-        addressParts.push(venue.address.address_2);
-      }
-      let cityRegionPostal = [];
-      if (venue.address.city) {
-        cityRegionPostal.push(venue.address.city);
-      }
-      if (venue.address.region) {
-        cityRegionPostal.push(venue.address.region);
-      }
-      if (venue.address.postal_code) {
-        cityRegionPostal.push(venue.address.postal_code);
-      }
-      if (cityRegionPostal.length > 0) {
-        addressParts.push(cityRegionPostal.join(", "));
-      }
-    }
-    return addressParts.join(" ");
+    return image;
   }
   
   useEffect(() => {
-    postsForEvent(eventId)
+    postsForEvent(id)
       .then(async (posts) => {
         const postsWithUserInfo = await Promise.all(
           posts.map(async (post) => {
@@ -212,7 +157,7 @@ function EventDetail({}) {
       .catch((error) => {
         console.error("Error fetching posts for event", error);
       });
-  }, [eventId]);
+  }, [id]);
 
   const postsForEvent = async (id) => {
     try {
@@ -317,24 +262,86 @@ function EventDetail({}) {
       console.log(error);
       setError(error.message);
     }
-  }
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <h2>Loading....</h2>
+      </div>
+    );
+  } else if (notFound) {
+    return (
+      <div>
+        <h2>Error 404: Event Not Found</h2>
+      </div>
+    );
+  } else {
 
   return (
     <div className="outer-container">
       <div className="event-container" id="event-container">
-        <img
-          className="event-image"
-          src={event.logo && event.logo.original.url}
-          alt="Event Image"
+        <img src={
+            eventData && eventData.images && chooseImage(eventData.images) 
+              ? chooseImage(eventData.images)
+              : noImage
+          }
+          alt="Event"
         />
         <div className="event-details">
-          <h1 className="event-name">{event.name && event.name.text}</h1>
+          <h1 className="event-name">{eventData && eventData.name}</h1>
 
           <div className="event-time-location">
             <CalendarMonthOutlinedIcon />
             <h2>Date and Time: </h2>
-            {event.start && event.end && formatEventDateTime(event.start, event.end)}
-            {/* <button className="join-button" onClick={joinEvent}>Join</button> */}
+            {eventData && eventData.dates && eventData.dates.start ? (
+                  <dd>{formatDate(eventData.dates.start.localDate)} {tConvert(eventData.dates.start.localTime)}</dd>
+                ) : (
+                  <dd>N/A</dd>
+                )}
+            
+          </div>
+
+          <div className="event-address">
+            <LocationOnOutlinedIcon />
+            <h2>Address:</h2>
+            <div>
+            {eventData && eventData.locale ? (
+                  <dd>{eventData.locale}</dd>
+                ) : (
+                  <dd>N/A</dd>
+                )}
+            </div>
+          </div>
+
+          <div className="event-description">
+            <div className="description-header">
+              <DescriptionOutlinedIcon />
+              <h2>Info:</h2>
+            </div>
+            <div>{eventData && eventData.info ? (
+                  <dd>{eventData.info}</dd>
+                ) : (
+                  <dd>N/A</dd>
+                )}</div>
+          </div>
+
+          <p className="event-ticket">
+            {eventData && eventData.url ? (
+              <dd>
+                Link: <a
+                  className="event-link"
+                  rel='noopener noreferrer'
+                  target='_blank'
+                  href={eventData.url}
+                >
+                  {eventData.name}
+                </a>
+              </dd>
+            ) : (
+              <dd>No external ticketing link available.</dd>
+            )}
+          </p>
             <button 
               className={hasJoined ? "join-button joined" : "join-button"} 
               onClick={joinEvent} 
@@ -342,42 +349,6 @@ function EventDetail({}) {
             >
               {hasJoined ? "Joined" : "Join"}
             </button>
-          </div>
-
-          <div className="event-address">
-            <LocationOnOutlinedIcon />
-            <h2>Address:</h2>
-            <div>
-              {event.online_event ? "Online" : formatVenueAddress(venue)}
-            </div>
-          </div>
-
-          <div className="event-description">
-            <div className="description-header">
-              <DescriptionOutlinedIcon />
-              <h2>Description:</h2>
-            </div>
-            <div>{event.description && event.description.text}</div>
-          </div>
-
-          <p className="event-ticket">
-            {event.is_externally_ticketed &&
-            event.external_ticketing &&
-            event.external_ticketing.external_url ? (
-              <>
-                If you want the tickets, click the link:
-                <a
-                  className="event-link"
-                  href={event.external_ticketing.external_url}
-                >
-                  {event.external_ticketing.external_url}
-                </a>
-              </>
-            ) : (
-              "No external ticketing link available."
-            )}
-          </p>
-
           <div className="event-posts">
             <CommentOutlinedIcon />
             <h2>Posts:</h2>
@@ -393,8 +364,7 @@ function EventDetail({}) {
                     <div className="post-photo">
                       <img src={post.imageURL} alt="User Avatar" />
                     </div>
-                  )}
-                  </span>
+                  )}</span>
                   
                 </div>
                 <div className="post-content">{post.text}</div>
@@ -403,6 +373,7 @@ function EventDetail({}) {
         </div>
 
         <div className="post-input-container">
+          {error && <p style={{color: 'red'}}>{error}</p>}
           <table>
             <tbody>
               <tr>
@@ -432,8 +403,6 @@ function EventDetail({}) {
         </div>
 
         <br></br>
-        {error && <p style={{color: 'red'}}>{error}</p>}
-
         <button className="add-poll-button"
           onClick={() => {
             if (create) {
@@ -487,5 +456,6 @@ function EventDetail({}) {
     </div>
   );
 }
+}
 
-export default EventDetail;
+export default TicketMasterDetail;
