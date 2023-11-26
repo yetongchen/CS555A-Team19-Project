@@ -108,6 +108,15 @@ function UserProfile() {
     getPostCards();
   }, [userComments]);
 
+<<<<<<< Updated upstream
+=======
+  const currentComments = (filteredComments.length > 0 ? filteredComments : userComments) || [];
+  const paginatedComments = currentComments.slice((currentPageComments - 1) * pageSize, currentPageComments * pageSize);
+  const paginatedEvents = (savedEvents || []).slice((currentPageEvents - 1) * pageSize, currentPageEvents * pageSize);
+
+
+
+>>>>>>> Stashed changes
   const handleDeletePostById = async (id) => {
     const url = `http://localhost:4000/post/detail/${id}`;
     try {
