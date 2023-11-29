@@ -80,16 +80,24 @@ function EventDetail({}) {
     getEventById(eventId)
       .then((eventData) => {
         setEvent(eventData);
-        if (eventData.logo && eventData.logo.original.url  && document.getElementById("event-container")){
-          document.getElementById("event-container").style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url('${eventData.logo.original.url}')`;
-          document.getElementById("event-container").style.backgroundAttachment = 'fixed';
+        if (
+          eventData.logo &&
+          eventData.logo.original.url &&
+          document.getElementById("event-container")
+        ) {
+          document.getElementById(
+            "event-container"
+          ).style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url('${eventData.logo.original.url}')`;
+          document.getElementById(
+            "event-container"
+          ).style.backgroundAttachment = "fixed";
         }
         if (eventData.venue_id) {
           getVenueById(eventData.venue_id)
             .then(setVenue)
             .catch((error) => {
               console.error("Error fetching event", error);
-              setError('There was a problem fetching event details.');
+              setError("There was a problem fetching event details.");
             });
         }
       })
@@ -141,7 +149,7 @@ function EventDetail({}) {
   function formatEventDateTime(start, end) {
     const startDate = new Date(start.local);
     const endDate = new Date(end.local);
-  
+
     const dateOptions = {
       weekday: "long",
       year: "numeric",
@@ -151,20 +159,20 @@ function EventDetail({}) {
     const startDateString = startDate.toLocaleDateString("en-US", dateOptions);
 
     // Function to format time
-    const formatTime = (date) => date.toLocaleTimeString("en-US", {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
+    const formatTime = (date) =>
+      date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
 
     const startTime = formatTime(startDate);
     const endTime = formatTime(endDate);
-    
+
     const timeZone = start.timezone;
-  
+
     return `${startDateString} · ${startTime} - ${endTime} ${timeZone}`;
   }
-  
 
   function formatVenueAddress(venue) {
     let addressParts = [];
@@ -195,13 +203,15 @@ function EventDetail({}) {
     }
     return addressParts.join(" ");
   }
-  
+
   useEffect(() => {
     postsForEvent(eventId)
       .then(async (posts) => {
         const postsWithUserInfo = await Promise.all(
           posts.map(async (post) => {
-            const userInfo = await axios.get(`http://localhost:4000/users/${post.user_id}`);
+            const userInfo = await axios.get(
+              `http://localhost:4000/users/${post.user_id}`
+            );
             post.imageURL = userInfo.data.imageURL;
             console.log("displayPostForEvent userInfo: ", post);
             return post; // 将用户信息添加到帖子对象中
@@ -219,10 +229,10 @@ function EventDetail({}) {
       const response = await axios.get(
         `http://localhost:4000/post/event/${id}`
       );
-      if(response.data.error){
+      if (response.data.error) {
         console.log(response.data);
         setError(response.data.error);
-      }else{
+      } else {
         setError(null);
         return response.data;
       }
@@ -260,10 +270,10 @@ function EventDetail({}) {
       );
 
       const newPost = response.data;
-      if(newPost.error){
+      if (newPost.error) {
         console.log(newPost.error);
         setError(newPost.error);
-      }else{
+      } else {
         setError(null);
         let updatedPosts = await postsForEvent(id);
         setPosts(updatedPosts);
@@ -293,15 +303,14 @@ function EventDetail({}) {
     return `${year}-${month}-${day} ${hour}:${minute}`;
   };
 
-  
   const [hasJoined, setHasJoined] = useState(false);
-  useEffect(() =>{
+  useEffect(() => {
     if (userInfo && userInfo.events && userInfo.events.includes(eventId)) {
       setHasJoined(true);
     }
   }, [userInfo, eventId]);
 
-    const joinEvent = async () => {
+  const joinEvent = async () => {
     setError(null);
     if (!userInfo) {
       console.error("User must be logged in to join event");
@@ -311,13 +320,15 @@ function EventDetail({}) {
     setHasJoined(true);
     setError(null);
     try {
-      const response = await axios.post(`http://localhost:4000/users/addEventToUser/${userInfo._id}/${eventId}`);
+      const response = await axios.post(
+        `http://localhost:4000/users/addEventToUser/${userInfo._id}/${eventId}`
+      );
       return response.data;
     } catch (error) {
       console.log(error);
       setError(error.message);
     }
-  }
+  };
 
   return (
     <div className="outer-container">
@@ -333,11 +344,13 @@ function EventDetail({}) {
           <div className="event-time-location">
             <CalendarMonthOutlinedIcon />
             <h2>Date and Time: </h2>
-            {event.start && event.end && formatEventDateTime(event.start, event.end)}
+            {event.start &&
+              event.end &&
+              formatEventDateTime(event.start, event.end)}
             {/* <button className="join-button" onClick={joinEvent}>Join</button> */}
-            <button 
-              className={hasJoined ? "join-button joined" : "join-button"} 
-              onClick={joinEvent} 
+            <button
+              className={hasJoined ? "join-button joined" : "join-button"}
+              onClick={joinEvent}
               disabled={hasJoined}
             >
               {hasJoined ? "Joined" : "Join"}
@@ -389,13 +402,12 @@ function EventDetail({}) {
                   <span className="post-title">{post.title}</span>
                   <span className="post-author">
                     {formatPostDate(post.datetime)} By: {post.name}
-                  {post && post.imageURL && (
-                    <div className="post-photo">
-                      <img src={post.imageURL} alt="User Avatar" />
-                    </div>
-                  )}
+                    {post && post.imageURL && (
+                      <div className="post-photo">
+                        <img src={post.imageURL} alt="User Avatar" />
+                      </div>
+                    )}
                   </span>
-                  
                 </div>
                 <div className="post-content">{post.text}</div>
               </div>
@@ -432,11 +444,16 @@ function EventDetail({}) {
         </div>
 
         <br></br>
-        {error && <p style={{color: 'red'}}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <button className="add-poll-button"
+        <button
+          className="add-poll-button"
           onClick={() => {
-            if (create) {
+            if (!userInfo) {
+              console.log("User must be logged in to create poll");
+              setError("You must be logged in to create a poll");
+              return;
+            } else if (create) {
               setCreate(false);
             } else {
               setCreate(true);
