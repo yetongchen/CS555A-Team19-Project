@@ -75,7 +75,12 @@ function UserProfile() {
         let res =
           savedEvents &&
           savedEvents.map((id) => {
-            return <EventOfDateCard eventId={id} key={id} />;
+            return <EventOfDateCard 
+            eventId={id} 
+            key={id} 
+            onMoveEvent={() => handleMoveEvent(id)}
+            showMoveButton={true}
+            />;
           });
         seteventCardsData(res);
       } catch (error) {
@@ -219,6 +224,25 @@ function UserProfile() {
     setIsModalVisible(false);
   };
 
+  const handleMoveEvent = async (eventId) => {
+    if(window.confirm("Are you sure to delete this event from your save list?")){
+      try{
+        const url = `http://localhost:4000/users/removeEventFromUser/${userInfo._id}/${eventId}`;
+        const response = await axios.post(url);
+        console.log(response);
+        // 更新状态以反映变化
+        setSavedEvents(newEvents => {
+          const updatedEvents = newEvents.filter(event => event !== eventId);
+          console.log("Updated events:", updatedEvents);
+          return updatedEvents;
+        });        
+        console.log(response.data.message);
+      }catch(error){
+        console.error(error);
+      }
+    }
+  } 
+
   return (
     <div className="user-profile-container">
       <Modal
@@ -279,6 +303,7 @@ function UserProfile() {
             >
               {eventCardsData}
             </Grid>
+           
             <Pagination
               current={currentPageEvents}
               total={filteredEvents.length}
