@@ -12,6 +12,7 @@ import {
   FormHelperText,
   RadioGroup,
   Radio,
+  LinearProgress,
 } from "@mui/material";
 
 const vote = async (poll_id, user_id, option) => {
@@ -36,6 +37,8 @@ export const PollCard = ({ pollData, userData }) => {
   // Vote
   const [helperText, setHelperText] = useState("");
   const [value, setValue] = useState("");
+  const [totalVoter, setTotalVoter] = useState(0);
+  const [voted, setVoted] = useState(false);
 
   useEffect(() => {
     // poll
@@ -52,14 +55,28 @@ export const PollCard = ({ pollData, userData }) => {
   }, []);
 
   useEffect(() => {
+    if (options) {
+      let total = 0;
+      Object.keys(options).map((option) => {
+        total += options[option].length;
+      });
+      setTotalVoter(total);
+    }
+  }, [options]);
+
+  useEffect(() => {
     if (userID && options) {
       let curVal = "";
+      let voted = false;
+
       Object.keys(options).map((option) => {
         if (options[option].includes(userID)) {
           curVal = option;
+          voted = true;
         }
       });
       setValue(curVal);
+      setVoted(voted);
     }
   }, [userID, options]);
 
@@ -80,7 +97,7 @@ export const PollCard = ({ pollData, userData }) => {
       const newPoll = await vote(pollID, userID, value);
 
       if (newPoll) {
-        alert("Done!!");
+        // alert("Done!!");
         setOptions(newPoll.data.options);
       }
     }
@@ -100,6 +117,36 @@ export const PollCard = ({ pollData, userData }) => {
           <p>{description}</p>
         </CardContent>
 
+        <CardContent>
+          {voted ? <h2>Results:</h2> : <p>(Vote to see results)</p>}
+          {voted &&
+            options &&
+            Object.keys(options).map((option, i) => {
+              const percentage = options[option].length
+                ? ((options[option].length / totalVoter) * 100).toFixed(2)
+                : 0.0;
+              return (
+                <p key={`result_${i}`}>
+                  {`${option} (${percentage}%): `}
+                  <LinearProgress
+                    sx={{
+                      borderRadius: 100,
+                      height: 10,
+                      backgroundColor: "#c899f7",
+                      // backgroundColor: "white",
+                      "& .MuiLinearProgress-bar": {
+                        borderRadius: 100,
+                        backgroundColor: "#6f48eb",
+                      },
+                    }}
+                    variant="determinate"
+                    value={parseFloat(percentage)}
+                  />
+                </p>
+              );
+            })}
+        </CardContent>
+
         <CardContent style={{ textAlign: "left" }}>
           <form onSubmit={handleSubmit}>
             <FormControl sx={{ m: 3 }} variant="standard">
@@ -107,12 +154,13 @@ export const PollCard = ({ pollData, userData }) => {
               <br></br>
               <RadioGroup value={value} onChange={handleRadioChange}>
                 {options &&
-                  Object.keys(options).map((option) => {
+                  Object.keys(options).map((option, i) => {
                     return (
                       <FormControlLabel
                         value={option}
                         label={option}
                         control={<Radio />}
+                        key={i}
                       />
                     );
                   })}
@@ -123,7 +171,8 @@ export const PollCard = ({ pollData, userData }) => {
                 style={{
                   borderRadius: 100,
                   fontWeight: "bold",
-                  backgroundColor: "#FFC085",
+                  backgroundColor: "#6f48eb",
+                  color: "white",
                 }}
                 type="submit"
                 variant="standard"
