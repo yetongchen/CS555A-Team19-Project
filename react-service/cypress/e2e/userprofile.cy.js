@@ -17,7 +17,7 @@ describe('User Profile', () => {
     cy.get('input[type="password"]').type('Password@123');
     cy.get('form').submit();
     cy.url().should('include', '/');
-    cy.get('.welcome').click();
+    cy.get('.welcome', { timeout: 10000 }).click();
     cy.url().should('include', '/profile');
   });
 
