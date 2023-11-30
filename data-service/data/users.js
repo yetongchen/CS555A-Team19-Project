@@ -147,3 +147,20 @@ export const addEventToUser = async (userId, eventId) => {
     throw error;
   }
 };
+
+export const removeEventFromUser = async (userId, eventId) => {
+  userId = validateId(userId);
+  eventId = validateId(eventId);
+  
+  const userCollection = await users();
+  const user = await getUserById(userId);
+  if (!user) throw "User not found";
+  let userEvents = user.events;
+  let updateEvents = 0;
+  if(userEvents. length === 1 && userEvents[0] === eventId){
+    updateEvents = await userCollection.updateOne({_id: userId}, { $pop: { events: -1 } });
+  } else{
+    updateEvents = await userCollection.updateOne({_id: userId}, { $pull: { events: eventId } });
+  }
+  if(updateEvents.modifiedCount === 0) throw "Could not remove event from user";
+};
