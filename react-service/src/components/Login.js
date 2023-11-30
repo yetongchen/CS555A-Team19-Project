@@ -16,7 +16,14 @@ const Login = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    const user = result.user;
+    axios
+      .post("http://localhost:4000/users/register", {
+        name: user.displayName,
+        email: user.email,
+        uid: user.uid,
+      })
       .then((res) => {
         if (auth.currentUser) navigate("/");
       })

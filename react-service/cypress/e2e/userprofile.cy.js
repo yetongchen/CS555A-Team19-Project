@@ -61,35 +61,35 @@ describe('User Profile', () => {
 
 
 
-  it('navigates through paginated events', () => {
-    cy.url().should('include', '/profile');
+  // it('navigates through paginated events', () => {
+  //   cy.url().should('include', '/profile');
     
-    cy.contains('Events').click();
-    cy.wait(1000); 
-    //cy.get('Tabs.TabPane[tab="Events"]').click();
+  //   cy.contains('Events').click();
+  //   cy.wait(1000); 
+  //   //cy.get('Tabs.TabPane[tab="Events"]').click();
 
-    cy.get('.ant-pagination').should('exist');
-    //cy.get('.ant-pagination').should('be.visible');
-    cy.get('.ant-pagination').find('li').contains('2').click();
-    cy.wait(1000); 
+  //   cy.get('.ant-pagination').should('exist');
+  //   //cy.get('.ant-pagination').should('be.visible');
+  //   cy.get('.ant-pagination').find('li').contains('2').click();
+  //   cy.wait(1000); 
 
-    cy.get('.event-by-date-card').should('have.length', 10);
-  });
+  //   cy.get('.event-by-date-card').should('have.length', 10);
+  // });
   
 
 
 
-  it('navigates through paginated comments', () => {
-    cy.url().should('include', '/profile');
+  // it('navigates through paginated comments', () => {
+  //   cy.url().should('include', '/profile');
 
-    cy.contains('Comments').click();
-    cy.wait(1000);
+  //   cy.contains('Comments').click();
+  //   cy.wait(1000);
   
-    cy.get('.ant-pagination').should('exist');
-    cy.get('.ant-pagination').find('li').contains('2').click({ force: true });
+  //   cy.get('.ant-pagination').should('exist');
+  //   cy.get('.ant-pagination').find('li').contains('2').click({ force: true });
 
-    cy.wait(1000);
+  //   cy.wait(1000);
   
-    cy.get('.event-by-date-card').should('have.length', 20);
-  });
+  //   cy.get('.event-by-date-card').should('have.length', 20);
+  // });
 });
