@@ -13,9 +13,10 @@ describe('User Profile', () => {
 
     cy.visit('http://localhost:3000/login');
     cy.intercept('POST', '**/identitytoolkit/**').as('firebaseAuth');
-    cy.get('input[type="text"]').type('test@example.com');
-    cy.get('input[type="password"]').type('Password@123');
-    cy.get('form').submit();
+    cy.get('input[type="text"]').type('test555@test.com');
+    cy.get('input[type="password"]').type('Test555!');
+    cy.get('#btn').click();
+    cy.wait(3000);
     cy.url().should('include', '/');
     cy.get('.welcome', { timeout: 10000 }).click();
     cy.url().should('include', '/profile');
