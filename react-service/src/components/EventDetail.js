@@ -63,7 +63,7 @@ function EventDetail({}) {
             `http://localhost:4000/users/${user.uid}`
           );
           setUserInfo(response.data);
-          console.log(response.data);
+          // console.log(response.data);
         } catch (error) {
           console.error("Error fetching user info:", error);
         }
@@ -127,7 +127,7 @@ function EventDetail({}) {
     if (id) {
       getPolls();
     }
-  }, [id, polls]);
+  }, [id]);
 
   async function getVenueById(vid) {
     const apiUrl = `https://www.eventbriteapi.com/v3/venues/${vid}/`;
