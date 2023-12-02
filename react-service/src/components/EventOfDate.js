@@ -39,25 +39,24 @@ function EventOfDate() {
 
   const [ticketmasterData, setTicketmasterData] = useState(undefined);
 
+  // getEvents函数移到useEffect外部
+  const getEvents = async () => {
+    if (!start_date) return; // 如果没有start_date，就不执行任何操作
+
+    const apiKey = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
+    const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${start_date}Z`;
+    try {
+      const response = await axios.get(url);
+      setTicketmasterData(response.data._embedded.events);
+    } catch (error) {
+      console.error("Error when get event detail", error);
+    }
+  };
+
+  // 首个useEffect负责获取TicketMaster数据
   useEffect(() => {
-    let data = null;
-    async function getEvents() {
-      const apiKey = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
-      const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${start_date}Z`;
-      try {
-        const response = await axios.get(url);
-        data = response.data;
-
-        setTicketmasterData(data._embedded.events);
-      } catch (error) {
-        console.error("Error when get event detail", error);
-      }
-    }
-
-    if (start_date) {
-      getEvents();
-    }
-  }, []);
+    getEvents();
+  }, [start_date]); // 依赖于start_date
 
   // useEffect(() => {
   //   if (ticketmasterData && cardsData) {
@@ -128,7 +127,7 @@ function EventOfDate() {
     }
 
     getEventIDs();
-  }, []);
+  }, [currentPage, date, state, city]);
 
   useEffect(() => {
     function getEventIDs() {
@@ -155,6 +154,7 @@ function EventOfDate() {
         return <h1>Page Not Found</h1>;
       }
     }
+  
     getEventIDs();
   }, [currentPage]); // Included dependencies
 

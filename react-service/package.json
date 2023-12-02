@@ -38,7 +38,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run --spec 'cypress/e2e/EventOfDate.cy.js,cypress/e2e/Home.cy.js,cypress/e2e/login.cy.js,cypress/e2e/spec.cy.js'"
+    "cypress:run": "cypress run --spec 'cypress/e2e/EventOfDate.cy.js,cypress/e2e/Home.cy.js,cypress/e2e/login.cy.js,cypress/e2e/spec.cy.js,cypress/e2e/TicketMasterDetail.cy.js'"
   },
   "eslintConfig": {
     "extends": [
@@ -65,7 +65,8 @@
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
     "babel-jest": "^29.7.0",
-    "cypress": "^13.4.0"
+    "cypress": "^13.4.0",
+    "cypress-file-upload": "^5.0.8"
   },
   "jest": {
     "transformIgnorePatterns": [

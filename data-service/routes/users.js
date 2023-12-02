@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, getUserById, updateUserPatch, addEventToUser} from "../data/users.js";
+import { createUser, getUserById, updateUserPatch, addEventToUser, removeEventFromUser} from "../data/users.js";
 import { users } from "../config/mongoCollections.js";
 import postValidation from "../validation/postValidation.js";
 
@@ -139,5 +139,23 @@ router.route("/addEventToUser/:userId/:eventId").post(async (req, res) => {
     res.status(400).json({ error: e });
   }
 });
+
+router.route("/removeEventFromUser/:userId/:eventId").post(async (req, res) => {
+  let { userId, eventId } = req.params;
+  try {
+    userId = postValidation.checkString(userId);
+    eventId = postValidation.checkString(eventId);
+  } catch (e) {
+    return res.status(400).json({ error: e.toString() });
+  }
+
+  try {
+    let updateInfo = await removeEventFromUser(userId, eventId);
+    res.status(200).json({ message: 'Removed the event successfully', updateInfo });
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
+});
+
 
 export default router;

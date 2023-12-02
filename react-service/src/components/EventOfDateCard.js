@@ -14,7 +14,7 @@ import noImage from "../images/no-image.png";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
 
-function EventOfDateCard({ eventId, timeRange }) {
+function EventOfDateCard({ eventId, timeRange,onMoveEvent,showMoveButton}) {
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -75,9 +75,10 @@ function EventOfDateCard({ eventId, timeRange }) {
             <Button
               variant="solid"
               size="md"
-              color="primary"
+              // color="primary"
               aria-label="Explore Bahamas Islands"
               sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+              style={{ backgroundColor: "#6f48eb" }}
             >
               <a href="#" style={{ color: "white" }}>
                 Explore
@@ -163,9 +164,10 @@ function EventOfDateCard({ eventId, timeRange }) {
               <Button
                 variant="solid"
                 size="md"
-                color="primary"
+                // color="primary"
                 aria-label="Explore Bahamas Islands"
                 sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+                style={{ backgroundColor: "#6f48eb" }}
               >
                 <a
                   href={`/events/${eventId}`}
@@ -179,15 +181,37 @@ function EventOfDateCard({ eventId, timeRange }) {
               <Button
                 variant="solid"
                 size="md"
-                color="primary"
+                // color="primary"
                 aria-label="Explore Bahamas Islands"
                 sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+                style={{ backgroundColor: "#6f48eb" }}
               >
                 <a href={`#`} style={{ color: "white" }}>
                   Explore
                 </a>
               </Button>
             )}
+            {showMoveButton && <button onClick={() => onMoveEvent(eventId)} 
+          style={{
+            position: 'absolute',
+            left: 10,
+            bottom: 10,
+            backgroundColor: '#4CAF50', // 绿色背景
+            color: 'white', // 白色文字
+            border: 'none',
+            borderRadius: '4px', // 圆角
+            padding: '4px 8px', // 内部填充
+            textAlign: 'center',
+            textDecoration: 'none',
+            display: 'inline-block',
+            fontSize: '12px',
+            margin: '4px 2px',
+            cursor: 'pointer', // 鼠标指针
+            boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)' // 阴影
+          }}        
+            >
+              Delete
+           </button>}
           </CardContent>
         </Card>
       </Grid>

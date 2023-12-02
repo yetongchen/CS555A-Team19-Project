@@ -60,12 +60,13 @@ function TicketMasterCard({ data }) {
             <Button
               variant="solid"
               size="md"
-              color="primary"
+              // color="primary"
               aria-label="Explore Bahamas Islands"
               sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+              style={{ backgroundColor: "#6f48eb" }}
             >
               <a
-                // href={`/events/${eventId}`}
+                href={`/event/ticketmaster/${data.id}`}
                 style={{ color: "white" }}
                 target="_blank"
               >
@@ -76,9 +77,10 @@ function TicketMasterCard({ data }) {
             <Button
               variant="solid"
               size="md"
-              color="primary"
+              // color="primary"
               aria-label="Explore Bahamas Islands"
               sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+              style={{ backgroundColor: "#6f48eb" }}
             >
               <a href={`#`} style={{ color: "white" }}>
                 Explore

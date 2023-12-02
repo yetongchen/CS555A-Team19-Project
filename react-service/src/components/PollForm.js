@@ -67,10 +67,11 @@ export const PollForm = () => {
 
       const newPoll = await createPoll(id, poll);
       if (newPoll) {
-        alert("New Poll Added!");
+        // alert("New Poll Added!");
         setTitle("");
         setDescription("");
         setOptions([]);
+        window.location.reload();
       }
     } else {
       alert(
@@ -104,8 +105,8 @@ export const PollForm = () => {
           {options.length > 0 ? (
             <ul>
               {options &&
-                options.map((option) => {
-                  return <li>&nbsp;&nbsp;&nbsp;&nbsp;- {option}</li>;
+                options.map((option, i) => {
+                  return <li key={i}>&nbsp;&nbsp;&nbsp;&nbsp;- {option}</li>;
                 })}
             </ul>
           ) : (

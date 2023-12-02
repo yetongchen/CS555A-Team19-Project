@@ -134,7 +134,7 @@ section {
   top: 0;
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url(/src/images/login.jpg);
+  /* background: linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7)), url(/src/images/login.jpg); */
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -144,11 +144,11 @@ section {
   padding-bottom: 50px;
 }
 
-.event-image {
+.event-container img {
   width: 100%;
   border-radius: 5px;
   max-width: 900px;
-  max-height: 350px;
+  /* max-height: 350px; */
 }
 
 .event-details {
@@ -179,15 +179,19 @@ section {
 
 .join-button {
   border-radius: 10px;
-  background-color: #FFC085;
+  /* background-color: #FFC085; */
+  background-color: #6f48eb;
+  color: #fff;
+  /* width: 100px; */
   width: 100px;
   height: 30px;
-  float: right;
+  /* float: right; */
   cursor: pointer;
 }
 
 .join-button:hover {
-  background-color: #f4b070;
+  /* background-color: #f4b070; */
+  background-color: #c899f7;
 }
 
 .join-button:disabled {
@@ -226,7 +230,7 @@ section {
 .event-link {
   text-decoration: underline;
   cursor: pointer;
-  color: #dd74ca;
+  color: #7380ec;
 }
 
 /*
@@ -348,7 +352,8 @@ section {
 
 .post-input-container input[type="text"]:focus,
 .post-input-container textarea:focus {
-  border-color: #FFC085;
+  /* border-color: #FFC085; */
+  border-color: #6f48eb;
   outline: none;
 }
 
@@ -362,7 +367,8 @@ section {
   width: 100px;
   padding: 10px;
   margin-top: 20px;
-  background-color: #FFC085;
+  /* background-color: #FFC085; */
+  background-color: #6f48eb;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -371,7 +377,8 @@ section {
 }
 
 .post-input-container button:hover {
-  background-color: #f4b070;
+  /* background-color: #f4b070; */
+  background-color: #c899f7;
 }
 
 
@@ -495,4 +502,22 @@ section {
   overflow: hidden;
   display: inline-block;
   vertical-align: middle;
+}
+
+.add-poll-button {
+  border-radius: 10px;
+  background-color: #6f48eb;
+  color: #fff;
+  width: 200px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.add-poll-button:hover {
+  background-color: #c899f7;
+}
+
+.add-poll-button:disabled {
+  background-color: #cccccc; 
+  cursor: default; 
 }
