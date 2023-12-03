@@ -64,26 +64,37 @@ const Home = () => {
     const transformValue = `translateX(-${currentIndex * 100}%)`;
 
     return (
-      <div className="carousel-images" >
+      <div className="carousel-images">
         <div className="carousel-wrapper">
-        <div className="carousel-images-container" style={{ transform: transformValue }}>
-          {images.map((image, index) => (
-           <img key={index} src={image} alt={`Carousel ${index}`} />
-          ))}
-        </div>
-        {/* <img key={currentIndex} src={images[currentIndex]} /> */}
-        <div className="slide_direction">
-          <button onClick={goToPrevious} className="left-arrow">
-            <svg viewBox="0 0 24 24">
-              <path fillRule="evenodd" clipRule="evenodd" d="M4 12l8 8 1.5-1.5L8 13h12v-2H8l5.5-5.5L12 4z"></path>
-            </svg> 
-          </button>
-          <button onClick={goToNext} className="right-arrow">
-            <svg viewBox="0 0 24 24">
-              <path fillRule="evenodd" clipRule="evenodd" d="M10.5 5.5L16 11H4v2h12l-5.5 5.5L12 20l8-8-8-8z"></path>
-            </svg>
-          </button>
-        </div>
+          <div
+            className="carousel-images-container"
+            style={{ transform: transformValue }}
+          >
+            {images.map((image, index) => (
+              <img key={index} src={image} alt={`Carousel ${index}`} />
+            ))}
+          </div>
+          {/* <img key={currentIndex} src={images[currentIndex]} /> */}
+          <div className="slide_direction">
+            <button onClick={goToPrevious} className="left-arrow">
+              <svg viewBox="0 0 24 24">
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4 12l8 8 1.5-1.5L8 13h12v-2H8l5.5-5.5L12 4z"
+                ></path>
+              </svg>
+            </button>
+            <button onClick={goToNext} className="right-arrow">
+              <svg viewBox="0 0 24 24">
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M10.5 5.5L16 11H4v2h12l-5.5 5.5L12 20l8-8-8-8z"
+                ></path>
+              </svg>
+            </button>
+          </div>
         </div>
         <div className="carousel-indicator">
           {images.map((_, index) => (
@@ -252,6 +263,7 @@ const Home = () => {
               </LocalizationProvider>
 
               <Button
+                className="date-submit-btn"
                 variant="outlined"
                 href="#outlined-buttons"
                 type="submit"
@@ -261,7 +273,7 @@ const Home = () => {
                   alignItems: "right",
                   color: "#6f48eb",
                   borderColor: "#6f48eb",
-                  marginTop: '9px', 
+                  marginTop: "9px",
                 }}
                 onClick={handleSubmit}
               >
