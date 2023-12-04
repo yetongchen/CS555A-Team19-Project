@@ -124,6 +124,7 @@ const Home = () => {
     let dateParms = `${event.getFullYear()}-${
       event.getUTCMonth() + 1
     }-${event.getDate()}`;
+    console.log(dateParms)
 
     if (state) {
       navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
