@@ -125,7 +125,9 @@ const Home = () => {
       event.getUTCMonth() + 1
     }-${event.getDate()}`;
 
-    if (coordsInfo) {
+    if (state) {
+      navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
+    } else if (coordsInfo) {
       let state = coordsInfo.nearest[0].prov[0];
       let city = coordsInfo.nearest[0].city[0];
       state = state ? state.replace(/\s+/g, "-") : state;
@@ -135,11 +137,25 @@ const Home = () => {
         `events/date/?page=1&date=${dateParms}&state=${state}&city=${city}`
       );
       setState(coordsInfo.nearest[0].prov);
-    } else if (state) {
-      navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
     } else {
       navigate("/");
     }
+
+    // previous version of located function
+    // if (coordsInfo) {
+    //   let state = coordsInfo.nearest[0].prov[0];
+    //   let city = coordsInfo.nearest[0].city[0];
+    //   state = state ? state.replace(/\s+/g, "-") : state;
+    //   city = city ? city.replace(/\s+/g, "-") : city;
+    //   console.log(state, city);
+    //   navigate(
+    //     `events/date/?page=1&date=${dateParms}&state=${state}&city=${city}`
+    //   );
+    //   setState(coordsInfo.nearest[0].prov);
+    // } else if (state) {
+    // } else {
+    //   navigate("/");
+    // }
   };
 
   // To handle state drop down list
@@ -149,6 +165,7 @@ const Home = () => {
   };
 
   const handleSubmit = (event) => {
+    if(!coordsInfo) alert("Enable the submit button only when access to the current location is granted.")
     event.preventDefault();
     console.log(
       state,
