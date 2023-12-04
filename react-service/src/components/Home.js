@@ -64,26 +64,37 @@ const Home = () => {
     const transformValue = `translateX(-${currentIndex * 100}%)`;
 
     return (
-      <div className="carousel-images" >
+      <div className="carousel-images">
         <div className="carousel-wrapper">
-        <div className="carousel-images-container" style={{ transform: transformValue }}>
-          {images.map((image, index) => (
-           <img key={index} src={image} alt={`Carousel ${index}`} />
-          ))}
-        </div>
-        {/* <img key={currentIndex} src={images[currentIndex]} /> */}
-        <div className="slide_direction">
-          <button onClick={goToPrevious} className="left-arrow">
-            <svg viewBox="0 0 24 24">
-              <path fillRule="evenodd" clipRule="evenodd" d="M4 12l8 8 1.5-1.5L8 13h12v-2H8l5.5-5.5L12 4z"></path>
-            </svg> 
-          </button>
-          <button onClick={goToNext} className="right-arrow">
-            <svg viewBox="0 0 24 24">
-              <path fillRule="evenodd" clipRule="evenodd" d="M10.5 5.5L16 11H4v2h12l-5.5 5.5L12 20l8-8-8-8z"></path>
-            </svg>
-          </button>
-        </div>
+          <div
+            className="carousel-images-container"
+            style={{ transform: transformValue }}
+          >
+            {images.map((image, index) => (
+              <img key={index} src={image} alt={`Carousel ${index}`} />
+            ))}
+          </div>
+          {/* <img key={currentIndex} src={images[currentIndex]} /> */}
+          <div className="slide_direction">
+            <button onClick={goToPrevious} className="left-arrow">
+              <svg viewBox="0 0 24 24">
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M4 12l8 8 1.5-1.5L8 13h12v-2H8l5.5-5.5L12 4z"
+                ></path>
+              </svg>
+            </button>
+            <button onClick={goToNext} className="right-arrow">
+              <svg viewBox="0 0 24 24">
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M10.5 5.5L16 11H4v2h12l-5.5 5.5L12 20l8-8-8-8z"
+                ></path>
+              </svg>
+            </button>
+          </div>
         </div>
         <div className="carousel-indicator">
           {images.map((_, index) => (
@@ -113,8 +124,11 @@ const Home = () => {
     let dateParms = `${event.getFullYear()}-${
       event.getUTCMonth() + 1
     }-${event.getDate()}`;
+    console.log(dateParms)
 
-    if (coordsInfo) {
+    if (state) {
+      navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
+    } else if (coordsInfo) {
       let state = coordsInfo.nearest[0].prov[0];
       let city = coordsInfo.nearest[0].city[0];
       state = state ? state.replace(/\s+/g, "-") : state;
@@ -124,11 +138,25 @@ const Home = () => {
         `events/date/?page=1&date=${dateParms}&state=${state}&city=${city}`
       );
       setState(coordsInfo.nearest[0].prov);
-    } else if (state) {
-      navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
     } else {
       navigate("/");
     }
+
+    // previous version of located function 
+    // if (coordsInfo) {
+    //   let state = coordsInfo.nearest[0].prov[0];
+    //   let city = coordsInfo.nearest[0].city[0];
+    //   state = state ? state.replace(/\s+/g, "-") : state;
+    //   city = city ? city.replace(/\s+/g, "-") : city;
+    //   console.log(state, city);
+    //   navigate(
+    //     `events/date/?page=1&date=${dateParms}&state=${state}&city=${city}`
+    //   );
+    //   setState(coordsInfo.nearest[0].prov);
+    // } else if (state) {
+    // } else {
+    //   navigate("/");
+    // }
   };
 
   // To handle state drop down list
@@ -138,6 +166,7 @@ const Home = () => {
   };
 
   const handleSubmit = (event) => {
+    if(!coordsInfo) alert("Enable the submit button only when access to the current location is granted.")
     event.preventDefault();
     console.log(
       state,
@@ -252,6 +281,7 @@ const Home = () => {
               </LocalizationProvider>
 
               <Button
+                className="date-submit-btn"
                 variant="outlined"
                 href="#outlined-buttons"
                 type="submit"
@@ -261,7 +291,7 @@ const Home = () => {
                   alignItems: "right",
                   color: "#6f48eb",
                   borderColor: "#6f48eb",
-                  marginTop: '9px', 
+                  marginTop: "9px",
                 }}
                 onClick={handleSubmit}
               >

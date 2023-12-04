@@ -27,7 +27,6 @@ function EventOfDate() {
   const [event_ids, setEventIds] = useState(undefined);
   const [loading, setLoading] = useState(true); // 新增加载状态
 
-  console.log(date);
   let start_date = searchParams.get("start_date");
   let end_date = searchParams.get("end_date");
   let city = searchParams.get("city");
@@ -41,10 +40,22 @@ function EventOfDate() {
 
   // getEvents函数移到useEffect外部
   const getEvents = async () => {
-    if (!start_date) return; // 如果没有start_date，就不执行任何操作
+    if (!start_date && !end_date && !date) {
+      return;
+    }
+
+    let start = start_date;
+    let end = end_date;
+
+    if (!start_date && !end_date && date) {
+      // console.log(date)
+      // const newDate = new Date(date).toISOString().split("T");
+      start = `${date}T05:00:00`;
+      end = `${date}T23:59:59`;
+    }
 
     const apiKey = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
-    const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${start_date}Z`;
+    const url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${50}&apikey=${apiKey}&startDateTime=${start}Z&endDateTime=${end}Z`;
     try {
       const response = await axios.get(url);
       setTicketmasterData(response.data._embedded.events);
@@ -56,7 +67,7 @@ function EventOfDate() {
   // 首个useEffect负责获取TicketMaster数据
   useEffect(() => {
     getEvents();
-  }, [start_date]); // 依赖于start_date
+  }, [start_date, date]); // 依赖于start_date
 
   // useEffect(() => {
   //   if (ticketmasterData && cardsData) {
@@ -84,7 +95,6 @@ function EventOfDate() {
     async function getEventIDs() {
       try {
         setLoading(true); // 开始加载时设置为true
-        setLoading(true);
         let res = null;
         const { data } = await axios.post("http://localhost:4000/eventIDs", {
           pages: 3,
@@ -92,7 +102,7 @@ function EventOfDate() {
           state,
           city,
         });
-        console.log(data);
+        // console.log(data);
         setEventIds(data.eventIDs);
 
         if (data.eventIDs && data.eventIDs.length > 0) {
@@ -132,6 +142,13 @@ function EventOfDate() {
   useEffect(() => {
     function getEventIDs() {
       try {
+        let start = start_date ? start_date.split("T")[1] : "00:00";
+        let end = end_date ? end_date.split("T")[1] : "23:59";
+        const timeRange = {
+          start: start,
+          end: end,
+        };
+
         let res = null;
         res =
           event_ids &&
@@ -139,11 +156,7 @@ function EventOfDate() {
             .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
             .map((id) => {
               return (
-                <EventOfDateCard
-                  eventId={id}
-                  key={id}
-                  // timeRange={{ start: "17:00", end: "20:00" }}
-                />
+                <EventOfDateCard eventId={id} key={id} timeRange={timeRange} />
               );
             });
         setCardsData(res);
@@ -154,8 +167,8 @@ function EventOfDate() {
         return <h1>Page Not Found</h1>;
       }
     }
-  
-    getEventIDs();
+
+    // getEventIDs();
   }, [currentPage]); // Included dependencies
 
   return (
