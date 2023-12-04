@@ -14,7 +14,7 @@ import noImage from "../images/no-image.png";
 
 const apiKey = process.env.REACT_APP_EVENTBRITE_API_KEY;
 
-function EventOfDateCard({ eventId, timeRange,onMoveEvent,showMoveButton}) {
+function EventOfDateCard({ eventId, timeRange, onMoveEvent, showMoveButton }) {
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -89,12 +89,17 @@ function EventOfDateCard({ eventId, timeRange,onMoveEvent,showMoveButton}) {
       </Grid>
     );
   } else {
+    console.log(timeRange);
+
     if (timeRange) {
       const event_dateTime = new Date(eventData.start.local);
+      console.log(eventData);
 
       const event_date = event_dateTime.toLocaleDateString();
       const start_dateTime = new Date(`${event_date} ${timeRange.start}`);
+      // console.log(start_dateTime);
       const end_dateTime = new Date(`${event_date} ${timeRange.end}`);
+      // console.log(end_dateTime);
 
       if (event_dateTime < start_dateTime || event_dateTime > end_dateTime)
         return;
@@ -191,27 +196,30 @@ function EventOfDateCard({ eventId, timeRange,onMoveEvent,showMoveButton}) {
                 </a>
               </Button>
             )}
-            {showMoveButton && <button onClick={() => onMoveEvent(eventId)} 
-          style={{
-            position: 'absolute',
-            left: 10,
-            bottom: 10,
-            backgroundColor: '#4CAF50', // 绿色背景
-            color: 'white', // 白色文字
-            border: 'none',
-            borderRadius: '4px', // 圆角
-            padding: '4px 8px', // 内部填充
-            textAlign: 'center',
-            textDecoration: 'none',
-            display: 'inline-block',
-            fontSize: '12px',
-            margin: '4px 2px',
-            cursor: 'pointer', // 鼠标指针
-            boxShadow: '0 2px 2px 0 rgba(0,0,0,0.2)' // 阴影
-          }}        
-            >
-              Delete
-           </button>}
+            {showMoveButton && (
+              <button
+                onClick={() => onMoveEvent(eventId)}
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  bottom: 10,
+                  backgroundColor: "#4CAF50", // 绿色背景
+                  color: "white", // 白色文字
+                  border: "none",
+                  borderRadius: "4px", // 圆角
+                  padding: "4px 8px", // 内部填充
+                  textAlign: "center",
+                  textDecoration: "none",
+                  display: "inline-block",
+                  fontSize: "12px",
+                  margin: "4px 2px",
+                  cursor: "pointer", // 鼠标指针
+                  boxShadow: "0 2px 2px 0 rgba(0,0,0,0.2)", // 阴影
+                }}
+              >
+                Delete
+              </button>
+            )}
           </CardContent>
         </Card>
       </Grid>
