@@ -94,8 +94,7 @@ To get a local copy up and running follow these simple example steps.
 3 - Execute the following terminal command in the project root directory: 
 
 ```bash
-docker-compose build
-docker-compose up
+docker-compose up --build -d
 ```
 
   This command will build each service's image in docker, including data seeding process.
