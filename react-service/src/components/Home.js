@@ -143,7 +143,6 @@ const Home = () => {
     }
 
     // previous version of located function 
-    // (can delete)
     // if (coordsInfo) {
     //   let state = coordsInfo.nearest[0].prov[0];
     //   let city = coordsInfo.nearest[0].city[0];
