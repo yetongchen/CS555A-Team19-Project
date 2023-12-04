@@ -311,7 +311,11 @@ function EventBody({eventData, id, err}) {
         <br></br>
         <button className="add-poll-button"
           onClick={() => {
-            if (create) {
+            if (!userInfo) {
+              console.log("User must be logged in to create poll");
+              setError("You must be logged in to create a poll");
+              return;
+            } else if (create) {
               setCreate(false);
             } else {
               setCreate(true);
