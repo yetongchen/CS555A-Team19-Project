@@ -124,6 +124,7 @@ const Home = () => {
     let dateParms = `${event.getFullYear()}-${
       event.getUTCMonth() + 1
     }-${event.getDate()}`;
+    console.log(dateParms)
 
     if (state) {
       navigate(`events/date/?page=1&date=${dateParms}&state=${state}`);
@@ -141,7 +142,7 @@ const Home = () => {
       navigate("/");
     }
 
-    // previous version of located function
+    // previous version of located function 
     // if (coordsInfo) {
     //   let state = coordsInfo.nearest[0].prov[0];
     //   let city = coordsInfo.nearest[0].city[0];

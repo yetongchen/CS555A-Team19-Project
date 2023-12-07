@@ -48,9 +48,10 @@ function EventOfDate() {
     let end = end_date;
 
     if (!start_date && !end_date && date) {
-      const newDate = new Date(date).toISOString().split("T");
-      start = `${newDate[0]}T05:00:00`;
-      end = `${newDate[0]}T23:59:59`;
+      // console.log(date)
+      // const newDate = new Date(date).toISOString().split("T");
+      start = `${date}T05:00:00`;
+      end = `${date}T23:59:59`;
     }
 
     const apiKey = "WexwqeiVEcpNEH0CGKyB1BLhxYbi9yiQ";
