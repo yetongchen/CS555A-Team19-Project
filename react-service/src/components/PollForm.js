@@ -2,18 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Grid,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  RadioGroup,
-  Radio,
-} from "@mui/material";
+import { Card, CardContent, Grid } from "@mui/material";
 
 const createPoll = async (eventID, poll) => {
   const newPoll = await axios.post(

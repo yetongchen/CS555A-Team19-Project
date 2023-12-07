@@ -18,6 +18,8 @@ function EventOfDateCard({ eventId, timeRange, onMoveEvent, showMoveButton }) {
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  console.log(timeRange);
+
   useEffect(() => {
     let data = null;
     async function getEventById(id) {
@@ -89,20 +91,17 @@ function EventOfDateCard({ eventId, timeRange, onMoveEvent, showMoveButton }) {
       </Grid>
     );
   } else {
-    console.log(timeRange);
-
     if (timeRange) {
       const event_dateTime = new Date(eventData.start.local);
-      console.log(eventData);
 
       const event_date = event_dateTime.toLocaleDateString();
-      const start_dateTime = new Date(`${event_date} ${timeRange.start}`);
+      // const start_dateTime = new Date(`${event_date} ${timeRange.start}`);
       // console.log(start_dateTime);
-      const end_dateTime = new Date(`${event_date} ${timeRange.end}`);
+      // const end_dateTime = new Date(`${event_date} ${timeRange.end}`);
       // console.log(end_dateTime);
 
-      if (event_dateTime < start_dateTime || event_dateTime > end_dateTime)
-        return;
+      // if (event_dateTime < start_dateTime || event_dateTime > end_dateTime)
+      //   return;
     }
 
     return (

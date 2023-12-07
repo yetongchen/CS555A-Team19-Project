@@ -141,8 +141,8 @@ function EventOfDate() {
   useEffect(() => {
     function getEventIDs() {
       try {
-        let start = start_date ? start_date.split("T")[1] : "00:00";
-        let end = end_date ? end_date.split("T")[1] : "23:59";
+        let start = start_date ? start_date : `${date}T00:00:00`;
+        let end = end_date ? end_date : `${date}T23:59:59`;
         const timeRange = {
           start: start,
           end: end,
@@ -167,7 +167,7 @@ function EventOfDate() {
       }
     }
 
-    // getEventIDs();
+    getEventIDs();
   }, [currentPage]); // Included dependencies
 
   return (
