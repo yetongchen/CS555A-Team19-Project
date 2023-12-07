@@ -23,9 +23,9 @@ const SignUpPage = () => {
     console.log("password", password.value)
     console.log("cpassword", cpassword.value)
     function validateName(name) {
-      const nameRegex = /^[a-zA-Z]+$/;
+      const nameRegex = /^[a-zA-Z0-9 ]+$/;
       if (nameRegex.test(name) === false) {
-        alert("Name contains numbers or symbols")
+        alert("Name contains invalid characters");
         return false;
       }
       return true;
@@ -94,7 +94,7 @@ const SignUpPage = () => {
         <h2>Registration</h2>
         <br />
         <form onSubmit={(e) => handleSignUp(e)}>
-          <InputLabel htmlFor="name">Full Name</InputLabel>
+          <InputLabel htmlFor="name">Username</InputLabel>
           <Input id="name" name="name" />
           <InputLabel htmlFor="email">Email</InputLabel>
           <Input id="email" type="email" name="email" />
