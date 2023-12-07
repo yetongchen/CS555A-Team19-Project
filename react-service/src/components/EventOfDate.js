@@ -97,7 +97,7 @@ function EventOfDate() {
         setLoading(true); // 开始加载时设置为true
         let res = null;
         const { data } = await axios.post("http://localhost:4000/eventIDs", {
-          pages: 3,
+          pages: 5,
           date,
           state,
           city,
@@ -111,8 +111,16 @@ function EventOfDate() {
             pageDisplay * (currentPage - 1),
             pageDisplay * currentPage
           );
+
+          const start = start_date ? start_date : `${date}T00:00:00`;
+          const end = end_date ? end_date : `${date}T23:59:59`;
+          const timeRange = {
+            start: start,
+            end: end,
+          };
+
           const cards = paginatedEventIds.map((id) => (
-            <EventOfDateCard eventId={id} key={id} />
+            <EventOfDateCard eventId={id} key={id} timeRange={timeRange} />
           ));
           setCardsData(cards);
           setLastPage(Math.ceil(data.eventIDs.length / pageDisplay));
@@ -142,22 +150,13 @@ function EventOfDate() {
   useEffect(() => {
     function getEventIDs() {
       try {
-        let start = start_date ? start_date : `${date}T00:00:00`;
-        let end = end_date ? end_date : `${date}T23:59:59`;
-        const timeRange = {
-          start: start,
-          end: end,
-        };
-
         let res = null;
         res =
           event_ids &&
           event_ids
             .slice(pageDisplay * (currentPage - 1), pageDisplay * currentPage)
             .map((id) => {
-              return (
-                <EventOfDateCard eventId={id} key={id} timeRange={timeRange} />
-              );
+              return <EventOfDateCard eventId={id} key={id} />;
             });
         setCardsData(res);
         setLastPage(Math.ceil(event_ids.length / pageDisplay));
