@@ -142,23 +142,23 @@ function UserProfile() {
     }
   };
 
-  const handleSearchComments = (e) => {
-    const value = e.target.value.toLowerCase();
-    const filtered = userComments.filter((comment) =>
-      comment.toLowerCase().includes(value)
-    );
-    setFilteredComments(filtered);
-    setCurrentPageComments(1);
-  };
+  // const handleSearchComments = (e) => {
+  //   const value = e.target.value.toLowerCase();
+  //   const filtered = userComments.filter((comment) =>
+  //     comment.toLowerCase().includes(value)
+  //   );
+  //   setFilteredComments(filtered);
+  //   setCurrentPageComments(1);
+  // };
 
-  const handleSearchEvents = (e) => {
-    const value = e.target.value.toLowerCase();
-    const filtered = savedEvents.filter((event) =>
-      event.toLowerCase().includes(value)
-    );
-    setFilteredEvents(filtered);
-    setCurrentPageEvents(1);
-  };
+  // const handleSearchEvents = (e) => {
+  //   const value = e.target.value.toLowerCase();
+  //   const filtered = savedEvents.filter((event) =>
+  //     event.toLowerCase().includes(value)
+  //   );
+  //   setFilteredEvents(filtered);
+  //   setCurrentPageEvents(1);
+  // };
 
   //const currentComments = filteredComments.slice((currentPageComments - 1) * pageSize, currentPageComments * pageSize);
   //const currentEvents = filteredEvents.slice((currentPageEvents - 1) * pageSize, currentPageEvents * pageSize);
@@ -283,7 +283,7 @@ function UserProfile() {
       <div className="user-profile-content">
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="Events" key="1">
-            <Input placeholder="Search Events" onChange={handleSearchEvents} />
+            {/* <Input placeholder="Search Events" onChange={handleSearchEvents} /> */}
             <Grid
               container
               spacing={1}
@@ -313,10 +313,10 @@ function UserProfile() {
           </Tabs.TabPane>
 
           <Tabs.TabPane tab="Comments" key="2">
-            <Input
+            {/* <Input
               placeholder="Search Comments"
               onChange={handleSearchComments}
-            />
+            /> */}
             <Grid
               container
               spacing={1}
